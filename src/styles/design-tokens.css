@@ -1,0 +1,40 @@
+:root {
+  /* Colors - Neon Observatory / Obsidian & Emerald */
+  --color-background: #0c0e12;
+  --color-surface: #171a1f;
+  --color-surface-hover: #23262c;
+  --color-primary: #3fff8b;
+  --color-primary-container: #005d2c;
+  --color-on-primary: #003918;
+  --color-secondary: #fdd400;
+  --color-secondary-container: #705d00;
+  --color-tertiary: #ff7076;
+  --color-tertiary-container: #9f0519;
+  --color-text: #f6f6fc;
+  --color-text-dim: #aaabb0;
+  --color-outline: #46484d;
+  --color-glass-bg: rgba(23, 26, 31, 0.7);
+  
+  /* Typography - Authority Editorial */
+  --font-main: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  
+  /* Radii */
+  --radius-md: 0.75rem;
+  --radius-lg: 1.25rem;
+  
+  /* Effects */
+  --glass-blur: blur(20px);
+  --neon-glow: 0 0 15px rgba(63, 255, 139, 0.4);
+  --neon-glow-strong: 0 0 25px rgba(63, 255, 139, 0.6);
+}
+
+[data-theme='light'] {
+  /* Light mode tokens if needed later, but primary is dark */
+}

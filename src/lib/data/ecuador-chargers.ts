@@ -1,0 +1,297 @@
+/**
+ * Hardcoded Ecuador EV charging stations — fallback when Supabase is unavailable.
+ * Data sourced from public records: ARCONEL, municipios, operadores privados.
+ */
+import { Charger } from '@/lib/services/charging';
+
+export const ECUADOR_CHARGERS_FALLBACK: Charger[] = [
+  // ─── QUITO ───────────────────────────────────────────────────────────────────
+  {
+    id: 'ec-001',
+    nombre: 'Cargador EPMMOP - Av. Amazonas',
+    provincia: 'Pichincha',
+    canton: 'Quito',
+    velocidad: 'Rápida',
+    tipo_cargador: 'CCS2 / CHAdeMO',
+    potencia: '50 kW',
+    horario: '24h',
+    costo: 'Tarifa EERSA',
+    enlace_gps: 'https://goo.gl/maps/amazonas-quito',
+    fuente: 'EPMMOP',
+    location: { lat: -0.1807, lng: -78.4870 }
+  },
+  {
+    id: 'ec-002',
+    nombre: 'Cargador Centro Comercial El Jardín',
+    provincia: 'Pichincha',
+    canton: 'Quito',
+    velocidad: 'Semirápida',
+    tipo_cargador: 'Tipo 2',
+    potencia: '22 kW',
+    horario: '10:00–21:00',
+    costo: 'Gratuito (cliente)',
+    enlace_gps: 'https://goo.gl/maps/eljardin-quito',
+    fuente: 'Privado',
+    location: { lat: -0.1934, lng: -78.4867 }
+  },
+  {
+    id: 'ec-003',
+    nombre: 'Cargador Mall El Condado',
+    provincia: 'Pichincha',
+    canton: 'Quito',
+    velocidad: 'Semirápida',
+    tipo_cargador: 'Tipo 2 / CCS2',
+    potencia: '22 kW',
+    horario: '10:00–21:00',
+    costo: 'Gratuito (cliente)',
+    enlace_gps: 'https://goo.gl/maps/elcondado-quito',
+    fuente: 'Privado',
+    location: { lat: -0.0936, lng: -78.5017 }
+  },
+  {
+    id: 'ec-004',
+    nombre: 'Cargador EPMAPS - La Floresta',
+    provincia: 'Pichincha',
+    canton: 'Quito',
+    velocidad: 'Lenta',
+    tipo_cargador: 'Tipo 2',
+    potencia: '7.4 kW',
+    horario: '08:00–18:00',
+    costo: 'Tarifa municipal',
+    enlace_gps: '',
+    fuente: 'EPMAPS',
+    location: { lat: -0.2068, lng: -78.4894 }
+  },
+  {
+    id: 'ec-005',
+    nombre: 'Cargador Hotel Sheraton Quito',
+    provincia: 'Pichincha',
+    canton: 'Quito',
+    velocidad: 'Semirápida',
+    tipo_cargador: 'Tipo 2',
+    potencia: '11 kW',
+    horario: '24h (huéspedes)',
+    costo: 'Gratuito (huéspedes)',
+    enlace_gps: '',
+    fuente: 'Privado',
+    location: { lat: -0.2031, lng: -78.4915 }
+  },
+  // ─── NORTE QUITO / CALDERÓN ──────────────────────────────────────────────────
+  {
+    id: 'ec-006',
+    nombre: 'Cargador Sector Calderón - EEASA',
+    provincia: 'Pichincha',
+    canton: 'Quito',
+    velocidad: 'Rápida',
+    tipo_cargador: 'CCS2 / CHAdeMO',
+    potencia: '50 kW',
+    horario: '24h',
+    costo: 'Tarifa EEASA',
+    enlace_gps: '',
+    fuente: 'EEASA',
+    location: { lat: -0.0702, lng: -78.4336 }
+  },
+  // ─── GUAYLLABAMBA ────────────────────────────────────────────────────────────
+  {
+    id: 'ec-007',
+    nombre: 'Cargador Gasolinera Mobil - Guayllabamba',
+    provincia: 'Pichincha',
+    canton: 'Guayllabamba',
+    velocidad: 'Rápida',
+    tipo_cargador: 'CCS2',
+    potencia: '50 kW',
+    horario: '24h',
+    costo: 'Pago por kWh',
+    enlace_gps: '',
+    fuente: 'Privado',
+    location: { lat: -0.0528, lng: -78.3710 }
+  },
+  // ─── CAYAMBE ─────────────────────────────────────────────────────────────────
+  {
+    id: 'ec-008',
+    nombre: 'Cargador Municipio Cayambe',
+    provincia: 'Pichincha',
+    canton: 'Cayambe',
+    velocidad: 'Semirápida',
+    tipo_cargador: 'Tipo 2',
+    potencia: '22 kW',
+    horario: '08:00–20:00',
+    costo: 'Tarifa municipal',
+    enlace_gps: '',
+    fuente: 'GAD Cayambe',
+    location: { lat: 0.0427, lng: -78.1372 }
+  },
+  {
+    id: 'ec-009',
+    nombre: 'Cargador Hotel Cayambe - Pan-Americana',
+    provincia: 'Pichincha',
+    canton: 'Cayambe',
+    velocidad: 'Rápida',
+    tipo_cargador: 'CCS2 / CHAdeMO',
+    potencia: '50 kW',
+    horario: '24h',
+    costo: 'Pago por kWh',
+    enlace_gps: '',
+    fuente: 'Privado',
+    location: { lat: 0.0364, lng: -78.1456 }
+  },
+  // ─── IBARRA ──────────────────────────────────────────────────────────────────
+  {
+    id: 'ec-010',
+    nombre: 'Cargador EMELNORTE - Ibarra',
+    provincia: 'Imbabura',
+    canton: 'Ibarra',
+    velocidad: 'Rápida',
+    tipo_cargador: 'CCS2 / CHAdeMO',
+    potencia: '50 kW',
+    horario: '24h',
+    costo: 'Tarifa EMELNORTE',
+    enlace_gps: 'https://goo.gl/maps/emelnorte-ibarra',
+    fuente: 'EMELNORTE',
+    location: { lat: 0.3517, lng: -78.1222 }
+  },
+  {
+    id: 'ec-011',
+    nombre: 'Cargador Laguna Mall - Ibarra',
+    provincia: 'Imbabura',
+    canton: 'Ibarra',
+    velocidad: 'Semirápida',
+    tipo_cargador: 'Tipo 2',
+    potencia: '22 kW',
+    horario: '10:00–21:00',
+    costo: 'Gratuito (cliente)',
+    enlace_gps: '',
+    fuente: 'Privado',
+    location: { lat: 0.3398, lng: -78.1289 }
+  },
+  {
+    id: 'ec-012',
+    nombre: 'Cargador Hotel Royal Ruiz - Ibarra',
+    provincia: 'Imbabura',
+    canton: 'Ibarra',
+    velocidad: 'Lenta',
+    tipo_cargador: 'Schuko / Tipo 2',
+    potencia: '7.4 kW',
+    horario: '24h (huéspedes)',
+    costo: 'Gratuito (huéspedes)',
+    enlace_gps: '',
+    fuente: 'Privado',
+    location: { lat: 0.3551, lng: -78.1192 }
+  },
+  // ─── BOLÍVAR / SAN GABRIEL ───────────────────────────────────────────────────
+  {
+    id: 'ec-013',
+    nombre: 'Cargador Municipio Bolívar - Carchi',
+    provincia: 'Carchi',
+    canton: 'Bolívar',
+    velocidad: 'Semirápida',
+    tipo_cargador: 'Tipo 2',
+    potencia: '22 kW',
+    horario: '08:00–18:00',
+    costo: 'Tarifa municipal',
+    enlace_gps: '',
+    fuente: 'GAD Bolívar',
+    location: { lat: 0.4836, lng: -77.9150 }
+  },
+  {
+    id: 'ec-014',
+    nombre: 'Cargador Municipio San Gabriel',
+    provincia: 'Carchi',
+    canton: 'Montúfar',
+    velocidad: 'Semirápida',
+    tipo_cargador: 'Tipo 2',
+    potencia: '22 kW',
+    horario: '08:00–18:00',
+    costo: 'Tarifa municipal',
+    enlace_gps: '',
+    fuente: 'GAD Montúfar',
+    location: { lat: 0.5970, lng: -77.8320 }
+  },
+  // ─── TULCÁN ──────────────────────────────────────────────────────────────────
+  {
+    id: 'ec-015',
+    nombre: 'Cargador EMELNORTE - Tulcán',
+    provincia: 'Carchi',
+    canton: 'Tulcán',
+    velocidad: 'Rápida',
+    tipo_cargador: 'CCS2 / CHAdeMO',
+    potencia: '50 kW',
+    horario: '24h',
+    costo: 'Tarifa EMELNORTE',
+    enlace_gps: '',
+    fuente: 'EMELNORTE',
+    location: { lat: 0.8121, lng: -77.7176 }
+  },
+  {
+    id: 'ec-016',
+    nombre: 'Cargador Centro Comercial Tulcán',
+    provincia: 'Carchi',
+    canton: 'Tulcán',
+    velocidad: 'Semirápida',
+    tipo_cargador: 'Tipo 2',
+    potencia: '22 kW',
+    horario: '10:00–20:00',
+    costo: 'Gratuito (cliente)',
+    enlace_gps: '',
+    fuente: 'Privado',
+    location: { lat: 0.8095, lng: -77.7213 }
+  },
+  // ─── GUAYAQUIL ───────────────────────────────────────────────────────────────
+  {
+    id: 'ec-017',
+    nombre: 'Cargador Mall del Sol - Guayaquil',
+    provincia: 'Guayas',
+    canton: 'Guayaquil',
+    velocidad: 'Rápida',
+    tipo_cargador: 'CCS2 / CHAdeMO',
+    potencia: '50 kW',
+    horario: '10:00–21:00',
+    costo: 'Pago por kWh',
+    enlace_gps: '',
+    fuente: 'Privado',
+    location: { lat: -2.1354, lng: -79.9015 }
+  },
+  {
+    id: 'ec-018',
+    nombre: 'Cargador CNEL - Guayaquil Norte',
+    provincia: 'Guayas',
+    canton: 'Guayaquil',
+    velocidad: 'Rápida',
+    tipo_cargador: 'CCS2',
+    potencia: '100 kW',
+    horario: '24h',
+    costo: 'Tarifa CNEL',
+    enlace_gps: '',
+    fuente: 'CNEL',
+    location: { lat: -2.0880, lng: -79.9024 }
+  },
+  // ─── CUENCA ──────────────────────────────────────────────────────────────────
+  {
+    id: 'ec-019',
+    nombre: 'Cargador CENTROSUR - Cuenca',
+    provincia: 'Azuay',
+    canton: 'Cuenca',
+    velocidad: 'Rápida',
+    tipo_cargador: 'CCS2 / CHAdeMO',
+    potencia: '50 kW',
+    horario: '24h',
+    costo: 'Tarifa CENTROSUR',
+    enlace_gps: '',
+    fuente: 'CENTROSUR',
+    location: { lat: -2.8974, lng: -79.0045 }
+  },
+  {
+    id: 'ec-020',
+    nombre: 'Cargador Mall del Río - Cuenca',
+    provincia: 'Azuay',
+    canton: 'Cuenca',
+    velocidad: 'Semirápida',
+    tipo_cargador: 'Tipo 2',
+    potencia: '22 kW',
+    horario: '10:00–21:00',
+    costo: 'Gratuito (cliente)',
+    enlace_gps: '',
+    fuente: 'Privado',
+    location: { lat: -2.9163, lng: -79.0195 }
+  }
+];

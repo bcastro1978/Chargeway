@@ -1,0 +1,431 @@
+[
+  {
+    "id": "byd-yuan-plus",
+    "brand": "BYD",
+    "model": "Yuan Plus (Atto 3)",
+    "specs": {
+      "usable_battery_kwh": 60.48,
+      "drag_coefficient": 0.29,
+      "frontal_area_m2": 2.5,
+      "weight_kg": 1750,
+      "peak_charging_kw": 88,
+      "wltp_range_km": 420
+    }
+  },
+  {
+    "id": "byd-yuan-pro",
+    "brand": "BYD",
+    "model": "Yuan Pro",
+    "specs": {
+      "usable_battery_kwh": 45.1,
+      "drag_coefficient": 0.31,
+      "frontal_area_m2": 2.4,
+      "weight_kg": 1580,
+      "peak_charging_kw": 65,
+      "wltp_range_km": 300
+    }
+  },
+  {
+    "id": "byd-dolphin-45",
+    "brand": "BYD",
+    "model": "Dolphin (44.9 kWh)",
+    "specs": {
+      "usable_battery_kwh": 44.9,
+      "drag_coefficient": 0.28,
+      "frontal_area_m2": 2.3,
+      "weight_kg": 1658,
+      "peak_charging_kw": 60,
+      "wltp_range_km": 340
+    }
+  },
+  {
+    "id": "byd-seagull-30",
+    "brand": "BYD",
+    "model": "Seagull (30 kWh)",
+    "specs": {
+      "usable_battery_kwh": 30.08,
+      "drag_coefficient": 0.29,
+      "frontal_area_m2": 2.1,
+      "weight_kg": 1160,
+      "peak_charging_kw": 30,
+      "wltp_range_km": 300
+    }
+  },
+  {
+    "id": "byd-seagull-38",
+    "brand": "BYD",
+    "model": "Seagull (38.8 kWh)",
+    "specs": {
+      "usable_battery_kwh": 38.88,
+      "drag_coefficient": 0.29,
+      "frontal_area_m2": 2.1,
+      "weight_kg": 1285,
+      "peak_charging_kw": 40,
+      "wltp_range_km": 400
+    }
+  },
+  {
+    "id": "byd-seal-awd",
+    "brand": "BYD",
+    "model": "Seal AWD",
+    "specs": {
+      "usable_battery_kwh": 82.5,
+      "drag_coefficient": 0.219,
+      "frontal_area_m2": 2.3,
+      "weight_kg": 2185,
+      "peak_charging_kw": 150,
+      "wltp_range_km": 520
+    }
+  },
+  {
+    "id": "byd-sealion-7",
+    "brand": "BYD",
+    "model": "Sealion 7 AWD",
+    "specs": {
+      "usable_battery_kwh": 82.5,
+      "drag_coefficient": 0.24,
+      "frontal_area_m2": 2.6,
+      "weight_kg": 2340,
+      "peak_charging_kw": 150,
+      "wltp_range_km": 456
+    }
+  },
+  {
+    "id": "byd-han-ev",
+    "brand": "BYD",
+    "model": "Han EV AWD",
+    "specs": {
+      "usable_battery_kwh": 85.4,
+      "drag_coefficient": 0.23,
+      "frontal_area_m2": 2.4,
+      "weight_kg": 2250,
+      "peak_charging_kw": 120,
+      "wltp_range_km": 521
+    }
+  },
+  {
+    "id": "byd-tang-ev",
+    "brand": "BYD",
+    "model": "Tang EV",
+    "specs": {
+      "usable_battery_kwh": 86.4,
+      "drag_coefficient": 0.33,
+      "frontal_area_m2": 2.8,
+      "weight_kg": 2489,
+      "peak_charging_kw": 110,
+      "wltp_range_km": 400
+    }
+  },
+  {
+    "id": "byd-song-plus-ev",
+    "brand": "BYD",
+    "model": "Song Plus EV",
+    "specs": {
+      "usable_battery_kwh": 71.8,
+      "drag_coefficient": 0.32,
+      "frontal_area_m2": 2.7,
+      "weight_kg": 1920,
+      "peak_charging_kw": 140,
+      "wltp_range_km": 505
+    }
+  },
+  {
+    "id": "kia-ev3-long-range",
+    "brand": "Kia",
+    "model": "EV3 Long Range",
+    "specs": {
+      "usable_battery_kwh": 81.4,
+      "drag_coefficient": 0.263,
+      "frontal_area_m2": 2.5,
+      "weight_kg": 1885,
+      "peak_charging_kw": 128,
+      "wltp_range_km": 600
+    }
+  },
+  {
+    "id": "kia-ev5-standard",
+    "brand": "Kia",
+    "model": "EV5 (64.2 kWh)",
+    "specs": {
+      "usable_battery_kwh": 64.2,
+      "drag_coefficient": 0.29,
+      "frontal_area_m2": 2.8,
+      "weight_kg": 1870,
+      "peak_charging_kw": 102,
+      "wltp_range_km": 400
+    }
+  },
+  {
+    "id": "kia-ev6-77-rwd",
+    "brand": "Kia",
+    "model": "EV6 (77.4 kWh) RWD",
+    "specs": {
+      "usable_battery_kwh": 77.4,
+      "drag_coefficient": 0.28,
+      "frontal_area_m2": 2.6,
+      "weight_kg": 1985,
+      "peak_charging_kw": 233,
+      "wltp_range_km": 528
+    }
+  },
+  {
+    "id": "kia-niro-ev",
+    "brand": "Kia",
+    "model": "Niro EV (64 kWh)",
+    "specs": {
+      "usable_battery_kwh": 64.8,
+      "drag_coefficient": 0.29,
+      "frontal_area_m2": 2.5,
+      "weight_kg": 1739,
+      "peak_charging_kw": 80,
+      "wltp_range_km": 460
+    }
+  },
+  {
+    "id": "kia-ev9-awd",
+    "brand": "Kia",
+    "model": "EV9 GT-Line (99.8 kWh)",
+    "specs": {
+      "usable_battery_kwh": 96.0,
+      "drag_coefficient": 0.28,
+      "frontal_area_m2": 3.2,
+      "weight_kg": 2560,
+      "peak_charging_kw": 210,
+      "wltp_range_km": 505
+    }
+  },
+  {
+    "id": "renault-kwid-etech",
+    "brand": "Renault",
+    "model": "Kwid E-Tech",
+    "specs": {
+      "usable_battery_kwh": 26.8,
+      "drag_coefficient": 0.33,
+      "frontal_area_m2": 2.1,
+      "weight_kg": 977,
+      "peak_charging_kw": 30,
+      "wltp_range_km": 220
+    }
+  },
+  {
+    "id": "renault-megane-etech",
+    "brand": "Renault",
+    "model": "Megane E-Tech",
+    "specs": {
+      "usable_battery_kwh": 60.0,
+      "drag_coefficient": 0.29,
+      "frontal_area_m2": 2.4,
+      "weight_kg": 1636,
+      "peak_charging_kw": 130,
+      "wltp_range_km": 450
+    }
+  },
+  {
+    "id": "hyundai-ioniq5-77",
+    "brand": "Hyundai",
+    "model": "Ioniq 5 (77.4 kWh) AWD",
+    "specs": {
+      "usable_battery_kwh": 77.4,
+      "drag_coefficient": 0.288,
+      "frontal_area_m2": 2.65,
+      "weight_kg": 2100,
+      "peak_charging_kw": 233,
+      "wltp_range_km": 507
+    }
+  },
+  {
+    "id": "hyundai-kona-ev",
+    "brand": "Hyundai",
+    "model": "Kona EV (64 kWh)",
+    "specs": {
+      "usable_battery_kwh": 64.0,
+      "drag_coefficient": 0.29,
+      "frontal_area_m2": 2.4,
+      "weight_kg": 1685,
+      "peak_charging_kw": 77,
+      "wltp_range_km": 484
+    }
+  },
+  {
+    "id": "mg-zs-ev-72",
+    "brand": "MG",
+    "model": "ZS EV Long Range",
+    "specs": {
+      "usable_battery_kwh": 72.6,
+      "drag_coefficient": 0.33,
+      "frontal_area_m2": 2.6,
+      "weight_kg": 1620,
+      "peak_charging_kw": 92,
+      "wltp_range_km": 440
+    }
+  },
+  {
+    "id": "mg-marvel-r",
+    "brand": "MG",
+    "model": "Marvel R AWD",
+    "specs": {
+      "usable_battery_kwh": 70.0,
+      "drag_coefficient": 0.29,
+      "frontal_area_m2": 2.6,
+      "weight_kg": 1920,
+      "peak_charging_kw": 92,
+      "wltp_range_km": 370
+    }
+  },
+  {
+    "id": "skywell-et5",
+    "brand": "Skywell",
+    "model": "ET5 (72 kWh)",
+    "specs": {
+      "usable_battery_kwh": 71.98,
+      "drag_coefficient": 0.32,
+      "frontal_area_m2": 2.7,
+      "weight_kg": 1920,
+      "peak_charging_kw": 100,
+      "wltp_range_km": 400
+    }
+  },
+  {
+    "id": "dongfeng-friday",
+    "brand": "Dongfeng",
+    "model": "Friday EV (85.9 kWh)",
+    "specs": {
+      "usable_battery_kwh": 85.9,
+      "drag_coefficient": 0.33,
+      "frontal_area_m2": 2.6,
+      "weight_kg": 2000,
+      "peak_charging_kw": 80,
+      "wltp_range_km": 510
+    }
+  },
+  {
+    "id": "dongfeng-box",
+    "brand": "Dongfeng",
+    "model": "Box (42.3 kWh)",
+    "specs": {
+      "usable_battery_kwh": 42.3,
+      "drag_coefficient": 0.29,
+      "frontal_area_m2": 2.3,
+      "weight_kg": 1315,
+      "peak_charging_kw": 50,
+      "wltp_range_km": 310
+    }
+  },
+  {
+    "id": "audi-etron-55",
+    "brand": "Audi",
+    "model": "e-tron 55 quattro",
+    "specs": {
+      "usable_battery_kwh": 86.5,
+      "drag_coefficient": 0.28,
+      "frontal_area_m2": 2.65,
+      "weight_kg": 2565,
+      "peak_charging_kw": 150,
+      "wltp_range_km": 436
+    }
+  },
+  {
+    "id": "audi-etron-gt",
+    "brand": "Audi",
+    "model": "e-tron GT quattro",
+    "specs": {
+      "usable_battery_kwh": 83.7,
+      "drag_coefficient": 0.24,
+      "frontal_area_m2": 2.35,
+      "weight_kg": 2276,
+      "peak_charging_kw": 270,
+      "wltp_range_km": 488
+    }
+  },
+  {
+    "id": "porsche-taycan-4s",
+    "brand": "Porsche",
+    "model": "Taycan 4S (Plus)",
+    "specs": {
+      "usable_battery_kwh": 83.7,
+      "drag_coefficient": 0.22,
+      "frontal_area_m2": 2.33,
+      "weight_kg": 2220,
+      "peak_charging_kw": 270,
+      "wltp_range_km": 464
+    }
+  },
+  {
+    "id": "nissan-leaf-40",
+    "brand": "Nissan",
+    "model": "Leaf (40 kWh)",
+    "specs": {
+      "usable_battery_kwh": 39.0,
+      "drag_coefficient": 0.28,
+      "frontal_area_m2": 2.3,
+      "weight_kg": 1580,
+      "peak_charging_kw": 50,
+      "wltp_range_km": 270
+    }
+  },
+  {
+    "id": "tesla-m3-rwd",
+    "brand": "Tesla",
+    "model": "Model 3 RWD",
+    "specs": {
+      "usable_battery_kwh": 57.5,
+      "drag_coefficient": 0.219,
+      "frontal_area_m2": 2.22,
+      "weight_kg": 1765,
+      "peak_charging_kw": 170,
+      "wltp_range_km": 513
+    }
+  },
+  {
+    "id": "geely-geometry-c",
+    "brand": "Geely",
+    "model": "Geometry C",
+    "specs": {
+      "usable_battery_kwh": 70.0,
+      "drag_coefficient": 0.273,
+      "frontal_area_m2": 2.45,
+      "weight_kg": 1685,
+      "peak_charging_kw": 75,
+      "wltp_range_km": 460
+    }
+  },
+  {
+    "id": "gac-aion-y-plus",
+    "brand": "GAC Aion",
+    "model": "Y Plus",
+    "specs": {
+      "usable_battery_kwh": 63.2,
+      "drag_coefficient": 0.278,
+      "frontal_area_m2": 2.55,
+      "weight_kg": 1730,
+      "peak_charging_kw": 80,
+      "wltp_range_km": 410
+    }
+  },
+  {
+    "id": "volvo-ex30",
+    "brand": "Volvo",
+    "model": "EX30 Ultra Single Motor",
+    "specs": {
+      "usable_battery_kwh": 64.0,
+      "drag_coefficient": 0.28,
+      "frontal_area_m2": 2.42,
+      "weight_kg": 1850,
+      "peak_charging_kw": 153,
+      "wltp_range_km": 476
+    }
+  },
+  {
+    "id": "chevrolet-bolt-euv",
+    "brand": "Chevrolet",
+    "model": "Bolt EUV",
+    "specs": {
+      "usable_battery_kwh": 65.0,
+      "drag_coefficient": 0.32,
+      "frontal_area_m2": 2.58,
+      "weight_kg": 1669,
+      "peak_charging_kw": 50,
+      "wltp_range_km": 397
+    }
+  }
+]

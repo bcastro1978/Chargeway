@@ -1,0 +1,5 @@
+BEGIN;
+INSERT INTO public.charging_points (region, province, city_or_canton, name, speed, charger_type, power, schedule, cost_type, gps_link, lat, lng) VALUES ('Desconocida', 'Desconocida', 'Desconocida', 'Manabi - Portoviejo- PEAJE MANTA PORTOVIEJO', 'Desconocida', 'Tomacorriente', '220v 32A (Pata de gallina) 7kw', '24/7-', 'Desconocido', 'https://maps.app.goo.gl/5K6wcguAyPUKsrq3A', NULL, NULL);
+INSERT INTO public.charging_points (region, province, city_or_canton, name, speed, charger_type, power, schedule, cost_type, gps_link, lat, lng) VALUES ('Desconocida', 'Desconocida', 'Desconocida', 'Quito Centro comercial Montufar', 'Desconocida', 'Pared', 'tipo 1 (7kw) ADAPTADOR', '9am a 5pm', 'Desconocido', 'https://maps.app.goo.gl/evx2pQhJHXFsSw3T9', NULL, NULL);
+INSERT INTO public.charging_points (region, province, city_or_canton, name, speed, charger_type, power, schedule, cost_type, gps_link, lat, lng) VALUES ('Desconocida', 'Desconocida', 'Desconocida', 'Quito Plaza Marquesina', 'Desconocida', 'Pared', 'tipo 2 (7kw)', 'tarde', 'Desconocido', 'https://maps.app.goo.gl/UoeHfWeAxjwCACLc7', NULL, NULL);
+COMMIT;

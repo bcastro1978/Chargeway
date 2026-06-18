@@ -1,0 +1,34 @@
+{
+  "common": {
+    "app_name": "ChargeWay",
+    "tagline": "Drive with Electric Tranquility",
+    "next": "Next",
+    "back": "Back",
+    "save": "Save",
+    "cancel": "Cancel"
+  },
+  "onboarding": {
+    "title": "Welcome to ChargeWay",
+    "subtitle": "Stop range anxiety by configuring your vehicle",
+    "select_vehicle": "Select your Vehicle",
+    "vehicle_specs": "Technical Specs",
+    "battery_capacity": "Battery Capacity",
+    "range_est": "Estimated Range"
+  },
+  "dashboard": {
+    "tranquility_index": "Tranquility Index",
+    "status_optimal": "Optimal",
+    "status_warning": "Warning",
+    "status_critical": "Critical",
+    "remaining_soc": "Remaining SoC",
+    "estimated_range": "Estimared Range",
+    "next_charger": "Next Charging Point",
+    "update_soc": "Update SoC"
+  },
+  "routing": {
+    "origin": "Origin",
+    "destination": "Destination",
+    "plan_route": "Plan Route",
+    "elevation_profile": "Elevation Profile"
+  }
+}
