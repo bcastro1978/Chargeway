@@ -9,9 +9,37 @@ import { ChargerCard } from '@/components/Dashboard/ChargerCard';
 import { VehicleSelector } from '@/components/Dashboard/VehicleSelector';
 import { RouteSearch, Waypoint } from '@/components/Dashboard/RouteSearch';
 import { AuthButton } from '@/components/Dashboard/AuthButton';
-import { Loader2 } from 'lucide-react';
+import { Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { fetchAllEcuadorChargers, Charger } from '@/lib/services/charging';
 import { useTripStore } from '@/lib/store/useTripStore';
+
+const EV_FACTS = [
+  {
+    icon: '🔋',
+    title: 'Frenado Regenerativo',
+    description: 'Las pendientes de Ecuador permiten recuperar hasta un 15% de autonomía al descender usando el motor como generador.'
+  },
+  {
+    icon: '⛰️',
+    title: 'Efecto de la Altitud',
+    description: 'La densidad del aire disminuye con la altitud, reduciendo la fricción aerodinámica y mejorando la eficiencia en la sierra.'
+  },
+  {
+    icon: '🔌',
+    title: 'Velocidad de Carga',
+    description: 'La carga DC (Rápida) protege la vida útil de la celda al regular automáticamente la potencia a partir del 80% de SoC.'
+  },
+  {
+    icon: '🌡️',
+    title: 'Temperatura y Vida Útil',
+    description: 'Mantener la batería entre el 20% y 80% de carga minimiza el estrés térmico y maximiza los ciclos de vida útil.'
+  },
+  {
+    icon: '⚡',
+    title: 'Torque Instantáneo',
+    description: 'Los motores eléctricos entregan todo su torque desde 0 RPM, brindando una aceleración inmediata y eficiente en subidas empinadas.'
+  }
+];
 
 export default function Home() {
   const {
@@ -39,6 +67,22 @@ export default function Home() {
 
   const [allChargers, setAllChargers] = useState<Charger[]>([]);
   const [hoveredSegment, setHoveredSegment] = useState<number | null>(null);
+  const [currentFactIndex, setCurrentFactIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentFactIndex((prevIndex) => (prevIndex + 1) % EV_FACTS.length);
+    }, 6000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const handlePrevFact = () => {
+    setCurrentFactIndex((prev) => (prev - 1 + EV_FACTS.length) % EV_FACTS.length);
+  };
+
+  const handleNextFact = () => {
+    setCurrentFactIndex((prev) => (prev + 1) % EV_FACTS.length);
+  };
 
   useEffect(() => {
     fetchAllEcuadorChargers().then(setAllChargers).catch(console.error);
@@ -273,12 +317,6 @@ export default function Home() {
 
   return (
     <main className="p-4 md:p-8 max-w-7xl mx-auto min-h-screen relative">
-      {/* Floating Language Selector on Top Right */}
-      <div className="absolute right-4 top-4 md:right-8 md:top-8 z-50">
-        <div className="bg-neutral-800/50 backdrop-blur-md border border-neutral-700/50 px-4 py-2 rounded-full cursor-pointer hover:bg-neutral-700/50 transition-colors">
-          <span className="text-xs font-semibold text-neutral-300">ES | EN</span>
-        </div>
-      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[350px_1fr] gap-8 pt-4">
         {/* Left Sidebar */}
@@ -374,41 +412,55 @@ export default function Home() {
         <div className="flex flex-col gap-8">
           <section className="flex flex-col gap-8">
             {/* Información sobre vehículos eléctricos */}
-            <div className="h-40 bg-neutral-900/50 backdrop-blur-md border border-neutral-800 rounded-2xl p-4 flex flex-col justify-between overflow-hidden">
-              <h3 className="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                <span>ℹ️ Información sobre Vehículos Eléctricos (SolAI)</span>
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 flex-1">
-                {/* Fact 1 */}
-                <div className="bg-neutral-950/40 rounded-xl p-3 border border-neutral-800/40 flex flex-col justify-center">
+            <div className="h-44 bg-neutral-900/50 backdrop-blur-md border border-neutral-800 rounded-2xl p-4 flex flex-col justify-between overflow-hidden">
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-xs font-bold text-neutral-400 uppercase tracking-wider flex items-center gap-1.5">
+                  <span>INFORMACION SOBRE VEHICULOS ELECTRICOS</span>
+                </h3>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={handlePrevFact}
+                    className="p-1 rounded-lg hover:bg-neutral-800 text-neutral-400 hover:text-neutral-200 transition-colors"
+                    aria-label="Anterior"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={handleNextFact}
+                    className="p-1 rounded-lg hover:bg-neutral-800 text-neutral-400 hover:text-neutral-200 transition-colors"
+                    aria-label="Siguiente"
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+              
+              <div className="relative flex-1 flex flex-col justify-center min-h-0">
+                <div
+                  key={currentFactIndex}
+                  className="animate-fade-in bg-neutral-950/40 rounded-xl p-3 border border-neutral-800/40 flex flex-col justify-center h-full"
+                >
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-emerald-400 text-sm">🔋</span>
-                    <h4 className="text-[11px] font-bold text-neutral-200">Frenado Regenerativo</h4>
+                    <span className="text-emerald-400 text-sm">{EV_FACTS[currentFactIndex].icon}</span>
+                    <h4 className="text-[11px] font-bold text-neutral-200">{EV_FACTS[currentFactIndex].title}</h4>
                   </div>
                   <p className="text-[10px] text-neutral-400 leading-normal">
-                    Las pendientes de Ecuador permiten recuperar hasta un 15% de autonomía al descender usando el motor como generador.
+                    {EV_FACTS[currentFactIndex].description}
                   </p>
                 </div>
-                {/* Fact 2 */}
-                <div className="bg-neutral-950/40 rounded-xl p-3 border border-neutral-800/40 flex flex-col justify-center">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-amber-400 text-sm">⛰️</span>
-                    <h4 className="text-[11px] font-bold text-neutral-200">Efecto de la Altitud</h4>
-                  </div>
-                  <p className="text-[10px] text-neutral-400 leading-normal">
-                    La densidad del aire disminuye con la altitud, reduciendo la fricción aerodinámica y mejorando la eficiencia en la sierra.
-                  </p>
-                </div>
-                {/* Fact 3 */}
-                <div className="bg-neutral-950/40 rounded-xl p-3 border border-neutral-800/40 flex flex-col justify-center">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-blue-400 text-sm">🔌</span>
-                    <h4 className="text-[11px] font-bold text-neutral-200">Velocidad de Carga</h4>
-                  </div>
-                  <p className="text-[10px] text-neutral-400 leading-normal">
-                    La carga DC (Rápida) protege la vida útil de la celda al regular automáticamente la potencia a partir del 80% de SoC.
-                  </p>
-                </div>
+              </div>
+
+              <div className="flex justify-center gap-1.5 mt-2">
+                {EV_FACTS.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentFactIndex(index)}
+                    className={`w-1.5 h-1.5 rounded-full transition-all ${
+                      currentFactIndex === index ? 'bg-emerald-500 w-3' : 'bg-neutral-700 hover:bg-neutral-600'
+                    }`}
+                    aria-label={`Ir al hecho ${index + 1}`}
+                  />
+                ))}
               </div>
             </div>
 

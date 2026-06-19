@@ -76,3 +76,20 @@ h1, h2, h3, h4, h5, h6 {
     box-shadow: 0 0 20px rgba(245,158,11,1), 0 0 40px rgba(245,158,11,0.6);
   }
 }
+
+/* Custom fade-in for carousel transitions */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
