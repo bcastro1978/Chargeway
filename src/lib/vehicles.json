@@ -492,5 +492,96 @@
       "peak_charging_kw": 80,
       "wltp_range_km": 364
     }
+  },
+  {
+    "id": "jac-e30x",
+    "brand": "JAC",
+    "model": "E30X",
+    "specs": {
+      "usable_battery_kwh": 51.5,
+      "drag_coefficient": 0.29,
+      "frontal_area_m2": 2.3,
+      "weight_kg": 1450,
+      "peak_charging_kw": 60,
+      "wltp_range_km": 374
+    }
+  },
+  {
+    "id": "leapmotor-t03",
+    "brand": "Leapmotor",
+    "model": "T03",
+    "specs": {
+      "usable_battery_kwh": 36.0,
+      "drag_coefficient": 0.32,
+      "frontal_area_m2": 2.2,
+      "weight_kg": 1125,
+      "peak_charging_kw": 45,
+      "wltp_range_km": 280
+    }
+  },
+  {
+    "id": "leapmotor-c10",
+    "brand": "Leapmotor",
+    "model": "C10 EV",
+    "specs": {
+      "usable_battery_kwh": 69.9,
+      "drag_coefficient": 0.28,
+      "frontal_area_m2": 2.6,
+      "weight_kg": 1800,
+      "peak_charging_kw": 80,
+      "wltp_range_km": 420
+    }
+  },
+  {
+    "id": "chevrolet-equinox-ev",
+    "brand": "Chevrolet",
+    "model": "Equinox EV FWD",
+    "specs": {
+      "usable_battery_kwh": 85.0,
+      "drag_coefficient": 0.30,
+      "frontal_area_m2": 2.6,
+      "weight_kg": 2233,
+      "peak_charging_kw": 150,
+      "wltp_range_km": 513
+    }
+  },
+  {
+    "id": "gac-aion-ut",
+    "brand": "GAC Aion",
+    "model": "UT",
+    "specs": {
+      "usable_battery_kwh": 44.1,
+      "drag_coefficient": 0.28,
+      "frontal_area_m2": 2.4,
+      "weight_kg": 1450,
+      "peak_charging_kw": 60,
+      "wltp_range_km": 330
+    }
+  },
+  {
+    "id": "gac-aion-es",
+    "brand": "GAC Aion",
+    "model": "ES",
+    "specs": {
+      "usable_battery_kwh": 55.2,
+      "drag_coefficient": 0.27,
+      "frontal_area_m2": 2.4,
+      "weight_kg": 1665,
+      "peak_charging_kw": 60,
+      "wltp_range_km": 320
+    }
+  },
+  {
+    "id": "gac-aion-v",
+    "brand": "GAC Aion",
+    "model": "V",
+    "specs": {
+      "usable_battery_kwh": 75.0,
+      "drag_coefficient": 0.29,
+      "frontal_area_m2": 2.7,
+      "weight_kg": 1880,
+      "peak_charging_kw": 180,
+      "wltp_range_km": 510
+    }
   }
 ]
