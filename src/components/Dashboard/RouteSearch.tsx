@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Plus, MapPin, Loader2, GripVertical, ArrowUpDown, X } from 'lucide-react';
+import { Plus, MapPin, Loader2, GripVertical, ArrowUpDown, X, Trash2 } from 'lucide-react';
 import { fetchSuggestions, SearchSuggestion } from '../../lib/services/mapbox';
 
 export interface Waypoint {
@@ -332,6 +332,13 @@ export const RouteSearch: React.FC<RouteSearchProps> = ({ locations, onChange })
     onChange(newLocations);
   };
 
+  const clearRoute = () => {
+    onChange([
+      { id: 'origin', name: '', lat: 0, lng: 0 },
+      { id: 'destination', name: '', lat: 0, lng: 0 }
+    ]);
+  };
+
   const handleDrop = (toIdx: number) => {
     const fromIdx = dragIdx.current;
     if (fromIdx === null || fromIdx === toIdx) return;
@@ -414,13 +421,22 @@ export const RouteSearch: React.FC<RouteSearchProps> = ({ locations, onChange })
     <div className="glass-card" style={{ padding: 'var(--spacing-lg)', display: 'flex', flexDirection: 'column', gap: 'var(--spacing-md)' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h3 style={{ fontSize: '1rem', fontWeight: 600 }}>Planificar Ruta</h3>
-        <button
-          onClick={swapOriginDestination}
-          style={{ background: 'none', border: 'none', color: 'var(--color-primary)', cursor: 'pointer', padding: '4px' }}
-          title="Invertir ruta"
-        >
-          <ArrowUpDown size={18} />
-        </button>
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <button
+            onClick={swapOriginDestination}
+            style={{ background: 'none', border: 'none', color: 'var(--color-primary)', cursor: 'pointer', padding: '4px' }}
+            title="Invertir ruta"
+          >
+            <ArrowUpDown size={18} />
+          </button>
+          <button
+            onClick={clearRoute}
+            style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', padding: '4px' }}
+            title="Borrar ruta"
+          >
+            <Trash2 size={18} />
+          </button>
+        </div>
       </div>
 
       <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: 'var(--spacing-sm)' }}>

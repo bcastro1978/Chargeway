@@ -106,7 +106,22 @@ export default function Home() {
       lng
     };
     const newRoute = [...routePoints];
-    newRoute.splice(newRoute.length - 1, 0, newPoint);
+    
+    // Find if there is any empty point (origin, destination or waypoint) to fill first
+    const emptyIndex = newRoute.findIndex(p => !p.name.trim() || (p.lat === 0 && p.lng === 0));
+    
+    if (emptyIndex !== -1) {
+      newRoute[emptyIndex] = {
+        ...newRoute[emptyIndex],
+        name: `Punto en el mapa (${lat.toFixed(4)}, ${lng.toFixed(4)})`,
+        lat,
+        lng
+      };
+    } else {
+      // If all are filled, add it as a new waypoint before destination
+      newRoute.splice(newRoute.length - 1, 0, newPoint);
+    }
+    
     setRoutePoints(newRoute);
   };
 
