@@ -73,13 +73,6 @@ const SearchInput: React.FC<SearchInputProps> = ({
       if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
         if (pendingAutoSelect.current) clearTimeout(pendingAutoSelect.current);
         pendingAutoSelect.current = setTimeout(() => {
-          const current = latestSuggestions.current;
-          if (current.length > 0) {
-            const first = current[0];
-            onSelect({ id: first.id, name: first.name, lng: first.center[0], lat: first.center[1] });
-            setQuery(first.name);
-            onTextChange?.(first.name);
-          }
           setSuggestions([]);
           setShowSuggestions(false);
           onFocusChangeRef.current?.(false);
