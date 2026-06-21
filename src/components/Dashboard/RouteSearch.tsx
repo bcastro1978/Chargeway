@@ -107,7 +107,6 @@ const SearchInput: React.FC<SearchInputProps> = ({
     if (pendingAutoSelect.current) clearTimeout(pendingAutoSelect.current);
     onSelect({ id: s.id, name: s.name, lng: s.center[0], lat: s.center[1] });
     setQuery(s.name);
-    onTextChange?.(s.name);
     setSuggestions([]);
     setShowSuggestions(false);
     onFocusChange?.(false);
