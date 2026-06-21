@@ -112,7 +112,7 @@ export const RouteDistanceCard: React.FC<RouteDistanceCardProps> = ({
           <MapPin size={16} className="text-emerald-400 shrink-0" />
           <div>
             <span className="text-xs text-neutral-500 block">Llegas con</span>
-            <p className={`text-sm font-bold ${getStatusColor()}`}>{Math.round(arrivalSoc * 100)}% ({arrivalRangeKm} km)</p>
+            <p className={`text-sm font-bold ${getStatusColor()}`}>{Math.round(arrivalSoc * 100)}%</p>
           </div>
           {/* Tooltip */}
           <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block w-52 bg-neutral-950/95 text-[11px] text-neutral-300 p-2.5 rounded-lg border border-neutral-800 shadow-xl shadow-black/50 z-50 pointer-events-none">
