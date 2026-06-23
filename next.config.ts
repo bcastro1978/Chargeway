@@ -8,6 +8,9 @@ const withPWA = require("@ducanh2912/next-pwa").default({
   // Caching settings for Mapbox and API
   cacheOnFrontEndNav: true,
   aggressiveFrontEndNavCaching: true,
+  manifest: {
+    filePath: "public/manifest.json"
+  }
 });
 
 const nextConfig: NextConfig = {
