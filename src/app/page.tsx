@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState, useMemo } from 'react';
 import { RouteDistanceCard } from '@/components/Dashboard/RouteDistanceCard';
-import { VehicleStats } from '@/components/Dashboard/VehicleStats';
 import { RouteMap } from '@/components/Map/RouteMap';
 import { ElevationProfile } from '@/components/Dashboard/ElevationProfile';
 import { ChargerCard } from '@/components/Dashboard/ChargerCard';
@@ -336,24 +335,16 @@ export default function Home() {
       <div className="grid grid-cols-1 lg:grid-cols-[350px_1fr] gap-8 pt-4">
         {/* Left Sidebar */}
         <aside className="flex flex-col gap-6">
-          <div className="flex justify-center mb-1">
-            <img 
-              src="/logo.png" 
-              alt="ChargeWay Logo" 
-              className="w-40 h-40 rounded-3xl object-cover border border-neutral-800 shadow-[0_0_30px_rgba(16,185,129,0.3)]"
-            />
-          </div>
           <AuthButton />
-          <VehicleSelector selectedId={selectedVehicle.id} onSelect={setSelectedVehicle} />
+          <VehicleSelector 
+            selectedId={selectedVehicle.id} 
+            onSelect={setSelectedVehicle} 
+            soc={soc}
+            onSocChange={setSoc}
+            rangeKm={Math.round(selectedVehicle.specs.wltp_range_km * soc)}
+          />
 
           <RouteSearch locations={routePoints} onChange={handleRouteChange} />
-
-          <VehicleStats
-            model={selectedVehicle.model}
-            soc={soc}
-            rangeKm={Math.round(selectedVehicle.specs.wltp_range_km * soc)}
-            onSocChange={setSoc}
-          />
 
           {/* Action Buttons */}
           {isLoadingPlan ? (

@@ -21,9 +21,18 @@ export interface Vehicle {
 interface VehicleSelectorProps {
   selectedId: string;
   onSelect: (vehicle: Vehicle) => void;
+  soc: number;
+  onSocChange: (newSoc: number) => void;
+  rangeKm: number;
 }
 
-export const VehicleSelector: React.FC<VehicleSelectorProps> = ({ selectedId, onSelect }) => {
+export const VehicleSelector: React.FC<VehicleSelectorProps> = ({ 
+  selectedId, 
+  onSelect,
+  soc,
+  onSocChange,
+  rangeKm
+}) => {
   const selectedVehicle = vehiclesData.find(v => v.id === selectedId) || vehiclesData[0];
   
   // Extract unique brands
@@ -54,7 +63,7 @@ export const VehicleSelector: React.FC<VehicleSelectorProps> = ({ selectedId, on
   };
 
   return (
-    <div className="glass-card" style={{ padding: 'var(--spacing-md)' }}>
+    <div className="glass-card animate-fade-in" style={{ padding: 'var(--spacing-md)' }}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-sm)' }}>
         <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--color-text-dim)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
           Vehículo Seleccionado
@@ -130,6 +139,37 @@ export const VehicleSelector: React.FC<VehicleSelectorProps> = ({ selectedId, on
             </div>
             <div style={{ fontSize: '0.7rem', padding: '2px 8px', borderRadius: '4px', background: 'rgba(255, 255, 255, 0.1)', color: 'var(--color-text-dim)' }}>
               {selectedVehicle.specs.wltp_range_km} km WLTP
+            </div>
+          </div>
+        </div>
+
+        {/* Integrated Battery Charge SOC Slider & Specs */}
+        <div style={{ borderTop: '1px solid var(--color-outline)', paddingTop: 'var(--spacing-sm)', marginTop: 'var(--spacing-xs)', display: 'flex', flexDirection: 'column', gap: 'var(--spacing-sm)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ color: 'var(--color-primary)', fontWeight: 600, fontSize: '0.9rem' }}>Carga Actual</span>
+            <span style={{ fontSize: '1.75rem', fontWeight: 800 }}>{Math.round(soc * 100)}%</span>
+          </div>
+
+          <div style={{ padding: '4px 0' }}>
+            <input 
+              type="range" 
+              min="0" 
+              max="100" 
+              value={soc * 100} 
+              onChange={(e) => onSocChange(parseInt(e.target.value) / 100)}
+              style={{ width: '100%', cursor: 'pointer', accentColor: 'var(--color-primary)' }}
+            />
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.70rem', color: 'var(--color-text-dim)', marginTop: 'var(--spacing-xs)' }}>
+              <span>0%</span>
+              <span>Actualizar manualmente</span>
+              <span>100%</span>
+            </div>
+          </div>
+
+          <div style={{ marginTop: '4px' }}>
+            <div style={{ padding: '12px var(--spacing-md)', background: 'var(--color-surface-hover)', borderRadius: 'var(--radius-md)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: '0.75rem', color: 'var(--color-text-dim)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>AUTONOMÍA ESTIMADA</span>
+              <span style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--color-primary)' }}>{rangeKm} km</span>
             </div>
           </div>
         </div>

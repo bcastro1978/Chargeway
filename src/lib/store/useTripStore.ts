@@ -133,7 +133,17 @@ export const useTripStore = create<TripState>((set, get) => ({
           .single();
 
         if (profile) {
-          set({ user: profile });
+          const loadedState: Partial<TripState> = { user: profile };
+          if (profile.last_vehicle_id) {
+            const foundVehicle = vehicles.find(v => v.id === profile.last_vehicle_id);
+            if (foundVehicle) {
+              loadedState.selectedVehicle = foundVehicle as Vehicle;
+            }
+          }
+          if (profile.last_soc !== null && profile.last_soc !== undefined) {
+            loadedState.soc = Number(profile.last_soc);
+          }
+          set(loadedState);
         } else {
           const meta = session.user.user_metadata;
           set({
@@ -156,7 +166,7 @@ export const useTripStore = create<TripState>((set, get) => ({
   },
 
   saveTripToDatabase: async () => {
-    const { tripPlan, routePoints, selectedVehicle, user } = get();
+    const { tripPlan, routePoints, selectedVehicle, user, soc } = get();
     if (!tripPlan || !user) return;
 
     const origin = routePoints[0]?.name || 'Origen';
@@ -167,7 +177,7 @@ export const useTripStore = create<TripState>((set, get) => ({
       origin_name: origin,
       destination_name: destination,
       vehicle_model: `${selectedVehicle.brand} ${selectedVehicle.model}`,
-      start_soc: get().soc,
+      start_soc: soc,
       arrival_soc: tripPlan.arrivalSoc,
       distance_km: tripPlan.route.distance / 1000,
       duration_min: tripPlan.route.duration / 60,
@@ -176,11 +186,36 @@ export const useTripStore = create<TripState>((set, get) => ({
       waypoints: routePoints
     };
 
-    const { error } = await supabase.from('trips').insert([tripData]);
-    if (error) {
-      console.error('Error saving trip:', error.message);
+    // Save trip details
+    const { error: tripError } = await supabase.from('trips').insert([tripData]);
+    if (tripError) {
+      console.error('Error saving trip:', tripError.message);
     } else {
       console.log('Trip saved successfully!');
+    }
+
+    // Save vehicle preferences in user profile
+    const { error: profileError } = await supabase
+      .from('profiles')
+      .update({
+        last_vehicle_id: selectedVehicle.id,
+        last_soc: soc,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', user.id);
+
+    if (profileError) {
+      console.error('Error updating user profile preferences:', profileError.message);
+    } else {
+      // Update local state for user metadata
+      set({
+        user: {
+          ...user,
+          last_vehicle_id: selectedVehicle.id,
+          last_soc: soc
+        }
+      });
+      console.log('User profile preferences updated!');
     }
   }
 }));
