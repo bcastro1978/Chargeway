@@ -59,15 +59,7 @@ CREATE POLICY "Users can update their own consent"
   ON public.consent_records FOR UPDATE
   USING (auth.uid() = user_id);
 
--- Los administradores pueden auditar todos los registros de consentimiento
-CREATE POLICY "Admins can read all consents"
-  ON public.consent_records FOR SELECT
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.profiles
-      WHERE id = auth.uid() AND role = 'admin'
-    )
-  );
+-- (Política de admin removida temporalmente ya que la tabla profiles no tiene columna 'role')
 
 -- Función para actualizar updated_at automáticamente
 CREATE OR REPLACE FUNCTION public.update_consent_updated_at()
