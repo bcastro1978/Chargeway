@@ -20,7 +20,7 @@ Versión 1.0 | Vigente desde: junio 2025
 
 1. OBJETO Y ACEPTACIÓN
 
-ChargeWay es una plataforma digital de planificación de viajes para vehículos eléctricos en Ecuador, desarrollada y operada por ChargeWay S.A.S. (en adelante "ChargeWay"). El uso de la aplicación implica la lectura, comprensión y aceptación plena e irrestricta de los presentes Términos y Condiciones.
+ChargeWay es una plataforma digital de planificación de viajes para vehículos eléctricos en Ecuador, desarrollada y operada por SolAI (en adelante "ChargeWay"). El uso de la aplicación implica la lectura, comprensión y aceptación plena e irrestricta de los presentes Términos y Condiciones.
 
 2. DESCRIPCIÓN DEL SERVICIO
 
@@ -46,7 +46,7 @@ El usuario se compromete a:
 
 5. PROPIEDAD INTELECTUAL
 
-Todos los derechos sobre el software, diseño, marca y contenido de ChargeWay son propiedad de ChargeWay S.A.S. Queda prohibida cualquier reproducción total o parcial sin autorización escrita.
+Todos los derechos sobre el software, diseño, marca y contenido de ChargeWay son propiedad de SolAI. Queda prohibida cualquier reproducción total o parcial sin autorización escrita.
 
 6. DISPONIBILIDAD DEL SERVICIO
 
@@ -69,7 +69,7 @@ Los presentes Términos se rigen por las leyes de la República del Ecuador. Par
 
 10. CONTACTO
 
-Para consultas legales: legal@chargeway.ec
+Para consultas legales: chargewayec@gmail.com
 `;
 
 const PRIVACY_TEXT = `
@@ -79,9 +79,8 @@ Conforme a la Ley Orgánica de Protección de Datos Personales (LOPDP) del Ecuad
 
 1. RESPONSABLE DEL TRATAMIENTO
 
-ChargeWay S.A.S., RUC: [PENDIENTE], con domicilio en Quito, Ecuador.
-Correo de contacto para datos personales: privacidad@chargeway.ec
-Delegado de Protección de Datos (DPO): [PENDIENTE]
+SolAI, con domicilio en Quito, Ecuador.
+Correo de contacto para datos personales: chargewayec@gmail.com
 
 2. DATOS QUE RECOPILAMOS
 
@@ -103,11 +102,8 @@ Los datos de movilidad son sometidos a un proceso técnico de ANONIMIZACIÓN IRR
 • Fabricantes de vehículos: análisis de participación de mercado por región, benchmarking entre marcas.
 Una vez anonimizados, los datos dejan de ser datos personales bajo la LOPDP y pueden ser tratados libremente con fines estadísticos.
 
-3.3 COMUNICACIONES PROMOCIONALES DE CHARGEWAY (base legal: consentimiento opt-in):
-Con tu autorización expresa, enviaremos actualizaciones sobre nuevas funcionalidades, electrolineras añadidas y consejos de conducción eficiente.
-
-3.4 TRANSFERENCIA A FABRICANTES SOCIOS (base legal: consentimiento opt-in explícito y separado):
-Con tu autorización expresa e independiente, compartiremos ÚNICAMENTE tu dirección de correo electrónico con fabricantes y concesionarios de vehículos eléctricos asociados a ChargeWay, para el envío de ofertas, invitaciones a pruebas de manejo y promociones exclusivas. Esta transferencia NO incluye datos de rutas ni de batería.
+3.3 COMUNICACIONES PROMOCIONALES (base legal: consentimiento opt-in):
+Con tu autorización expresa, enviaremos actualizaciones de ChargeWay y, si lo autorizas de forma independiente, compartiremos tu correo con fabricantes socios de vehículos eléctricos para el envío de ofertas exclusivas.
 
 4. PLAZO DE CONSERVACIÓN
 
@@ -126,17 +122,9 @@ Conforme al Capítulo IV de la LOPDP, tienes derecho a:
 • OPOSICIÓN: Oponerte a ciertos tratamientos, en particular los de marketing.
 • REVOCATORIA DEL CONSENTIMIENTO: Retirar en cualquier momento los consentimientos opcionales sin perjuicio para el acceso al servicio principal.
 
-Para ejercer tus derechos, escríbenos a: privacidad@chargeway.ec
+Para ejercer tus derechos, escríbenos a: chargewayec@gmail.com
 
-6. MEDIDAS DE SEGURIDAD
-
-ChargeWay implementa:
-• Cifrado TLS en todas las comunicaciones.
-• Almacenamiento en Supabase (infraestructura en AWS, región us-east-1) con Row Level Security habilitado.
-• Control de acceso basado en roles para los paneles administrativos.
-• Registros de auditoría de acceso a datos sensibles.
-
-7. MODIFICACIONES A ESTA POLÍTICA
+6. MODIFICACIONES A ESTA POLÍTICA
 
 Cualquier cambio sustancial será notificado por correo electrónico y requerirá nueva aceptación explícita del usuario antes de continuar usando la plataforma.
 `;
@@ -144,9 +132,12 @@ Cualquier cambio sustancial será notificado por correo electrónico y requerir�
 // ─── Componente ──────────────────────────────────────────────
 
 export interface ConsentChoices {
+  acceptedLegal: boolean;           // T&C + Política de Privacidad (obligatorio)
+  acceptedStatisticalUse: boolean;  // Uso estadístico anonimizado (obligatorio)
+  acceptedMarketingAll: boolean;    // Novedades ChargeWay + email a fabricantes (opcional)
+  // Keep legacy fields so DB insert doesn't break
   acceptedTerms: boolean;
   acceptedPrivacy: boolean;
-  acceptedStatisticalUse: boolean;
   acceptedMarketingChargeWay: boolean;
   acceptedMarketingBrands: boolean;
 }
@@ -273,18 +264,34 @@ const ConsentRow: React.FC<{
 
 export const ConsentModal: React.FC<ConsentModalProps> = ({ onAccept }) => {
   const [choices, setChoices] = useState<ConsentChoices>({
+    acceptedLegal: false,
+    acceptedStatisticalUse: false,
+    acceptedMarketingAll: false,
+    // mirror fields
     acceptedTerms: false,
     acceptedPrivacy: false,
-    acceptedStatisticalUse: false,
     acceptedMarketingChargeWay: false,
     acceptedMarketingBrands: false,
   });
   const [isSaving, setIsSaving] = useState(false);
 
-  const set = (key: keyof ConsentChoices) => (val: boolean) =>
-    setChoices(prev => ({ ...prev, [key]: val }));
+  const setField = (key: keyof ConsentChoices) => (val: boolean) => {
+    setChoices(prev => {
+      const next = { ...prev, [key]: val };
+      // Keep mirror fields in sync
+      if (key === 'acceptedLegal') {
+        next.acceptedTerms = val;
+        next.acceptedPrivacy = val;
+      }
+      if (key === 'acceptedMarketingAll') {
+        next.acceptedMarketingChargeWay = val;
+        next.acceptedMarketingBrands = val;
+      }
+      return next;
+    });
+  };
 
-  const requiredOk = choices.acceptedTerms && choices.acceptedPrivacy && choices.acceptedStatisticalUse;
+  const requiredOk = choices.acceptedLegal && choices.acceptedStatisticalUse;
 
   const handleSubmit = async () => {
     if (!requiredOk) return;
@@ -360,45 +367,30 @@ export const ConsentModal: React.FC<ConsentModalProps> = ({ onAccept }) => {
             </p>
 
             <ConsentRow
-              id="consent-terms"
-              checked={choices.acceptedTerms}
-              onChange={set('acceptedTerms')}
+              id="consent-legal"
+              checked={choices.acceptedLegal}
+              onChange={setField('acceptedLegal')}
               required
-              label="Acepto los Términos y Condiciones"
-              description="He leído y acepto los términos de uso de ChargeWay. Esta aceptación es obligatoria para utilizar la plataforma."
-            />
-            <ConsentRow
-              id="consent-privacy"
-              checked={choices.acceptedPrivacy}
-              onChange={set('acceptedPrivacy')}
-              required
-              label="Acepto la Política de Privacidad"
-              description="Entiendo cómo ChargeWay recopila, usa y protege mis datos personales conforme a la LOPDP de Ecuador."
+              label="Acepto los Términos, Condiciones y Política de Privacidad"
+              description="He leído y acepto los Términos y Condiciones de uso y la Política de Privacidad de ChargeWay (SolAI). Entiendo cómo se recopilan, usan y protegen mis datos conforme a la LOPDP de Ecuador."
             />
             <ConsentRow
               id="consent-stats"
               checked={choices.acceptedStatisticalUse}
-              onChange={set('acceptedStatisticalUse')}
+              onChange={setField('acceptedStatisticalUse')}
               required
               label="Autorizo el uso estadístico anonimizado de mis viajes"
-              description="Acepto que mis datos de rutas sean sometidos a anonimización irreversible y usados para análisis estadísticos de movilidad eléctrica en Ecuador. Una vez anonimizados, no se podrán vincular a mi identidad."
+              description="Acepto que mis datos de rutas sean sometidos a anonimización irreversible para análisis de movilidad eléctrica en Ecuador. Una vez anonimizados, no se podrán vincular a mi identidad."
             />
 
             <div style={{ height: '1px', background: 'rgba(255,255,255,0.05)' }} />
 
             <ConsentRow
-              id="consent-mkt-chargeWay"
-              checked={choices.acceptedMarketingChargeWay}
-              onChange={set('acceptedMarketingChargeWay')}
-              label="Deseo recibir novedades de ChargeWay"
-              description="Acepto recibir en mi correo electrónico actualizaciones sobre nuevas funcionalidades, electrolineras y consejos de manejo eficiente. Puedo cancelar en cualquier momento."
-            />
-            <ConsentRow
-              id="consent-mkt-brands"
-              checked={choices.acceptedMarketingBrands}
-              onChange={set('acceptedMarketingBrands')}
-              label="Autorizo compartir mi email con fabricantes de VE"
-              description="Acepto que ChargeWay comparta mi correo electrónico con fabricantes y concesionarios de vehículos eléctricos asociados para recibir ofertas y promociones exclusivas. Puedo revocar esta autorización en cualquier momento desde mi perfil."
+              id="consent-mkt-all"
+              checked={choices.acceptedMarketingAll}
+              onChange={setField('acceptedMarketingAll')}
+              label="Acepto comunicaciones de ChargeWay y fabricantes de VE"
+              description="Deseo recibir novedades de ChargeWay y autorizo compartir mi correo electrónico con fabricantes socios de vehículos eléctricos para recibir ofertas exclusivas. Puedo revocar esta autorización en cualquier momento desde mi perfil."
             />
           </div>
         </div>
@@ -415,7 +407,7 @@ export const ConsentModal: React.FC<ConsentModalProps> = ({ onAccept }) => {
           {!requiredOk && (
             <p style={{ fontSize: '0.68rem', color: '#f59e0b', display: 'flex', alignItems: 'center', gap: '4px', margin: 0 }}>
               <span>⚠️</span>
-              <span>Debes aceptar los tres consentimientos requeridos para continuar.</span>
+              <span>Debes aceptar los dos consentimientos requeridos para continuar.</span>
             </p>
           )}
           <button
