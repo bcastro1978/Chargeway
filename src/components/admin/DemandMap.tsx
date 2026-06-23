@@ -97,14 +97,14 @@ export const DemandMap: React.FC<DemandMapProps> = ({ trips, chargers }) => {
     markersRef.current.forEach(m => m.remove());
     markersRef.current = [];
 
-    chargers.forEach(charger => {
-      if (!charger.location && !charger.lat) return;
-      const lat = charger.location?.lat || charger.lat;
-      const lng = charger.location?.lng || charger.lng;
+    chargers.forEach((charger: any) => {
+      const lat = charger.location?.lat ?? charger.lat;
+      const lng = charger.location?.lng ?? charger.lng;
+      if (!lat || !lng) return;
       
       const containerEl = document.createElement('div');
       containerEl.className = 'w-4 h-4 bg-blue-500 rounded-full border border-white shadow-[0_0_8px_rgba(59,130,246,0.8)] cursor-pointer';
-      containerEl.title = charger.nombre || charger.name || 'Cargador';
+      containerEl.title = charger.nombre ?? charger.name ?? 'Cargador';
 
       const marker = new mapboxgl.Marker({ element: containerEl, anchor: 'center' })
         .setLngLat([lng, lat])

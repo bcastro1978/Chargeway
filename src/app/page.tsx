@@ -8,6 +8,7 @@ import { ChargerCard } from '@/components/Dashboard/ChargerCard';
 import { VehicleSelector } from '@/components/Dashboard/VehicleSelector';
 import { RouteSearch, Waypoint } from '@/components/Dashboard/RouteSearch';
 import { AuthButton } from '@/components/Dashboard/AuthButton';
+import { ConsentModal } from '@/components/Dashboard/ConsentModal';
 import { Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { fetchAllEcuadorChargers, Charger } from '@/lib/services/charging';
 import { useTripStore } from '@/lib/store/useTripStore';
@@ -61,7 +62,9 @@ export default function Home() {
     saveTripToDatabase,
     user,
     isLoadingUser,
-    loginWithGoogle
+    loginWithGoogle,
+    needsConsent,
+    saveConsent,
   } = useTripStore();
 
   const [allChargers, setAllChargers] = useState<Charger[]>([]);
@@ -331,6 +334,10 @@ export default function Home() {
 
   return (
     <main className="p-4 md:p-8 max-w-7xl mx-auto min-h-screen relative">
+      {/* Consent Modal – shown to logged-in users who haven't accepted current T&C version */}
+      {user && needsConsent && (
+        <ConsentModal onAccept={saveConsent} />
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-[350px_1fr] gap-8 pt-4">
         {/* Left Sidebar */}

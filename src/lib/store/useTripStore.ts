@@ -5,6 +5,7 @@ import { Vehicle } from '@/components/Dashboard/VehicleSelector';
 import { geocodePlace } from '@/lib/services/mapbox';
 import vehicles from '@/lib/vehicles.json';
 import { supabase } from '@/lib/supabase';
+import { ConsentChoices, TERMS_VERSION, PRIVACY_VERSION } from '@/components/Dashboard/ConsentModal';
 
 interface TripState {
   selectedVehicle: Vehicle;
@@ -17,6 +18,8 @@ interface TripState {
   mapFlyTo: { lat: number; lng: number } | null;
   user: any;
   isLoadingUser: boolean;
+  needsConsent: boolean;          // true = show consent modal
+  consentRecord: any | null;     // loaded from DB
   setSelectedVehicle: (vehicle: Vehicle) => void;
   setSoc: (soc: number) => void;
   setRoutePoints: (points: Waypoint[]) => void;
@@ -28,6 +31,7 @@ interface TripState {
   logout: () => Promise<void>;
   checkSession: () => Promise<void>;
   saveTripToDatabase: () => Promise<void>;
+  saveConsent: (choices: ConsentChoices) => Promise<void>;
 }
 
 export const useTripStore = create<TripState>((set, get) => ({
@@ -44,6 +48,8 @@ export const useTripStore = create<TripState>((set, get) => ({
   mapFlyTo: null,
   user: null,
   isLoadingUser: false,
+  needsConsent: false,
+  consentRecord: null,
 
   setSelectedVehicle: (vehicle) => set({ selectedVehicle: vehicle }),
   setSoc: (soc) => set({ soc }),
@@ -134,21 +140,51 @@ export const useTripStore = create<TripState>((set, get) => ({
 
         if (profile) {
           const loadedState: Partial<TripState> = { user: profile };
-          if (profile.last_vehicle_id) {
-            const foundVehicle = vehicles.find(v => v.id === profile.last_vehicle_id);
+          
+          // Query the user's last trip to load their previous vehicle and SoC
+          const { data: lastTrip } = await supabase
+            .from('trips')
+            .select('vehicle_model, start_soc')
+            .eq('user_id', session.user.id)
+            .order('created_at', { ascending: false })
+            .limit(1)
+            .single();
+
+          if (lastTrip && lastTrip.vehicle_model) {
+            const foundVehicle = vehicles.find(v => `${v.brand} ${v.model}` === lastTrip.vehicle_model);
             if (foundVehicle) {
               loadedState.selectedVehicle = foundVehicle as Vehicle;
             } else {
               loadedState.selectedVehicle = vehicles[0] as Vehicle;
             }
+            if (lastTrip.start_soc !== null && lastTrip.start_soc !== undefined) {
+              loadedState.soc = Number(lastTrip.start_soc);
+            }
           } else {
             loadedState.selectedVehicle = vehicles[0] as Vehicle;
           }
-          if (profile.last_soc !== null && profile.last_soc !== undefined) {
-            loadedState.soc = Number(profile.last_soc);
-          }
+          
           set(loadedState);
+
+          // Check if user has accepted current version of terms/privacy
+          const { data: existingConsent } = await supabase
+            .from('consent_records')
+            .select('id, terms_version, privacy_version, accepted_terms, accepted_privacy, accepted_statistical_use')
+            .eq('user_id', session.user.id)
+            .eq('accepted_terms', true)
+            .eq('accepted_privacy', true)
+            .eq('accepted_statistical_use', true)
+            .order('accepted_at', { ascending: false })
+            .limit(1)
+            .maybeSingle();
+
+          const hasValidConsent = existingConsent &&
+            existingConsent.terms_version === TERMS_VERSION &&
+            existingConsent.privacy_version === PRIVACY_VERSION;
+
+          set({ consentRecord: existingConsent, needsConsent: !hasValidConsent });
         } else {
+          // New user – no profile yet, must accept consent before continuing
           const meta = session.user.user_metadata;
           set({
             user: {
@@ -157,7 +193,8 @@ export const useTripStore = create<TripState>((set, get) => ({
               full_name: meta?.full_name || meta?.name || '',
               avatar_url: meta?.avatar_url || meta?.picture || ''
             },
-            selectedVehicle: vehicles[0] as Vehicle
+            selectedVehicle: vehicles[0] as Vehicle,
+            needsConsent: true,
           });
         }
       } else {
@@ -196,32 +233,50 @@ export const useTripStore = create<TripState>((set, get) => ({
     const { error: tripError } = await supabase.from('trips').insert([tripData]);
     if (tripError) {
       console.error('Error saving trip:', tripError.message);
-    } else {
-      console.log('Trip saved successfully!');
     }
 
-    // Save vehicle preferences in user profile
-    const { error: profileError } = await supabase
-      .from('profiles')
-      .update({
+    // Update local state for user metadata
+    set({
+      user: {
+        ...user,
         last_vehicle_id: selectedVehicle.id,
-        last_soc: soc,
-        updated_at: new Date().toISOString()
-      })
-      .eq('id', user.id);
+        last_soc: soc
+      }
+    });
+  },
 
-    if (profileError) {
-      console.error('Error updating user profile preferences:', profileError.message);
-    } else {
-      // Update local state for user metadata
-      set({
-        user: {
-          ...user,
-          last_vehicle_id: selectedVehicle.id,
-          last_soc: soc
-        }
-      });
-      console.log('User profile preferences updated!');
+  saveConsent: async (choices: ConsentChoices) => {
+    const { user } = get();
+    if (!user) return;
+
+    // Collect browser evidence for legal audit trail
+    const userAgent = typeof navigator !== 'undefined' ? navigator.userAgent : 'unknown';
+    // IP will be null client-side (server would need to provide it) — acceptable evidenciable
+    const consentPayload = {
+      user_id: user.id,
+      terms_version: TERMS_VERSION,
+      privacy_version: PRIVACY_VERSION,
+      accepted_terms: choices.acceptedTerms,
+      accepted_privacy: choices.acceptedPrivacy,
+      accepted_statistical_use: choices.acceptedStatisticalUse,
+      accepted_marketing_chargeWay: choices.acceptedMarketingChargeWay,
+      accepted_marketing_brands: choices.acceptedMarketingBrands,
+      user_agent: userAgent,
+      accepted_at: new Date().toISOString(),
+    };
+
+    const { data, error } = await supabase
+      .from('consent_records')
+      .insert([consentPayload])
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error saving consent record:', error.message);
+      throw new Error(error.message);
     }
-  }
+
+    set({ needsConsent: false, consentRecord: data });
+    console.log('Consent saved with ID:', data?.id);
+  },
 }));

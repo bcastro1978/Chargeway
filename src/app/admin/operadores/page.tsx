@@ -18,7 +18,7 @@ interface OpData {
   byType: { tipo: string; total: number }[];
   byPower: { potencia: string; total: number }[];
   tripsList: TripRoute[];
-  chargerList: any[]; // Store raw chargers
+  chargerList: any[];
 }
 
 function getDayOfWeek(dateString: string) {
@@ -99,7 +99,7 @@ export default function OperadoresPage() {
 
       setData({
         kpis: { totalChargers: 0, totalProvincias: 0, rapidos: 0, normales: 0 },
-        byProvincia: [], bySpeed: [], byCost: [], byType: [], byPower: [],
+        byProvincia: [], bySpeed: [], byType: [], byPower: [],
         chargerList: chargers,
         tripsList: mappedTrips
       });
@@ -458,7 +458,7 @@ export default function OperadoresPage() {
                     </div>
                   </div>
                   <div className="h-[550px] w-full relative">
-                    <DemandMap chargers={processedChargers} trips={filteredTrips} />
+                    <DemandMap chargers={processedChargers as any[]} trips={filteredTrips} />
                   </div>
                 </div>
 

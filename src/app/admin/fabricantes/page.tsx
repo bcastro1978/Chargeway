@@ -327,7 +327,7 @@ export default function FabricantesPage() {
                       <XAxis dataKey="shortModel" tick={{ fill: '#737373', fontSize: 10 }} angle={-35} textAnchor="end" interval={0} />
                       <YAxis tick={{ fill: '#737373', fontSize: 11 }} allowDecimals={false} />
                       <Tooltip content={<TooltipBar />} />
-                      <Bar dataKey="trips" name="Viajes" radius={[4, 4, 0, 0]} onClick={(data) => setFilterBrand(data.shortModel.split(' ')[0])} className="cursor-pointer hover:opacity-80 transition-opacity">
+                      <Bar dataKey="trips" name="Viajes" radius={[4, 4, 0, 0]} onClick={(data: any) => setFilterBrand((data.shortModel as string)?.split(' ')[0] ?? '')} className="cursor-pointer hover:opacity-80 transition-opacity">
                         {barData.map((entry, i) => (
                           <Cell key={entry.model} fill={PALETTE[i % PALETTE.length]} />
                         ))}
@@ -345,7 +345,7 @@ export default function FabricantesPage() {
                       <XAxis dataKey="shortModel" tick={{ fill: '#737373', fontSize: 10 }} angle={-35} textAnchor="end" interval={0} />
                       <YAxis tick={{ fill: '#737373', fontSize: 11 }} unit="kWh" />
                       <Tooltip content={<TooltipBar />} />
-                      <Bar dataKey="avgConsumptionKwh100km" name="kWh/100km" fill="#10b981" radius={[4, 4, 0, 0]} onClick={(data) => setFilterBrand(data.shortModel.split(' ')[0])} className="cursor-pointer hover:opacity-80 transition-opacity" />
+                      <Bar dataKey="avgConsumptionKwh100km" name="kWh/100km" fill="#10b981" radius={[4, 4, 0, 0]} onClick={(data: any) => setFilterBrand((data.shortModel as string)?.split(' ')[0] ?? '')} className="cursor-pointer hover:opacity-80 transition-opacity" />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
@@ -366,7 +366,7 @@ export default function FabricantesPage() {
                           outerRadius={90}
                           label={pieLabelFn}
                           labelLine={{ stroke: '#525252' }}
-                          onClick={(data) => setFilterBrand(data.name)}
+                          onClick={(data: any) => setFilterBrand(data?.name ?? '')}
                           className="cursor-pointer outline-none hover:opacity-80 transition-opacity"
                         >
                           {pieData.map((entry) => (
@@ -390,8 +390,8 @@ export default function FabricantesPage() {
                       <XAxis dataKey="shortModel" tick={{ fill: '#737373', fontSize: 10 }} angle={-35} textAnchor="end" interval={0} />
                       <YAxis tick={{ fill: '#737373', fontSize: 11 }} unit="%" domain={[0, 100]} />
                       <Tooltip content={<TooltipBar />} />
-                      <Bar dataKey="avgStartSocPct" name="SoC inicio %" fill="#3b82f6" radius={[4, 4, 0, 0]} onClick={(data) => setFilterBrand(data.shortModel.split(' ')[0])} className="cursor-pointer hover:opacity-80 transition-opacity" />
-                      <Bar dataKey="avgArrivalSocPct" name="SoC llegada %" fill="#10b981" radius={[4, 4, 0, 0]} onClick={(data) => setFilterBrand(data.shortModel.split(' ')[0])} className="cursor-pointer hover:opacity-80 transition-opacity" />
+                      <Bar dataKey="avgStartSocPct" name="SoC inicio %" fill="#3b82f6" radius={[4, 4, 0, 0]} onClick={(data: any) => setFilterBrand((data.shortModel as string)?.split(' ')[0] ?? '')} className="cursor-pointer hover:opacity-80 transition-opacity" />
+                      <Bar dataKey="avgArrivalSocPct" name="SoC llegada %" fill="#10b981" radius={[4, 4, 0, 0]} onClick={(data: any) => setFilterBrand((data.shortModel as string)?.split(' ')[0] ?? '')} className="cursor-pointer hover:opacity-80 transition-opacity" />
                       <Legend wrapperStyle={{ fontSize: 11, color: '#a3a3a3', paddingTop: 8 }} />
                     </BarChart>
                   </ResponsiveContainer>
