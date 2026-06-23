@@ -9,6 +9,7 @@ import { VehicleSelector } from '@/components/Dashboard/VehicleSelector';
 import { RouteSearch, Waypoint } from '@/components/Dashboard/RouteSearch';
 import { AuthButton } from '@/components/Dashboard/AuthButton';
 import { ConsentModal } from '@/components/Dashboard/ConsentModal';
+import { PwaInstallButton } from '@/components/Dashboard/PwaInstallButton';
 import { Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { fetchAllEcuadorChargers, Charger } from '@/lib/services/charging';
 import { useTripStore } from '@/lib/store/useTripStore';
@@ -342,6 +343,7 @@ export default function Home() {
       <div className="grid grid-cols-1 lg:grid-cols-[350px_1fr] gap-8 pt-4">
         {/* Left Sidebar */}
         <aside className="flex flex-col gap-6">
+          <PwaInstallButton />
           <AuthButton />
           <VehicleSelector 
             selectedId={selectedVehicle?.id || ''} 
