@@ -337,11 +337,11 @@ export default function Home() {
         <aside className="flex flex-col gap-6">
           <AuthButton />
           <VehicleSelector 
-            selectedId={selectedVehicle.id} 
+            selectedId={selectedVehicle?.id || ''} 
             onSelect={setSelectedVehicle} 
             soc={soc}
             onSocChange={setSoc}
-            rangeKm={Math.round(selectedVehicle.specs.wltp_range_km * soc)}
+            rangeKm={selectedVehicle ? Math.round(selectedVehicle.specs.wltp_range_km * soc) : 0}
           />
 
           <RouteSearch locations={routePoints} onChange={handleRouteChange} />

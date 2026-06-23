@@ -31,7 +31,7 @@ interface TripState {
 }
 
 export const useTripStore = create<TripState>((set, get) => ({
-  selectedVehicle: vehicles[0] as Vehicle,
+  selectedVehicle: null as any,
   soc: 0.65,
   routePoints: [
     { id: 'origin', name: '', lat: 0, lng: 0 },
@@ -138,7 +138,11 @@ export const useTripStore = create<TripState>((set, get) => ({
             const foundVehicle = vehicles.find(v => v.id === profile.last_vehicle_id);
             if (foundVehicle) {
               loadedState.selectedVehicle = foundVehicle as Vehicle;
+            } else {
+              loadedState.selectedVehicle = vehicles[0] as Vehicle;
             }
+          } else {
+            loadedState.selectedVehicle = vehicles[0] as Vehicle;
           }
           if (profile.last_soc !== null && profile.last_soc !== undefined) {
             loadedState.soc = Number(profile.last_soc);
@@ -152,14 +156,16 @@ export const useTripStore = create<TripState>((set, get) => ({
               email: session.user.email,
               full_name: meta?.full_name || meta?.name || '',
               avatar_url: meta?.avatar_url || meta?.picture || ''
-            }
+            },
+            selectedVehicle: vehicles[0] as Vehicle
           });
         }
       } else {
-        set({ user: null });
+        set({ user: null, selectedVehicle: vehicles[0] as Vehicle });
       }
     } catch (err) {
       console.error('Error checking session:', err);
+      set({ selectedVehicle: vehicles[0] as Vehicle });
     } finally {
       set({ isLoadingUser: false });
     }
