@@ -33,6 +33,9 @@ export const RouteMap: React.FC<RouteMapProps> = ({
   const gpsWatchId = useRef<number | null>(null);
   const simTimerId = useRef<NodeJS.Timeout | null>(null);
 
+  const [isFollowingUser, setIsFollowingUser] = useState(true);
+  const lastUserPosition = useRef<{ lng: number; lat: number } | null>(null);
+
   // Zustand subscriptions for Navigation Zero-Render Logic
   const isNavigating = useTripStore(state => state.isNavigating);
   const isSimulating = useTripStore(state => state.isSimulating);
@@ -53,12 +56,28 @@ export const RouteMap: React.FC<RouteMapProps> = ({
       setSelectedCharger(null);
       if (onMapClick) onMapClick(e.lngLat.lng, e.lngLat.lat);
     });
+
+    // Detect user navigation actions (drag/pan/zoom) to stop autosteering
+    const stopFollowing = () => {
+      setIsFollowingUser(false);
+    };
+    map.current.on('dragstart', stopFollowing);
+    map.current.on('zoomstart', stopFollowing);
+    map.current.on('pitchstart', stopFollowing);
+    map.current.on('rotatestart', stopFollowing);
   }, [onMapClick]);
 
   useEffect(() => {
     if (!map.current || !isMapReady || !flyTo) return;
     map.current.flyTo({ center: [flyTo.lng, flyTo.lat], zoom: 14, duration: 1500, essential: true });
   }, [flyTo, isMapReady]);
+
+  // Reset follow user state when starting/stopping navigation
+  useEffect(() => {
+    if (isNavigating) {
+      setIsFollowingUser(true);
+    }
+  }, [isNavigating]);
 
   // Handle Route and static markers
   useEffect(() => {
@@ -162,6 +181,7 @@ export const RouteMap: React.FC<RouteMapProps> = ({
     if (!map.current || !isMapReady) return;
 
     const updateGpsMarker = (lng: number, lat: number) => {
+      lastUserPosition.current = { lng, lat };
       if (!gpsMarkerRef.current) {
         const el = document.createElement('div');
         el.className = 'w-6 h-6 bg-blue-500 border-[3px] border-white rounded-full shadow-[0_0_15px_rgba(59,130,246,0.9)] z-20';
@@ -169,7 +189,11 @@ export const RouteMap: React.FC<RouteMapProps> = ({
       } else {
         gpsMarkerRef.current.setLngLat([lng, lat]);
       }
-      map.current?.easeTo({ center: [lng, lat], zoom: 15, duration: 800 });
+      
+      // Auto-recenter map only if user follow toggle is active
+      if (isFollowingUser) {
+        map.current?.easeTo({ center: [lng, lat], zoom: 15, duration: 800 });
+      }
     };
 
     if (isNavigating) {
@@ -202,17 +226,62 @@ export const RouteMap: React.FC<RouteMapProps> = ({
         gpsMarkerRef.current.remove();
         gpsMarkerRef.current = null;
       }
+      lastUserPosition.current = null;
     }
 
     return () => {
       if (gpsWatchId.current) navigator.geolocation.clearWatch(gpsWatchId.current);
       if (simTimerId.current) clearInterval(simTimerId.current);
     };
-  }, [isNavigating, isSimulating, isMapReady, tripPlan]);
+  }, [isNavigating, isSimulating, isMapReady, tripPlan, isFollowingUser]);
+
+  const handleRecenter = () => {
+    setIsFollowingUser(true);
+    if (lastUserPosition.current && map.current) {
+      map.current.easeTo({
+        center: [lastUserPosition.current.lng, lastUserPosition.current.lat],
+        zoom: 15,
+        duration: 1000
+      });
+    } else if (navigator.geolocation && map.current) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const lng = pos.coords.longitude;
+          const lat = pos.coords.latitude;
+          lastUserPosition.current = { lng, lat };
+          map.current?.easeTo({ center: [lng, lat], zoom: 15, duration: 1000 });
+        },
+        console.error,
+        { enableHighAccuracy: true, timeout: 5000 }
+      );
+    }
+  };
 
   return (
     <>
       <div ref={mapContainer} className="w-full h-full" />
+      
+      {/* Floating Centering Button */}
+      <button
+        onClick={handleRecenter}
+        className={`absolute bottom-16 right-4 z-[10] p-3 rounded-full border shadow-lg transition-all duration-300 flex items-center justify-center hover:scale-105 cursor-pointer ${
+          isFollowingUser 
+            ? 'bg-emerald-600 border-emerald-500 text-white shadow-[0_0_15px_rgba(16,185,129,0.4)]'
+            : 'bg-neutral-900/90 border-neutral-700 text-neutral-300 hover:text-white'
+        }`}
+        title="Centrar ubicación actual"
+        style={{ width: '48px', height: '48px' }}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+          <circle cx="12" cy="12" r="10" />
+          <circle cx="12" cy="12" r="3" />
+          <line x1="12" y1="1" x2="12" y2="3" />
+          <line x1="12" y1="21" x2="12" y2="23" />
+          <line x1="1" y1="12" x2="3" y2="12" />
+          <line x1="21" y1="12" x2="23" y2="12" />
+        </svg>
+      </button>
+
       <ChargerInfoPanel charger={selectedCharger} onClose={() => setSelectedCharger(null)} onNavigateToCharger={onNavigateToCharger} />
     </>
   );
