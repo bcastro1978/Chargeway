@@ -28,7 +28,8 @@ export function usePwaInstall(): UsePwaInstallResult {
 
     // Detect mobile device (phones and tablets, excludes desktop)
     const ua = navigator.userAgent;
-    const mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(ua);
+    const forcePwa = typeof window !== 'undefined' && window.location.search.includes('forcePwa=true');
+    const mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(ua) || forcePwa;
     setIsMobile(mobile);
 
     // Detect iOS specifically (Safari doesn't support beforeinstallprompt)
