@@ -272,8 +272,19 @@ export const useTripStore = create<TripState>((set, get) => ({
       .single();
 
     if (error) {
-      console.error('Error saving consent record:', error.message);
-      throw new Error(error.message);
+      // DB table may not exist yet — store consent locally as fallback
+      // so the user is never blocked. We still update needsConsent to false.
+      console.warn('Could not save consent to DB (table may be missing). Falling back to localStorage.', error.message);
+      try {
+        localStorage.setItem(
+          `chargeWay_consent_${user.id}`,
+          JSON.stringify({ ...consentPayload, savedAt: new Date().toISOString(), fallback: true })
+        );
+      } catch (_) {
+        // localStorage also unavailable — ignore, still let user through
+      }
+      set({ needsConsent: false, consentRecord: consentPayload });
+      return;
     }
 
     set({ needsConsent: false, consentRecord: data });
