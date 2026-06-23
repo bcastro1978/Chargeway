@@ -344,7 +344,9 @@ export default function Home() {
             rangeKm={selectedVehicle ? Math.round(selectedVehicle.specs.wltp_range_km * soc) : 0}
           />
 
-          <RouteSearch locations={routePoints} onChange={handleRouteChange} />
+          <div className="relative z-[100]">
+            <RouteSearch locations={routePoints} onChange={handleRouteChange} />
+          </div>
 
           {/* Action Buttons */}
           {isLoadingPlan ? (

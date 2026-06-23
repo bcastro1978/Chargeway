@@ -65,6 +65,8 @@ export const RouteMap: React.FC<RouteMapProps> = ({
     map.current.on('zoomstart', stopFollowing);
     map.current.on('pitchstart', stopFollowing);
     map.current.on('rotatestart', stopFollowing);
+    map.current.on('touchstart', stopFollowing);
+    map.current.on('wheel', stopFollowing);
   }, [onMapClick]);
 
   useEffect(() => {
@@ -176,6 +178,11 @@ export const RouteMap: React.FC<RouteMapProps> = ({
     });
   }, [geometry, locations, chargers, routeChargerIds, isMapReady, onChargerClick, isNavigating]);
 
+  const isFollowingUserRef = useRef(isFollowingUser);
+  useEffect(() => {
+    isFollowingUserRef.current = isFollowingUser;
+  }, [isFollowingUser]);
+
   // Phase 2: GPS Zero-Render Logic
   useEffect(() => {
     if (!map.current || !isMapReady) return;
@@ -191,7 +198,7 @@ export const RouteMap: React.FC<RouteMapProps> = ({
       }
       
       // Auto-recenter map only if user follow toggle is active
-      if (isFollowingUser) {
+      if (isFollowingUserRef.current) {
         map.current?.easeTo({ center: [lng, lat], zoom: 15, duration: 800 });
       }
     };
@@ -233,7 +240,7 @@ export const RouteMap: React.FC<RouteMapProps> = ({
       if (gpsWatchId.current) navigator.geolocation.clearWatch(gpsWatchId.current);
       if (simTimerId.current) clearInterval(simTimerId.current);
     };
-  }, [isNavigating, isSimulating, isMapReady, tripPlan, isFollowingUser]);
+  }, [isNavigating, isSimulating, isMapReady, tripPlan]);
 
   const handleRecenter = () => {
     setIsFollowingUser(true);

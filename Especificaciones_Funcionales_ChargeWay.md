@@ -39,6 +39,11 @@ La plataforma está construida bajo una arquitectura Frontend pesada orientada a
 ### 3.5. Orquestador de Rutas (`route-orchestrator.ts`)
 *   Motor lógico que une los waypoints, consulta la API de Mapbox Directions, calcula el consumo con el `energy-core`, detecta si la carga inicial no es suficiente y cruza espacialmente la polilínea con la base de datos de Supabase para recomendar paradas de carga estratégicas en el camino.
 
+### 3.6. Módulo de Inteligencia Comercial para Fabricantes (BI)
+*   **Benchmarking Competitivo**: Permite a las marcas (ej. BYD, Kia) comparar el volumen de tráfico de sus vehículos frente a la competencia en todo el país.
+*   **Distribución Geográfica Activa**: Analiza la densidad de vehículos circulando por provincia y cantón. Ayuda a identificar en qué ciudades la adopción de una marca específica es alta, y dónde hay una oportunidad de expansión o la necesidad de instalar puntos de carga exclusivos (Destination Charging).
+*   **Análisis de Desempeño Energético de Flota (Próximamente)**: Otorga a los fabricantes información macro sobre cómo se comportan sus vehículos en la orografía andina, revelando datos de degradación de rango por topografía.
+
 ---
 
 ## 4. Historias de Usuario (User Stories)
@@ -59,6 +64,11 @@ La plataforma está construida bajo una arquitectura Frontend pesada orientada a
 *   **US-3.1**: Como conductor, quiero presionar "Iniciar Viaje" para que el mapa haga un seguimiento de mi ubicación GPS y me muestre avanzando sobre la línea de ruta dibujada.
 *   **US-3.2**: Como conductor que necesita recargar urgente, quiero abrir el panel de un cargador y presionar "Llegar al punto" para que el sistema me enrute de inmediato hacia él y empiece a navegar.
 *   **US-3.3**: Como desarrollador probando el app, quiero activar la "Simulación de Viaje" para ver cómo el cursor se mueve a lo largo de la ruta sin que tenga que salir a conducir físicamente.
+
+**Épica 4: Inteligencia de Negocios para Fabricantes (Marcas)**
+*   **US-4.1**: Como analista de marca (ej. BYD), quiero ver un mapa nacional con la concentración de movilidad de mis vehículos filtrada por provincia y cantón para saber dónde está mi mercado.
+*   **US-4.2**: Como gerente de ventas, quiero un gráfico que contraste el porcentaje de uso de mis vehículos frente a mis competidores (ej. 45% BYD vs 20% Kia) para evaluar el market share en base a la movilidad real.
+*   **US-4.3**: Como ingeniero de producto automotriz, quiero visualizar patrones de rutas frecuentes de los dueños de mis vehículos para sugerir puntos óptimos de carga exclusiva o concesionarios de servicio técnico.
 
 ---
 
