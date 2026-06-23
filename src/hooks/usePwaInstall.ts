@@ -78,8 +78,10 @@ export function usePwaInstall(): UsePwaInstallResult {
         setIsInstallable(false);
       }
       setDeferredPrompt(null);
+    } else {
+      // Throw an error so the UI can catch it and show a manual fallback instruction
+      throw new Error("No deferred prompt available");
     }
-    // iOS: the component handles showing instructions
   };
 
   return { isMobile, isInstallable, isInstalled, isIos, install };

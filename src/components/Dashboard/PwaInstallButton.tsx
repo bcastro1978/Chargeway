@@ -97,20 +97,22 @@ export const PwaInstallButton: React.FC = () => {
   const [showIosGuide, setShowIosGuide] = useState(false);
   const [dismissed, setDismissed] = useState(false);
 
-  // Only render on mobile, when installable, and not yet installed or dismissed
-  // UNLESS forcePwa=true is passed for testing purposes
+  // Always render on mobile (unless already installed or dismissed). 
+  // We no longer require isInstallable to be true, because if Chrome blocks the native prompt
+  // (due to cache, cooldown, or SW issues), we still want the user to see the button and get instructions.
   const forceShow = typeof window !== 'undefined' && window.location.search.includes('forcePwa=true');
-  if (!forceShow && (!isMobile || !isInstallable || isInstalled || dismissed)) return null;
+  if (!forceShow && (!isMobile || isInstalled || dismissed)) return null;
 
   const handleClick = async () => {
     if (isIos) {
       setShowIosGuide(true);
     } else if (install) {
-      // If forceShow is true but install fails (e.g. deferredPrompt is null on desktop), just show a mock alert
       try {
         await install();
+        // If install returns without triggering outcome, it means deferredPrompt was null.
+        // We will show a manual fallback alert.
       } catch (e) {
-        if (forceShow) alert("En un móvil real esto mostraría el diálogo nativo de instalación.");
+        alert("Para instalar: Abre el menú de Chrome (tres puntos) y selecciona 'Agregar a la pantalla principal'.");
       }
     }
   };
