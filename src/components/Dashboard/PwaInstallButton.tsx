@@ -93,12 +93,12 @@ const IosInstructions: React.FC<{ onClose: () => void }> = ({ onClose }) => (
 
 // ─── Main Install Button ──────────────────────────────────────
 export const PwaInstallButton: React.FC = () => {
-  const { isMobile, isInstallable, isInstalled, isIos, install } = usePwaInstall();
+  const { isInstallable, isInstalled, isIos, install } = usePwaInstall();
   const [showIosGuide, setShowIosGuide] = useState(false);
   const [dismissed, setDismissed] = useState(false);
 
-  // Only render on mobile, when installable, and not yet installed or dismissed
-  if (!isMobile || !isInstallable || isInstalled || dismissed) return null;
+  // Only render when installable, and not yet installed or dismissed
+  if (!isInstallable || isInstalled || dismissed) return null;
 
   const handleClick = async () => {
     if (isIos) {

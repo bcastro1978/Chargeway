@@ -259,7 +259,7 @@ export const useTripStore = create<TripState>((set, get) => ({
       accepted_terms: choices.acceptedTerms,
       accepted_privacy: choices.acceptedPrivacy,
       accepted_statistical_use: choices.acceptedStatisticalUse,
-      accepted_marketing_chargeWay: choices.acceptedMarketingChargeWay,
+      accepted_marketing_chargeway: choices.acceptedMarketingChargeWay,
       accepted_marketing_brands: choices.acceptedMarketingBrands,
       user_agent: userAgent,
       accepted_at: new Date().toISOString(),
