@@ -98,13 +98,20 @@ export const PwaInstallButton: React.FC = () => {
   const [dismissed, setDismissed] = useState(false);
 
   // Only render on mobile, when installable, and not yet installed or dismissed
-  if (!isMobile || !isInstallable || isInstalled || dismissed) return null;
+  // UNLESS forcePwa=true is passed for testing purposes
+  const forceShow = typeof window !== 'undefined' && window.location.search.includes('forcePwa=true');
+  if (!forceShow && (!isMobile || !isInstallable || isInstalled || dismissed)) return null;
 
   const handleClick = async () => {
     if (isIos) {
       setShowIosGuide(true);
-    } else {
-      await install();
+    } else if (install) {
+      // If forceShow is true but install fails (e.g. deferredPrompt is null on desktop), just show a mock alert
+      try {
+        await install();
+      } catch (e) {
+        if (forceShow) alert("En un móvil real esto mostraría el diálogo nativo de instalación.");
+      }
     }
   };
 
