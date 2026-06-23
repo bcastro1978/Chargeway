@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
+import { ECUADOR_CHARGERS_FALLBACK } from '@/lib/data/ecuador-chargers';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, Cell, PieChart, Pie, Legend,
@@ -49,12 +50,101 @@ export default function OperadoresPage() {
   async function load() {
     setLoading(true); setError(null);
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      const res = await fetch('/api/admin/stats/operadores', {
-        headers: { Authorization: `Bearer ${session?.access_token}` },
+      // Load chargers: try Supabase first, fall back to bundled data
+      let chargers: any[] = [];
+      try {
+        const { data: dbData, error: dbError } = await supabase
+          .from('charging_points')
+          .select('*');
+        chargers = (!dbError && dbData && dbData.length > 0) ? dbData : ECUADOR_CHARGERS_FALLBACK;
+      } catch {
+        chargers = ECUADOR_CHARGERS_FALLBACK;
+      }
+
+      // Province aggregates
+      const provinciaMap: Record<string, number> = {};
+      for (const c of chargers) {
+        const prov = c.provincia || c.province || 'Sin provincia';
+        provinciaMap[prov] = (provinciaMap[prov] || 0) + 1;
+      }
+      const byProvincia = Object.entries(provinciaMap)
+        .map(([provincia, total]) => ({ provincia, total }))
+        .sort((a, b) => b.total - a.total);
+
+      // Speed distribution
+      let rapidos = 0, normales = 0;
+      for (const c of chargers) {
+        const speed = (c.velocidad || c.speed || '').toLowerCase();
+        if (speed.includes('rápid') || speed.includes('rapido') || speed.includes('rapid') || speed.includes('verde')) {
+          rapidos++;
+        } else {
+          normales++;
+        }
+      }
+
+      // Cost distribution
+      const costMap: Record<string, number> = {};
+      for (const c of chargers) {
+        const cost = c.costo || c.cost_type || 'Desconocido';
+        const key = cost.includes('Gratuito') || cost.includes('gratuito') ? 'Gratuito'
+          : cost.includes('Consultar') || cost.includes('consultar') ? 'Consultar'
+          : cost.includes('$') || cost.includes('USD') ? 'Pago'
+          : 'Desconocido';
+        costMap[key] = (costMap[key] || 0) + 1;
+      }
+      const byCost = Object.entries(costMap)
+        .map(([tipo, total]) => ({ tipo, total }))
+        .sort((a, b) => b.total - a.total);
+
+      // Charger type distribution
+      const typeMap: Record<string, number> = {};
+      for (const c of chargers) {
+        const tipo = c.tipo_cargador || c.charger_type || 'Desconocido';
+        const key = tipo.length > 30 ? tipo.substring(0, 30) + '…' : tipo;
+        typeMap[key] = (typeMap[key] || 0) + 1;
+      }
+      const byType = Object.entries(typeMap)
+        .map(([tipo, total]) => ({ tipo, total }))
+        .sort((a, b) => b.total - a.total)
+        .slice(0, 8);
+
+      // Power distribution
+      const powerMap: Record<string, number> = {};
+      for (const c of chargers) {
+        const potencia = c.potencia || c.power || '?';
+        powerMap[potencia] = (powerMap[potencia] || 0) + 1;
+      }
+      const byPower = Object.entries(powerMap)
+        .map(([potencia, total]) => ({ potencia, total }))
+        .sort((a, b) => b.total - a.total)
+        .slice(0, 8);
+
+      const totalChargers = chargers.length;
+      const totalProvincias = byProvincia.length;
+
+      const chargerList = chargers.slice(0, 50).map((c: any) => ({
+        id: c.id,
+        nombre: c.nombre || c.name || 'Sin nombre',
+        provincia: c.provincia || c.province || '',
+        canton: c.canton || c.city_or_canton || '',
+        velocidad: c.velocidad || c.speed || '',
+        potencia: c.potencia || c.power || '',
+        costo: c.costo || c.cost_type || '',
+        horario: c.horario || c.schedule || '',
+      }));
+
+      setData({
+        kpis: { totalChargers, totalProvincias, rapidos, normales },
+        byProvincia,
+        bySpeed: [
+          { tipo: 'Carga Rápida', total: rapidos },
+          { tipo: 'Carga Normal', total: normales },
+        ],
+        byCost,
+        byType,
+        byPower,
+        chargerList,
       });
-      if (!res.ok) throw new Error(`${res.status}`);
-      setData(await res.json());
     } catch (e: any) {
       setError(e.message);
     } finally {
@@ -290,7 +380,7 @@ export default function OperadoresPage() {
                   })}
                   {filtered.length === 0 && (
                     <tr>
-                      <td colSpan={7} className="px-4 py-8 text-center text-neutral-600 text-sm">Sin resultados para "{search}"</td>
+                      <td colSpan={7} className="px-4 py-8 text-center text-neutral-600 text-sm">Sin resultados para &ldquo;{search}&rdquo;</td>
                     </tr>
                   )}
                 </tbody>

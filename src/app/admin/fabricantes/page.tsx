@@ -70,12 +70,62 @@ export default function FabricantesPage() {
   async function load() {
     setLoading(true); setError(null);
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      const res = await fetch('/api/admin/stats/fabricantes', {
-        headers: { Authorization: `Bearer ${session?.access_token}` },
-      });
-      if (!res.ok) throw new Error(`${res.status}`);
-      setData(await res.json());
+      // Query trips directly from Supabase (admin access already verified by layout)
+      const { data: trips, error: tripsError } = await supabase
+        .from('trips')
+        .select('vehicle_model, distance_km, consumption_kwh, start_soc, arrival_soc, duration_min');
+
+      if (tripsError) throw new Error(tripsError.message);
+
+      // Build per-model aggregates
+      const modelMap: Record<string, {
+        trips: number; totalDistanceKm: number; totalConsumptionKwh: number;
+        socSum: number; arrivalSocSum: number;
+      }> = {};
+
+      for (const t of (trips || [])) {
+        const model = (t as any).vehicle_model || 'Desconocido';
+        if (!modelMap[model]) {
+          modelMap[model] = { trips: 0, totalDistanceKm: 0, totalConsumptionKwh: 0, socSum: 0, arrivalSocSum: 0 };
+        }
+        const m = modelMap[model];
+        m.trips += 1;
+        m.totalDistanceKm += Number((t as any).distance_km) || 0;
+        m.totalConsumptionKwh += Number((t as any).consumption_kwh) || 0;
+        m.socSum += Number((t as any).start_soc) || 0;
+        m.arrivalSocSum += Number((t as any).arrival_soc) || 0;
+      }
+
+      const byModel = Object.entries(modelMap)
+        .map(([model, d]) => ({
+          model,
+          trips: d.trips,
+          avgDistanceKm: d.trips > 0 ? Math.round(d.totalDistanceKm / d.trips) : 0,
+          avgConsumptionKwh100km: d.totalDistanceKm > 0
+            ? Math.round((d.totalConsumptionKwh / d.totalDistanceKm) * 100 * 10) / 10 : 0,
+          avgStartSocPct: d.trips > 0 ? Math.round((d.socSum / d.trips) * 100) : 0,
+          avgArrivalSocPct: d.trips > 0 ? Math.round((d.arrivalSocSum / d.trips) * 100) : 0,
+          totalDistanceKm: Math.round(d.totalDistanceKm),
+          totalConsumptionKwh: Math.round(d.totalConsumptionKwh * 10) / 10,
+        }))
+        .sort((a, b) => b.trips - a.trips);
+
+      const totalTrips = trips?.length || 0;
+      const totalModels = byModel.length;
+      const totalDistanceKm = Math.round(byModel.reduce((s, m) => s + m.totalDistanceKm, 0));
+      const avgConsumption = totalDistanceKm > 0
+        ? Math.round(byModel.reduce((s, m) => s + m.totalConsumptionKwh, 0) / totalDistanceKm * 100 * 10) / 10 : 0;
+
+      const brandMap: Record<string, number> = {};
+      for (const m of byModel) {
+        const brand = m.model.split(' ')[0];
+        brandMap[brand] = (brandMap[brand] || 0) + m.trips;
+      }
+      const byBrand = Object.entries(brandMap)
+        .map(([brand, trips]) => ({ brand, trips }))
+        .sort((a, b) => b.trips - a.trips);
+
+      setData({ kpis: { totalTrips, totalModels, totalDistanceKm, avgConsumption }, byModel, byBrand });
     } catch (e: any) {
       setError(e.message);
     } finally {
