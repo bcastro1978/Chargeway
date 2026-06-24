@@ -625,7 +625,8 @@
       "frontal_area_m2": 2.7,
       "weight_kg": 1880,
       "peak_charging_kw": 180,
-      "charger_type": "GB/T"
+      "charger_type": "GB/T",
+      "wltp_range_km": 500
     }
   },
   {
