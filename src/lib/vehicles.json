@@ -308,34 +308,6 @@
     }
   },
   {
-    "id": "dongfeng-friday",
-    "brand": "Dongfeng",
-    "model": "Friday EV (85.9 kWh)",
-    "specs": {
-      "usable_battery_kwh": 85.9,
-      "drag_coefficient": 0.33,
-      "frontal_area_m2": 2.6,
-      "weight_kg": 2000,
-      "peak_charging_kw": 80,
-      "wltp_range_km": 510,
-      "charger_type": "GB/T"
-    }
-  },
-  {
-    "id": "dongfeng-box",
-    "brand": "Dongfeng",
-    "model": "Box (42.3 kWh)",
-    "specs": {
-      "usable_battery_kwh": 42.3,
-      "drag_coefficient": 0.29,
-      "frontal_area_m2": 2.3,
-      "weight_kg": 1315,
-      "peak_charging_kw": 50,
-      "wltp_range_km": 310,
-      "charger_type": "GB/T"
-    }
-  },
-  {
     "id": "audi-etron-55",
     "brand": "Audi",
     "model": "e-tron 55 quattro",
