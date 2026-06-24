@@ -294,20 +294,6 @@
     }
   },
   {
-    "id": "skywell-et5",
-    "brand": "Skywell",
-    "model": "ET5 (72 kWh)",
-    "specs": {
-      "usable_battery_kwh": 71.98,
-      "drag_coefficient": 0.32,
-      "frontal_area_m2": 2.7,
-      "weight_kg": 1920,
-      "peak_charging_kw": 100,
-      "wltp_range_km": 400,
-      "charger_type": "GB/T"
-    }
-  },
-  {
     "id": "audi-etron-55",
     "brand": "Audi",
     "model": "e-tron 55 quattro",
@@ -668,6 +654,20 @@
       "weight_kg": 1650,
       "peak_charging_kw": 75,
       "wltp_range_km": 445,
+      "charger_type": "GB/T"
+    }
+  },
+  {
+    "id": "skywell-be11",
+    "brand": "Skywell",
+    "model": "BE11",
+    "specs": {
+      "usable_battery_kwh": 86,
+      "drag_coefficient": 0.3,
+      "frontal_area_m2": 2.7,
+      "weight_kg": 1930,
+      "peak_charging_kw": 120,
+      "wltp_range_km": 620,
       "charger_type": "GB/T"
     }
   }
