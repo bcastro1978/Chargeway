@@ -259,7 +259,7 @@ export const RouteMap: React.FC<RouteMapProps> = ({
           map.current?.easeTo({ center: [lng, lat], zoom: 15, duration: 1000 });
         },
         console.error,
-        { enableHighAccuracy: true, timeout: 5000 }
+        { enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 }
       );
     }
   };
