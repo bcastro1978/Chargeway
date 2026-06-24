@@ -165,12 +165,12 @@ const SearchInput: React.FC<SearchInputProps> = ({
           onSelect({ id: `fallback-${Date.now()}`, name: 'Quito, Ecuador', lng: -78.5249, lat: -0.1807 });
         } else {
           setQuery('');
-          alert('No se pudo obtener tu ubicación. Verifica que el GPS esté activo.');
+          alert(`No se pudo obtener tu ubicación (${err.message}). Verifica que el GPS esté activo y la app tenga permisos.`);
         }
         setShowSuggestions(false);
         onFocusChange?.(false);
       },
-      { enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 }
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 0 }
     );
   };
 
