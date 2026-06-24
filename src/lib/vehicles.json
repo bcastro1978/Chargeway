@@ -642,5 +642,33 @@
       "wltp_range_km": 578,
       "charger_type": "CCS1"
     }
+  },
+  {
+    "id": "chevrolet-spark-euv",
+    "brand": "Chevrolet",
+    "model": "Spark EUV",
+    "specs": {
+      "usable_battery_kwh": 41.9,
+      "drag_coefficient": 0.32,
+      "frontal_area_m2": 2.2,
+      "weight_kg": 1350,
+      "peak_charging_kw": 50,
+      "wltp_range_km": 298,
+      "charger_type": "GB/T"
+    }
+  },
+  {
+    "id": "chevrolet-captiva-ev",
+    "brand": "Chevrolet",
+    "model": "Captiva EV",
+    "specs": {
+      "usable_battery_kwh": 60,
+      "drag_coefficient": 0.31,
+      "frontal_area_m2": 2.5,
+      "weight_kg": 1750,
+      "peak_charging_kw": 120,
+      "wltp_range_km": 415,
+      "charger_type": "GB/T"
+    }
   }
 ]
