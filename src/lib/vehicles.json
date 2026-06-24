@@ -630,20 +630,6 @@
     }
   },
   {
-    "id": "chevrolet-equinox-ev",
-    "brand": "Chevrolet",
-    "model": "Equinox EV",
-    "specs": {
-      "usable_battery_kwh": 85,
-      "drag_coefficient": 0.28,
-      "frontal_area_m2": 2.5,
-      "weight_kg": 2267,
-      "peak_charging_kw": 150,
-      "wltp_range_km": 510,
-      "charger_type": "CCS1"
-    }
-  },
-  {
     "id": "chevrolet-blazer-ev-rs",
     "brand": "Chevrolet",
     "model": "Blazer EV RS",
