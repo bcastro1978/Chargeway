@@ -457,7 +457,7 @@
       "frontal_area_m2": 2.58,
       "weight_kg": 1669,
       "peak_charging_kw": 50,
-      "wltp_range_km": 397,
+      "wltp_range_km": 456,
       "charger_type": "CCS1"
     }
   },
@@ -583,7 +583,7 @@
       "frontal_area_m2": 2.6,
       "weight_kg": 2233,
       "peak_charging_kw": 150,
-      "wltp_range_km": 513,
+      "wltp_range_km": 653,
       "charger_type": "CCS1"
     }
   },
@@ -634,12 +634,12 @@
     "brand": "Chevrolet",
     "model": "Blazer EV RS",
     "specs": {
-      "usable_battery_kwh": 85,
+      "usable_battery_kwh": 89.5,
       "drag_coefficient": 0.29,
       "frontal_area_m2": 2.6,
       "weight_kg": 2626,
       "peak_charging_kw": 150,
-      "wltp_range_km": 449,
+      "wltp_range_km": 578,
       "charger_type": "CCS1"
     }
   }
