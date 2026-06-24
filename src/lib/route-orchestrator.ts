@@ -125,6 +125,13 @@ export async function generateTripPlan(
   const routeCoords = decodeGeoJSONGeometry(route.geometry).map(([lng, lat]) => ({ lat, lng }));
   const chargers = await fetchChargersAlongRoute(route.geometry, 30, routeCoords);
 
+  // Sort chargers by distance from the origin so the closest ones to the start appear first
+  chargers.sort((a, b) => {
+    const distA = haversineKm(origin.lat, origin.lng, a.location.lat, a.location.lng);
+    const distB = haversineKm(origin.lat, origin.lng, b.location.lat, b.location.lng);
+    return distA - distB;
+  });
+
   // 5. Calculate Consumption using Energy Core
   // We approximate the route into N segments based on elevation points
   let totalConsumptionWh = 0;
