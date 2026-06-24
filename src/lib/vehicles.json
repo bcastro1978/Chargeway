@@ -684,5 +684,19 @@
       "wltp_range_km": 430,
       "charger_type": "GB/T"
     }
+  },
+  {
+    "id": "dongfeng-mage-ev",
+    "brand": "Dongfeng",
+    "model": "Mage EV",
+    "specs": {
+      "usable_battery_kwh": 50.82,
+      "drag_coefficient": 0.31,
+      "frontal_area_m2": 2.5,
+      "weight_kg": 1650,
+      "peak_charging_kw": 75,
+      "wltp_range_km": 445,
+      "charger_type": "GB/T"
+    }
   }
 ]
