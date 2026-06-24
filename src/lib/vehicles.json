@@ -670,5 +670,33 @@
       "wltp_range_km": 620,
       "charger_type": "GB/T"
     }
+  },
+  {
+    "id": "wuling-bingo-38",
+    "brand": "Wuling",
+    "model": "Bingo",
+    "specs": {
+      "usable_battery_kwh": 37.9,
+      "drag_coefficient": 0.33,
+      "frontal_area_m2": 2.27,
+      "weight_kg": 1235,
+      "peak_charging_kw": 40,
+      "wltp_range_km": 401,
+      "charger_type": "GB/T"
+    }
+  },
+  {
+    "id": "wuling-bingo-s",
+    "brand": "Wuling",
+    "model": "Bingo S",
+    "specs": {
+      "usable_battery_kwh": 41.9,
+      "drag_coefficient": 0.33,
+      "frontal_area_m2": 2.4,
+      "weight_kg": 1325,
+      "peak_charging_kw": 40,
+      "wltp_range_km": 430,
+      "charger_type": "CCS2"
+    }
   }
 ]
