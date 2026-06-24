@@ -670,5 +670,19 @@
       "wltp_range_km": 415,
       "charger_type": "GB/T"
     }
+  },
+  {
+    "id": "skyworth-ev6-ii",
+    "brand": "Skyworth",
+    "model": "EV6 II",
+    "specs": {
+      "usable_battery_kwh": 54.75,
+      "drag_coefficient": 0.3,
+      "frontal_area_m2": 2.7,
+      "weight_kg": 1830,
+      "peak_charging_kw": 100,
+      "wltp_range_km": 430,
+      "charger_type": "GB/T"
+    }
   }
 ]
