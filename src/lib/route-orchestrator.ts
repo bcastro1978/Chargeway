@@ -10,6 +10,7 @@ import { fetchChargersAlongRoute, Charger } from './services/charging';
 import { calculateSegmentConsumption, VehicleSpecs } from './energy-core';
 
 import { AdvisorFeedback, RouteAdvisorAgent } from './agents/RouteAdvisorAgent';
+import { useTripStore } from '@/lib/store/useTripStore';
 
 export interface TripPlan {
   route: RouteResponse;
@@ -123,7 +124,20 @@ export async function generateTripPlan(
 
   // 4. Get Charging Points along the route polyline
   const routeCoords = decodeGeoJSONGeometry(route.geometry).map(([lng, lat]) => ({ lat, lng }));
-  const chargers = await fetchChargersAlongRoute(route.geometry, 30, routeCoords);
+  let chargers = await fetchChargersAlongRoute(route.geometry, 30, routeCoords);
+
+  // Filter based on UI toggle
+  const filterCompatible = useTripStore.getState().filterCompatibleChargers;
+  if (filterCompatible && vehicleSpecs?.charger_type) {
+    const vType = vehicleSpecs.charger_type.toLowerCase().replace(/[^a-z0-9]/g, '');
+    chargers = chargers.filter(c => {
+      if (!c.tipo_cargador) return true;
+      const cType = c.tipo_cargador.toLowerCase().replace(/[^a-z0-9]/g, '');
+      if (vType === 'type2' || vType === 'tipo2') return cType.includes('type2') || cType.includes('tipo2') || cType.includes('ac');
+      if (vType === 'ccs2' || vType === 'ccs1') return cType.includes(vType) || cType.includes('ccs') || cType.includes('combo');
+      return cType.includes(vType);
+    });
+  }
 
   // Sort chargers by distance from the origin so the closest ones to the start appear first
   chargers.sort((a, b) => {

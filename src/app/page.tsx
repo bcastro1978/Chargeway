@@ -61,6 +61,7 @@ export default function Home() {
     planRoute,
     checkSession,
     saveTripToDatabase,
+    filterCompatibleChargers,
     user,
     isLoadingUser,
     loginWithGoogle,
@@ -194,12 +195,29 @@ export default function Home() {
   };
 
   const mergedChargers = useMemo(() => {
-    const merged = [...allChargers];
+    let merged = [...allChargers];
     (tripPlan?.chargers || []).forEach(ch => {
       if (!merged.some(c => c.id === ch.id)) merged.push(ch);
     });
+
+    if (filterCompatibleChargers && selectedVehicle?.specs?.charger_type) {
+      const vType = selectedVehicle.specs.charger_type.toLowerCase().replace(/[^a-z0-9]/g, '');
+      merged = merged.filter(c => {
+        if (!c.tipo_cargador) return true; // keep if unknown just in case
+        const cType = c.tipo_cargador.toLowerCase().replace(/[^a-z0-9]/g, '');
+        
+        if (vType === 'type2' || vType === 'tipo2') {
+           return cType.includes('type2') || cType.includes('tipo2') || cType.includes('ac');
+        }
+        if (vType === 'ccs2' || vType === 'ccs1') {
+           return cType.includes(vType) || cType.includes('ccs') || cType.includes('combo');
+        }
+        return cType.includes(vType);
+      });
+    }
+
     return merged;
-  }, [allChargers, tripPlan?.chargers]);
+  }, [allChargers, tripPlan?.chargers, filterCompatibleChargers, selectedVehicle]);
 
   // Compute which chargers are within 5 km of the active route geometry.
   // Only those get the orange "En ruta" highlight; the rest stay teal.
@@ -657,6 +675,9 @@ export default function Home() {
       <footer className="mt-12 py-8 border-t border-neutral-800 text-center">
         <p className="text-neutral-500 text-sm">
           &copy; 2026 ChargeWay AI - Powered by SolAI Ecuador
+        </p>
+        <p className="text-neutral-400 text-xs mt-2">
+          Contacto: <a href="mailto:chargewayec@gmail.com" className="text-emerald-500 hover:underline">chargewayec@gmail.com</a>
         </p>
       </footer>
     </main>

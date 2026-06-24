@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Plus, MapPin, Loader2, GripVertical, ArrowUpDown, X, Trash2 } from 'lucide-react';
 import { fetchSuggestions, SearchSuggestion } from '../../lib/services/mapbox';
+import { useTripStore } from '@/lib/store/useTripStore';
 
 export interface Waypoint {
   id: string;
@@ -46,6 +47,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
   const wrapperRef = useRef<HTMLDivElement>(null);
   const debounceTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pendingAutoSelect = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const latestSuggestions = useRef<SearchSuggestion[]>([]);
 
   // Keep latestSuggestions in sync so we can read them in setTimeout callbacks
@@ -290,6 +292,8 @@ const SearchInput: React.FC<SearchInputProps> = ({
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const RouteSearch: React.FC<RouteSearchProps> = ({ locations, onChange }) => {
+  const filterCompatibleChargers = useTripStore(state => state.filterCompatibleChargers);
+  const setFilterCompatibleChargers = useTripStore(state => state.setFilterCompatibleChargers);
   const [focusedIdx, setFocusedIdx] = useState<number | null>(null);
   const [dragOverIdx, setDragOverIdx] = useState<number | null>(null);
   const dragIdx = useRef<number | null>(null);
@@ -442,6 +446,20 @@ export const RouteSearch: React.FC<RouteSearchProps> = ({ locations, onChange })
           <span>Selecciona los lugares del menú desplegable para confirmar coordenadas</span>
         </div>
       )}
+
+      {/* Filter Checkbox */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
+        <input 
+          type="checkbox" 
+          id="filterCompatible" 
+          checked={filterCompatibleChargers}
+          onChange={(e) => setFilterCompatibleChargers(e.target.checked)}
+          style={{ accentColor: 'var(--color-primary)', cursor: 'pointer', width: '16px', height: '16px', borderRadius: '4px' }}
+        />
+        <label htmlFor="filterCompatible" style={{ fontSize: '0.8rem', color: 'var(--color-text-dim)', cursor: 'pointer', userSelect: 'none' }}>
+          Mostrar solo cargadores compatibles
+        </label>
+      </div>
 
       <div style={{ borderTop: '1px solid var(--color-outline)', paddingTop: 'var(--spacing-md)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <span style={{ fontSize: '0.75rem', color: 'var(--color-text-dim)' }}>

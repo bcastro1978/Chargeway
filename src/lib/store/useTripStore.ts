@@ -20,8 +20,10 @@ interface TripState {
   isLoadingUser: boolean;
   needsConsent: boolean;          // true = show consent modal
   consentRecord: any | null;     // loaded from DB
+  filterCompatibleChargers: boolean;
   setSelectedVehicle: (vehicle: Vehicle) => void;
   setSoc: (soc: number) => void;
+  setFilterCompatibleChargers: (val: boolean) => void;
   setRoutePoints: (points: Waypoint[]) => void;
   setMapFlyTo: (coords: { lat: number; lng: number } | null) => void;
   setIsNavigating: (val: boolean) => void;
@@ -50,9 +52,11 @@ export const useTripStore = create<TripState>((set, get) => ({
   isLoadingUser: false,
   needsConsent: false,
   consentRecord: null,
+  filterCompatibleChargers: true,
 
   setSelectedVehicle: (vehicle) => set({ selectedVehicle: vehicle }),
   setSoc: (soc) => set({ soc }),
+  setFilterCompatibleChargers: (val) => set({ filterCompatibleChargers: val }),
   setRoutePoints: (points) => set({ routePoints: points }),
   setMapFlyTo: (coords) => set({ mapFlyTo: coords }),
   setIsNavigating: (val) => set({ isNavigating: val }),
