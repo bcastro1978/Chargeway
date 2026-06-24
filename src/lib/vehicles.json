@@ -9,7 +9,8 @@
       "frontal_area_m2": 2.5,
       "weight_kg": 1750,
       "peak_charging_kw": 88,
-      "wltp_range_km": 420
+      "wltp_range_km": 420,
+      "charger_type": "GB/T"
     }
   },
   {
@@ -22,7 +23,8 @@
       "frontal_area_m2": 2.4,
       "weight_kg": 1580,
       "peak_charging_kw": 65,
-      "wltp_range_km": 300
+      "wltp_range_km": 300,
+      "charger_type": "GB/T"
     }
   },
   {
@@ -35,7 +37,8 @@
       "frontal_area_m2": 2.3,
       "weight_kg": 1658,
       "peak_charging_kw": 60,
-      "wltp_range_km": 340
+      "wltp_range_km": 340,
+      "charger_type": "GB/T"
     }
   },
   {
@@ -48,7 +51,8 @@
       "frontal_area_m2": 2.1,
       "weight_kg": 1160,
       "peak_charging_kw": 30,
-      "wltp_range_km": 300
+      "wltp_range_km": 300,
+      "charger_type": "CCS2"
     }
   },
   {
@@ -61,7 +65,8 @@
       "frontal_area_m2": 2.1,
       "weight_kg": 1285,
       "peak_charging_kw": 40,
-      "wltp_range_km": 400
+      "wltp_range_km": 400,
+      "charger_type": "CCS2"
     }
   },
   {
@@ -74,7 +79,8 @@
       "frontal_area_m2": 2.3,
       "weight_kg": 2185,
       "peak_charging_kw": 150,
-      "wltp_range_km": 520
+      "wltp_range_km": 520,
+      "charger_type": "GB/T"
     }
   },
   {
@@ -87,7 +93,8 @@
       "frontal_area_m2": 2.6,
       "weight_kg": 2340,
       "peak_charging_kw": 150,
-      "wltp_range_km": 456
+      "wltp_range_km": 456,
+      "charger_type": "GB/T"
     }
   },
   {
@@ -100,7 +107,8 @@
       "frontal_area_m2": 2.4,
       "weight_kg": 2250,
       "peak_charging_kw": 120,
-      "wltp_range_km": 521
+      "wltp_range_km": 521,
+      "charger_type": "GB/T"
     }
   },
   {
@@ -113,7 +121,8 @@
       "frontal_area_m2": 2.8,
       "weight_kg": 2489,
       "peak_charging_kw": 110,
-      "wltp_range_km": 400
+      "wltp_range_km": 400,
+      "charger_type": "GB/T"
     }
   },
   {
@@ -126,7 +135,8 @@
       "frontal_area_m2": 2.7,
       "weight_kg": 1920,
       "peak_charging_kw": 140,
-      "wltp_range_km": 505
+      "wltp_range_km": 505,
+      "charger_type": "GB/T"
     }
   },
   {
@@ -139,7 +149,8 @@
       "frontal_area_m2": 2.5,
       "weight_kg": 1885,
       "peak_charging_kw": 128,
-      "wltp_range_km": 600
+      "wltp_range_km": 600,
+      "charger_type": "CCS1"
     }
   },
   {
@@ -152,7 +163,8 @@
       "frontal_area_m2": 2.8,
       "weight_kg": 1870,
       "peak_charging_kw": 102,
-      "wltp_range_km": 400
+      "wltp_range_km": 400,
+      "charger_type": "CCS1"
     }
   },
   {
@@ -165,7 +177,8 @@
       "frontal_area_m2": 2.6,
       "weight_kg": 1985,
       "peak_charging_kw": 233,
-      "wltp_range_km": 528
+      "wltp_range_km": 528,
+      "charger_type": "CCS1"
     }
   },
   {
@@ -178,7 +191,8 @@
       "frontal_area_m2": 2.5,
       "weight_kg": 1739,
       "peak_charging_kw": 80,
-      "wltp_range_km": 460
+      "wltp_range_km": 460,
+      "charger_type": "CCS1"
     }
   },
   {
@@ -186,12 +200,13 @@
     "brand": "Kia",
     "model": "EV9 GT-Line (99.8 kWh)",
     "specs": {
-      "usable_battery_kwh": 96.0,
+      "usable_battery_kwh": 96,
       "drag_coefficient": 0.28,
       "frontal_area_m2": 3.2,
       "weight_kg": 2560,
       "peak_charging_kw": 210,
-      "wltp_range_km": 505
+      "wltp_range_km": 505,
+      "charger_type": "CCS1"
     }
   },
   {
@@ -204,7 +219,8 @@
       "frontal_area_m2": 2.1,
       "weight_kg": 977,
       "peak_charging_kw": 30,
-      "wltp_range_km": 220
+      "wltp_range_km": 220,
+      "charger_type": "CCS2"
     }
   },
   {
@@ -212,12 +228,13 @@
     "brand": "Renault",
     "model": "Megane E-Tech",
     "specs": {
-      "usable_battery_kwh": 60.0,
+      "usable_battery_kwh": 60,
       "drag_coefficient": 0.29,
       "frontal_area_m2": 2.4,
       "weight_kg": 1636,
       "peak_charging_kw": 130,
-      "wltp_range_km": 450
+      "wltp_range_km": 450,
+      "charger_type": "CCS2"
     }
   },
   {
@@ -230,7 +247,8 @@
       "frontal_area_m2": 2.65,
       "weight_kg": 2100,
       "peak_charging_kw": 233,
-      "wltp_range_km": 507
+      "wltp_range_km": 507,
+      "charger_type": "CCS1"
     }
   },
   {
@@ -238,12 +256,13 @@
     "brand": "Hyundai",
     "model": "Kona EV (64 kWh)",
     "specs": {
-      "usable_battery_kwh": 64.0,
+      "usable_battery_kwh": 64,
       "drag_coefficient": 0.29,
       "frontal_area_m2": 2.4,
       "weight_kg": 1685,
       "peak_charging_kw": 77,
-      "wltp_range_km": 484
+      "wltp_range_km": 484,
+      "charger_type": "CCS1"
     }
   },
   {
@@ -256,7 +275,8 @@
       "frontal_area_m2": 2.6,
       "weight_kg": 1620,
       "peak_charging_kw": 92,
-      "wltp_range_km": 440
+      "wltp_range_km": 440,
+      "charger_type": "CCS2"
     }
   },
   {
@@ -264,12 +284,13 @@
     "brand": "MG",
     "model": "Marvel R AWD",
     "specs": {
-      "usable_battery_kwh": 70.0,
+      "usable_battery_kwh": 70,
       "drag_coefficient": 0.29,
       "frontal_area_m2": 2.6,
       "weight_kg": 1920,
       "peak_charging_kw": 92,
-      "wltp_range_km": 370
+      "wltp_range_km": 370,
+      "charger_type": "CCS2"
     }
   },
   {
@@ -282,7 +303,8 @@
       "frontal_area_m2": 2.7,
       "weight_kg": 1920,
       "peak_charging_kw": 100,
-      "wltp_range_km": 400
+      "wltp_range_km": 400,
+      "charger_type": "GB/T"
     }
   },
   {
@@ -295,7 +317,8 @@
       "frontal_area_m2": 2.6,
       "weight_kg": 2000,
       "peak_charging_kw": 80,
-      "wltp_range_km": 510
+      "wltp_range_km": 510,
+      "charger_type": "GB/T"
     }
   },
   {
@@ -308,7 +331,8 @@
       "frontal_area_m2": 2.3,
       "weight_kg": 1315,
       "peak_charging_kw": 50,
-      "wltp_range_km": 310
+      "wltp_range_km": 310,
+      "charger_type": "GB/T"
     }
   },
   {
@@ -321,7 +345,8 @@
       "frontal_area_m2": 2.65,
       "weight_kg": 2565,
       "peak_charging_kw": 150,
-      "wltp_range_km": 436
+      "wltp_range_km": 436,
+      "charger_type": "CCS1"
     }
   },
   {
@@ -334,7 +359,8 @@
       "frontal_area_m2": 2.35,
       "weight_kg": 2276,
       "peak_charging_kw": 270,
-      "wltp_range_km": 488
+      "wltp_range_km": 488,
+      "charger_type": "CCS1"
     }
   },
   {
@@ -347,7 +373,8 @@
       "frontal_area_m2": 2.33,
       "weight_kg": 2220,
       "peak_charging_kw": 270,
-      "wltp_range_km": 464
+      "wltp_range_km": 464,
+      "charger_type": "CCS1"
     }
   },
   {
@@ -355,12 +382,13 @@
     "brand": "Nissan",
     "model": "Leaf (40 kWh)",
     "specs": {
-      "usable_battery_kwh": 39.0,
+      "usable_battery_kwh": 39,
       "drag_coefficient": 0.28,
       "frontal_area_m2": 2.3,
       "weight_kg": 1580,
       "peak_charging_kw": 50,
-      "wltp_range_km": 270
+      "wltp_range_km": 270,
+      "charger_type": "CHAdeMO"
     }
   },
   {
@@ -373,7 +401,8 @@
       "frontal_area_m2": 2.22,
       "weight_kg": 1765,
       "peak_charging_kw": 170,
-      "wltp_range_km": 513
+      "wltp_range_km": 513,
+      "charger_type": "NACS"
     }
   },
   {
@@ -381,12 +410,13 @@
     "brand": "Geely",
     "model": "Geometry C",
     "specs": {
-      "usable_battery_kwh": 70.0,
+      "usable_battery_kwh": 70,
       "drag_coefficient": 0.273,
       "frontal_area_m2": 2.45,
       "weight_kg": 1685,
       "peak_charging_kw": 75,
-      "wltp_range_km": 460
+      "wltp_range_km": 460,
+      "charger_type": "GB/T"
     }
   },
   {
@@ -399,7 +429,8 @@
       "frontal_area_m2": 2.55,
       "weight_kg": 1730,
       "peak_charging_kw": 80,
-      "wltp_range_km": 410
+      "wltp_range_km": 410,
+      "charger_type": "GB/T"
     }
   },
   {
@@ -407,12 +438,13 @@
     "brand": "Volvo",
     "model": "EX30 Ultra Single Motor",
     "specs": {
-      "usable_battery_kwh": 64.0,
+      "usable_battery_kwh": 64,
       "drag_coefficient": 0.28,
       "frontal_area_m2": 2.42,
       "weight_kg": 1850,
       "peak_charging_kw": 153,
-      "wltp_range_km": 476
+      "wltp_range_km": 476,
+      "charger_type": "CCS1"
     }
   },
   {
@@ -420,12 +452,13 @@
     "brand": "Chevrolet",
     "model": "Bolt EUV",
     "specs": {
-      "usable_battery_kwh": 65.0,
+      "usable_battery_kwh": 65,
       "drag_coefficient": 0.32,
       "frontal_area_m2": 2.58,
       "weight_kg": 1669,
       "peak_charging_kw": 50,
-      "wltp_range_km": 397
+      "wltp_range_km": 397,
+      "charger_type": "CCS1"
     }
   },
   {
@@ -438,7 +471,8 @@
       "frontal_area_m2": 2.3,
       "weight_kg": 1250,
       "peak_charging_kw": 70,
-      "wltp_range_km": 330
+      "wltp_range_km": 330,
+      "charger_type": "GB/T"
     }
   },
   {
@@ -451,7 +485,8 @@
       "frontal_area_m2": 2.6,
       "weight_kg": 1615,
       "peak_charging_kw": 100,
-      "wltp_range_km": 430
+      "wltp_range_km": 430,
+      "charger_type": "GB/T"
     }
   },
   {
@@ -464,7 +499,8 @@
       "frontal_area_m2": 2.8,
       "weight_kg": 1800,
       "peak_charging_kw": 30,
-      "wltp_range_km": 83
+      "wltp_range_km": 83,
+      "charger_type": "GB/T"
     }
   },
   {
@@ -472,12 +508,13 @@
     "brand": "Omoda",
     "model": "E5",
     "specs": {
-      "usable_battery_kwh": 60.0,
+      "usable_battery_kwh": 60,
       "drag_coefficient": 0.28,
       "frontal_area_m2": 2.5,
       "weight_kg": 1710,
       "peak_charging_kw": 80,
-      "wltp_range_km": 430
+      "wltp_range_km": 430,
+      "charger_type": "GB/T"
     }
   },
   {
@@ -490,7 +527,8 @@
       "frontal_area_m2": 2.8,
       "weight_kg": 1890,
       "peak_charging_kw": 80,
-      "wltp_range_km": 364
+      "wltp_range_km": 364,
+      "charger_type": "GB/T"
     }
   },
   {
@@ -503,7 +541,8 @@
       "frontal_area_m2": 2.3,
       "weight_kg": 1450,
       "peak_charging_kw": 60,
-      "wltp_range_km": 374
+      "wltp_range_km": 374,
+      "charger_type": "GB/T"
     }
   },
   {
@@ -511,12 +550,13 @@
     "brand": "Leapmotor",
     "model": "T03",
     "specs": {
-      "usable_battery_kwh": 36.0,
+      "usable_battery_kwh": 36,
       "drag_coefficient": 0.32,
       "frontal_area_m2": 2.2,
       "weight_kg": 1125,
       "peak_charging_kw": 45,
-      "wltp_range_km": 280
+      "wltp_range_km": 280,
+      "charger_type": "GB/T"
     }
   },
   {
@@ -529,7 +569,8 @@
       "frontal_area_m2": 2.6,
       "weight_kg": 1800,
       "peak_charging_kw": 80,
-      "wltp_range_km": 420
+      "wltp_range_km": 420,
+      "charger_type": "GB/T"
     }
   },
   {
@@ -537,12 +578,13 @@
     "brand": "Chevrolet",
     "model": "Equinox EV FWD",
     "specs": {
-      "usable_battery_kwh": 85.0,
-      "drag_coefficient": 0.30,
+      "usable_battery_kwh": 85,
+      "drag_coefficient": 0.3,
       "frontal_area_m2": 2.6,
       "weight_kg": 2233,
       "peak_charging_kw": 150,
-      "wltp_range_km": 513
+      "wltp_range_km": 513,
+      "charger_type": "CCS1"
     }
   },
   {
@@ -555,7 +597,8 @@
       "frontal_area_m2": 2.4,
       "weight_kg": 1450,
       "peak_charging_kw": 60,
-      "wltp_range_km": 330
+      "wltp_range_km": 330,
+      "charger_type": "GB/T"
     }
   },
   {
@@ -568,7 +611,8 @@
       "frontal_area_m2": 2.4,
       "weight_kg": 1665,
       "peak_charging_kw": 60,
-      "wltp_range_km": 320
+      "wltp_range_km": 320,
+      "charger_type": "GB/T"
     }
   },
   {
@@ -576,11 +620,12 @@
     "brand": "GAC Aion",
     "model": "V",
     "specs": {
-      "usable_battery_kwh": 75.0,
+      "usable_battery_kwh": 75,
       "drag_coefficient": 0.29,
       "frontal_area_m2": 2.7,
       "weight_kg": 1880,
-      "peak_charging_kw": 180
+      "peak_charging_kw": 180,
+      "charger_type": "GB/T"
     }
   },
   {
@@ -588,12 +633,13 @@
     "brand": "Chevrolet",
     "model": "Equinox EV",
     "specs": {
-      "usable_battery_kwh": 85.0,
+      "usable_battery_kwh": 85,
       "drag_coefficient": 0.28,
       "frontal_area_m2": 2.5,
       "weight_kg": 2267,
       "peak_charging_kw": 150,
-      "wltp_range_km": 510
+      "wltp_range_km": 510,
+      "charger_type": "CCS1"
     }
   },
   {
@@ -601,12 +647,13 @@
     "brand": "Chevrolet",
     "model": "Blazer EV RS",
     "specs": {
-      "usable_battery_kwh": 85.0,
+      "usable_battery_kwh": 85,
       "drag_coefficient": 0.29,
       "frontal_area_m2": 2.6,
       "weight_kg": 2626,
       "peak_charging_kw": 150,
-      "wltp_range_km": 449
+      "wltp_range_km": 449,
+      "charger_type": "CCS1"
     }
   }
 ]

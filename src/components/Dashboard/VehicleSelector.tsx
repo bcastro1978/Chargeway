@@ -15,6 +15,7 @@ export interface Vehicle {
     frontal_area_m2: number;
     weight_kg: number;
     peak_charging_kw: number;
+    charger_type?: string;
   };
 }
 
@@ -140,6 +141,11 @@ export const VehicleSelector: React.FC<VehicleSelectorProps> = ({
             <div style={{ fontSize: '0.7rem', padding: '2px 8px', borderRadius: '4px', background: 'rgba(255, 255, 255, 0.1)', color: 'var(--color-text-dim)' }}>
               {selectedVehicle.specs.wltp_range_km} km WLTP
             </div>
+            {selectedVehicle.specs.charger_type && (
+              <div style={{ fontSize: '0.7rem', padding: '2px 8px', borderRadius: '4px', background: 'rgba(255, 255, 255, 0.1)', color: 'var(--color-text-dim)' }}>
+                {selectedVehicle.specs.charger_type}
+              </div>
+            )}
           </div>
         </div>
 
