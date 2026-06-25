@@ -24,7 +24,7 @@
       "weight_kg": 1580,
       "peak_charging_kw": 65,
       "wltp_range_km": 380,
-      "charger_type": "GB/T"
+      "charger_type": "CCS2"
     }
   },
   {
@@ -555,7 +555,7 @@
       "frontal_area_m2": 2.7,
       "weight_kg": 1880,
       "peak_charging_kw": 180,
-      "charger_type": "GB/T",
+      "charger_type": "CCS2",
       "wltp_range_km": 500
     }
   },
@@ -584,7 +584,7 @@
       "weight_kg": 1350,
       "peak_charging_kw": 50,
       "wltp_range_km": 298,
-      "charger_type": "GB/T"
+      "charger_type": "CCS2"
     }
   },
   {
