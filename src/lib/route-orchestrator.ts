@@ -128,13 +128,14 @@ export async function generateTripPlan(
 
   // Filter based on UI toggle
   const filterCompatible = useTripStore.getState().filterCompatibleChargers;
-  if (filterCompatible && vehicleSpecs?.charger_type) {
-    const vType = vehicleSpecs.charger_type.toLowerCase().replace(/[^a-z0-9]/g, '');
+  if (filterCompatible && (vehicleSpecs as any)?.charger_type) {
+    const vType = (vehicleSpecs as any).charger_type.toLowerCase().replace(/[^a-z0-9]/g, '');
     chargers = chargers.filter(c => {
       if (!c.tipo_cargador) return true;
       const cType = c.tipo_cargador.toLowerCase().replace(/[^a-z0-9]/g, '');
       if (vType === 'type2' || vType === 'tipo2') return cType.includes('type2') || cType.includes('tipo2') || cType.includes('ac');
-      if (vType === 'ccs2' || vType === 'ccs1') return cType.includes(vType) || cType.includes('ccs') || cType.includes('combo');
+      if (vType === 'ccs2' || vType === 'ccs1') return cType.includes(vType) || cType.includes('ccs') || cType.includes('combo') || cType.includes('cs2') || cType.includes('cs1');
+      if (vType === 'gbt') return cType.includes('gbt') || cType.includes('chino');
       return cType.includes(vType);
     });
   }

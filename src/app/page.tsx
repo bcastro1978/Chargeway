@@ -210,7 +210,10 @@ export default function Home() {
            return cType.includes('type2') || cType.includes('tipo2') || cType.includes('ac');
         }
         if (vType === 'ccs2' || vType === 'ccs1') {
-           return cType.includes(vType) || cType.includes('ccs') || cType.includes('combo');
+           return cType.includes(vType) || cType.includes('ccs') || cType.includes('combo') || cType.includes('cs2') || cType.includes('cs1');
+        }
+        if (vType === 'gbt') {
+           return cType.includes('gbt') || cType.includes('chino');
         }
         return cType.includes(vType);
       });
@@ -401,12 +404,31 @@ export default function Home() {
                 <span>{isNavigating ? 'Detener Viaje' : 'Iniciar Viaje'}</span>
               </button>
               {isNavigating && (
-                <button
-                  onClick={() => setIsSimulating(!isSimulating)}
-                  className="w-full py-2.5 rounded-xl font-semibold text-sm bg-neutral-800 hover:bg-neutral-700 text-white transition-colors flex items-center justify-center gap-2"
-                >
-                  <span>{isSimulating ? 'Pausar Simulacion' : 'Simular Viaje'}</span>
-                </button>
+                <>
+                  <button
+                    onClick={() => setIsSimulating(!isSimulating)}
+                    className="w-full py-2.5 rounded-xl font-semibold text-sm bg-neutral-800 hover:bg-neutral-700 text-white transition-colors flex items-center justify-center gap-2"
+                  >
+                    <span>{isSimulating ? 'Pausar Simulacion' : 'Simular Viaje'}</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      const validPoints = routePoints.filter(p => p.lat !== 0 && p.lng !== 0);
+                      if (validPoints.length < 2) return;
+                      const origin = validPoints[0];
+                      const destination = validPoints[validPoints.length - 1];
+                      const waypoints = validPoints.slice(1, validPoints.length - 1);
+                      let url = `https://www.google.com/maps/dir/?api=1&origin=${origin.lat},${origin.lng}&destination=${destination.lat},${destination.lng}`;
+                      if (waypoints.length > 0) {
+                        url += `&waypoints=${waypoints.map(w => `${w.lat},${w.lng}`).join('|')}`;
+                      }
+                      window.open(url, '_blank');
+                    }}
+                    className="w-full py-2.5 rounded-xl font-semibold text-sm bg-blue-600 hover:bg-blue-500 text-white transition-colors flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(37,99,235,0.4)]"
+                  >
+                    <span>🗺️ Abrir en Google Maps</span>
+                  </button>
+                </>
               )}
             </div>
           ) : (

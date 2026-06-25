@@ -134,6 +134,21 @@ export const useTripStore = create<TripState>((set, get) => ({
   checkSession: async () => {
     set({ isLoadingUser: true });
     try {
+      if (process.env.NODE_ENV === 'development') {
+        set({
+          user: {
+            id: 'dev-mock-id',
+            email: 'dev@chargeway.ec',
+            full_name: 'Desarrollador Local',
+            avatar_url: ''
+          },
+          selectedVehicle: vehicles[0] as Vehicle,
+          needsConsent: false,
+          isLoadingUser: false
+        });
+        return;
+      }
+
       const { data: { session } } = await supabase.auth.getSession();
       if (session?.user) {
         const { data: profile } = await supabase
