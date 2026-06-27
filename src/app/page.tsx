@@ -8,7 +8,7 @@ import { ChargerCard } from '@/components/Dashboard/ChargerCard';
 import { VehicleSelector } from '@/components/Dashboard/VehicleSelector';
 import { RouteSearch, Waypoint } from '@/components/Dashboard/RouteSearch';
 import { AuthButton } from '@/components/Dashboard/AuthButton';
-import { ConsentModal } from '@/components/Dashboard/ConsentModal';
+import { ConsentModal, ExpandableDoc, TERMS_TEXT, PRIVACY_TEXT } from '@/components/Dashboard/ConsentModal';
 import { PwaInstallButton } from '@/components/Dashboard/PwaInstallButton';
 import { Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { fetchAllEcuadorChargers, Charger } from '@/lib/services/charging';
@@ -320,9 +320,14 @@ export default function Home() {
             </p>
           </div>
 
+          <div className="flex flex-col gap-2 w-full max-w-sm mx-auto mt-4 mb-2">
+            <ExpandableDoc title="Leer Términos y Condiciones de Uso" content={TERMS_TEXT} />
+            <ExpandableDoc title="Leer Política de Privacidad" content={PRIVACY_TEXT} />
+          </div>
+
           <button
             onClick={loginWithGoogle}
-            className="w-full bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl py-4 px-6 text-sm font-bold transition-all duration-300 flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_30px_rgba(16,185,129,0.5)] cursor-pointer mt-4"
+            className="w-full bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl py-4 px-6 text-sm font-bold transition-all duration-300 flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_30px_rgba(16,185,129,0.5)] cursor-pointer"
           >
             {/* Google Icon SVG */}
             <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="currentColor">
@@ -346,9 +351,10 @@ export default function Home() {
             <span>Iniciar con Google</span>
           </button>
 
-          <span className="text-[10px] text-neutral-500 mt-2">
-            Al continuar, aceptas la política de privacidad de ChargeWay.
-          </span>
+          <div className="flex flex-col gap-2 mt-6 w-full max-w-sm mx-auto">
+            <ExpandableDoc title="Leer Términos y Condiciones de Uso" content={TERMS_TEXT} />
+            <ExpandableDoc title="Leer Política de Privacidad" content={PRIVACY_TEXT} />
+          </div>
         </div>
       </div>
     );
