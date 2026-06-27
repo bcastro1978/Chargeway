@@ -12,7 +12,8 @@ import { Shield, ChevronDown, ChevronUp, Check, X, Loader2, ExternalLink } from 
 export const TERMS_VERSION = '1.0';
 export const PRIVACY_VERSION = '1.0';
 
-// â”€â”€â”€ Textos Legales â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”export const TERMS_TEXT = `
+// â”€â”€â”€ Textos Legales â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+export const TERMS_TEXT = `
 TÃ‰RMINOS Y CONDICIONES DE USO â€“ ChargeWay
 VersiÃ³n 1.0 | Vigente desde: junio 2025
 
