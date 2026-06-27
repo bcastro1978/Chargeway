@@ -10,7 +10,10 @@
       "weight_kg": 1750,
       "peak_charging_kw": 88,
       "wltp_range_km": 420,
-      "charger_type": "GB/T"
+      "charger_type": "GB/T",
+      "commercial_range_km": 480,
+      "commercial_standard": "NEDC",
+      "certificado_wltp": "si"
     }
   },
   {
@@ -23,8 +26,11 @@
       "frontal_area_m2": 2.4,
       "weight_kg": 1580,
       "peak_charging_kw": 65,
-      "wltp_range_km": 380,
-      "charger_type": "CCS2"
+      "wltp_range_km": 341,
+      "charger_type": "CCS2",
+      "commercial_range_km": 401,
+      "commercial_standard": "NEDC",
+      "certificado_wltp": "no"
     }
   },
   {
@@ -38,7 +44,10 @@
       "weight_kg": 1658,
       "peak_charging_kw": 60,
       "wltp_range_km": 340,
-      "charger_type": "GB/T"
+      "charger_type": "GB/T",
+      "commercial_range_km": 405,
+      "commercial_standard": "NEDC",
+      "certificado_wltp": "si"
     }
   },
   {
@@ -51,8 +60,11 @@
       "frontal_area_m2": 2.1,
       "weight_kg": 1160,
       "peak_charging_kw": 30,
-      "wltp_range_km": 300,
-      "charger_type": "CCS2"
+      "wltp_range_km": 259,
+      "charger_type": "CCS2",
+      "commercial_range_km": 305,
+      "commercial_standard": "NEDC",
+      "certificado_wltp": "no"
     }
   },
   {
@@ -65,8 +77,11 @@
       "frontal_area_m2": 2.1,
       "weight_kg": 1285,
       "peak_charging_kw": 40,
-      "wltp_range_km": 400,
-      "charger_type": "CCS2"
+      "wltp_range_km": 344,
+      "charger_type": "CCS2",
+      "commercial_range_km": 405,
+      "commercial_standard": "NEDC",
+      "certificado_wltp": "no"
     }
   },
   {
@@ -80,7 +95,10 @@
       "weight_kg": 2185,
       "peak_charging_kw": 150,
       "wltp_range_km": 520,
-      "charger_type": "GB/T"
+      "charger_type": "GB/T",
+      "commercial_range_km": 650,
+      "commercial_standard": "CLTC",
+      "certificado_wltp": "si"
     }
   },
   {
@@ -94,7 +112,10 @@
       "weight_kg": 2340,
       "peak_charging_kw": 150,
       "wltp_range_km": 456,
-      "charger_type": "GB/T"
+      "charger_type": "GB/T",
+      "commercial_range_km": 610,
+      "commercial_standard": "CLTC",
+      "certificado_wltp": "si"
     }
   },
   {
@@ -108,7 +129,10 @@
       "weight_kg": 2250,
       "peak_charging_kw": 120,
       "wltp_range_km": 521,
-      "charger_type": "GB/T"
+      "charger_type": "GB/T",
+      "commercial_range_km": 610,
+      "commercial_standard": "CLTC",
+      "certificado_wltp": "si"
     }
   },
   {
@@ -122,7 +146,10 @@
       "weight_kg": 2489,
       "peak_charging_kw": 110,
       "wltp_range_km": 400,
-      "charger_type": "GB/T"
+      "charger_type": "GB/T",
+      "commercial_range_km": 635,
+      "commercial_standard": "CLTC",
+      "certificado_wltp": "si"
     }
   },
   {
@@ -135,8 +162,11 @@
       "frontal_area_m2": 2.7,
       "weight_kg": 1920,
       "peak_charging_kw": 140,
-      "wltp_range_km": 505,
-      "charger_type": "GB/T"
+      "wltp_range_km": 442,
+      "charger_type": "GB/T",
+      "commercial_range_km": 520,
+      "commercial_standard": "CLTC",
+      "certificado_wltp": "no"
     }
   },
   {
@@ -150,7 +180,10 @@
       "weight_kg": 1885,
       "peak_charging_kw": 128,
       "wltp_range_km": 600,
-      "charger_type": "CCS1"
+      "charger_type": "CCS1",
+      "commercial_range_km": 600,
+      "commercial_standard": "WLTP",
+      "certificado_wltp": "si"
     }
   },
   {
@@ -164,7 +197,10 @@
       "weight_kg": 1870,
       "peak_charging_kw": 102,
       "wltp_range_km": 400,
-      "charger_type": "CCS1"
+      "charger_type": "CCS1",
+      "commercial_range_km": 530,
+      "commercial_standard": "NEDC",
+      "certificado_wltp": "si"
     }
   },
   {
@@ -178,7 +214,10 @@
       "weight_kg": 1985,
       "peak_charging_kw": 233,
       "wltp_range_km": 528,
-      "charger_type": "CCS1"
+      "charger_type": "CCS1",
+      "commercial_range_km": 528,
+      "commercial_standard": "WLTP",
+      "certificado_wltp": "si"
     }
   },
   {
@@ -192,7 +231,10 @@
       "weight_kg": 1739,
       "peak_charging_kw": 80,
       "wltp_range_km": 460,
-      "charger_type": "CCS1"
+      "charger_type": "CCS1",
+      "commercial_range_km": 460,
+      "commercial_standard": "NEDC",
+      "certificado_wltp": "si"
     }
   },
   {
@@ -206,7 +248,10 @@
       "weight_kg": 2560,
       "peak_charging_kw": 210,
       "wltp_range_km": 505,
-      "charger_type": "CCS1"
+      "charger_type": "CCS1",
+      "commercial_range_km": 505,
+      "commercial_standard": "WLTP",
+      "certificado_wltp": "si"
     }
   },
   {
@@ -220,7 +265,10 @@
       "weight_kg": 977,
       "peak_charging_kw": 30,
       "wltp_range_km": 220,
-      "charger_type": "CCS2"
+      "charger_type": "CCS2",
+      "commercial_range_km": 298,
+      "commercial_standard": "WLTP",
+      "certificado_wltp": "si"
     }
   },
   {
@@ -234,7 +282,10 @@
       "weight_kg": 1636,
       "peak_charging_kw": 130,
       "wltp_range_km": 450,
-      "charger_type": "CCS2"
+      "charger_type": "CCS2",
+      "commercial_range_km": 450,
+      "commercial_standard": "WLTP",
+      "certificado_wltp": "si"
     }
   },
   {
@@ -248,7 +299,10 @@
       "weight_kg": 2100,
       "peak_charging_kw": 233,
       "wltp_range_km": 507,
-      "charger_type": "CCS1"
+      "charger_type": "CCS1",
+      "commercial_range_km": 480,
+      "commercial_standard": "NEDC",
+      "certificado_wltp": "si"
     }
   },
   {
@@ -262,7 +316,10 @@
       "weight_kg": 1685,
       "peak_charging_kw": 77,
       "wltp_range_km": 484,
-      "charger_type": "CCS1"
+      "charger_type": "CCS1",
+      "commercial_range_km": 484,
+      "commercial_standard": "WLTP",
+      "certificado_wltp": "si"
     }
   },
   {
@@ -276,7 +333,10 @@
       "weight_kg": 1620,
       "peak_charging_kw": 92,
       "wltp_range_km": 440,
-      "charger_type": "CCS2"
+      "charger_type": "CCS2",
+      "commercial_range_km": 440,
+      "commercial_standard": "WLTP",
+      "certificado_wltp": "si"
     }
   },
   {
@@ -290,7 +350,10 @@
       "weight_kg": 1920,
       "peak_charging_kw": 92,
       "wltp_range_km": 370,
-      "charger_type": "CCS2"
+      "charger_type": "CCS2",
+      "commercial_range_km": 370,
+      "commercial_standard": "WLTP",
+      "certificado_wltp": "si"
     }
   },
   {
@@ -304,7 +367,10 @@
       "weight_kg": 2565,
       "peak_charging_kw": 150,
       "wltp_range_km": 436,
-      "charger_type": "CCS1"
+      "charger_type": "CCS1",
+      "commercial_range_km": 436,
+      "commercial_standard": "WLTP",
+      "certificado_wltp": "si"
     }
   },
   {
@@ -318,7 +384,10 @@
       "weight_kg": 2276,
       "peak_charging_kw": 270,
       "wltp_range_km": 488,
-      "charger_type": "CCS1"
+      "charger_type": "CCS1",
+      "commercial_range_km": 488,
+      "commercial_standard": "WLTP",
+      "certificado_wltp": "si"
     }
   },
   {
@@ -332,7 +401,10 @@
       "weight_kg": 2220,
       "peak_charging_kw": 270,
       "wltp_range_km": 464,
-      "charger_type": "CCS1"
+      "charger_type": "CCS1",
+      "commercial_range_km": 463,
+      "commercial_standard": "WLTP",
+      "certificado_wltp": "si"
     }
   },
   {
@@ -346,7 +418,10 @@
       "weight_kg": 1580,
       "peak_charging_kw": 50,
       "wltp_range_km": 270,
-      "charger_type": "CHAdeMO"
+      "charger_type": "CHAdeMO",
+      "commercial_range_km": 378,
+      "commercial_standard": "NEDC",
+      "certificado_wltp": "si"
     }
   },
   {
@@ -360,7 +435,10 @@
       "weight_kg": 1765,
       "peak_charging_kw": 170,
       "wltp_range_km": 513,
-      "charger_type": "NACS"
+      "charger_type": "NACS",
+      "commercial_range_km": 438,
+      "commercial_standard": "EPA",
+      "certificado_wltp": "si"
     }
   },
   {
@@ -374,7 +452,10 @@
       "weight_kg": 1685,
       "peak_charging_kw": 75,
       "wltp_range_km": 460,
-      "charger_type": "GB/T"
+      "charger_type": "GB/T",
+      "commercial_range_km": 550,
+      "commercial_standard": "NEDC",
+      "certificado_wltp": "si"
     }
   },
   {
@@ -387,8 +468,11 @@
       "frontal_area_m2": 2.55,
       "weight_kg": 1730,
       "peak_charging_kw": 80,
-      "wltp_range_km": 410,
-      "charger_type": "GB/T"
+      "wltp_range_km": 417,
+      "charger_type": "GB/T",
+      "commercial_range_km": 490,
+      "commercial_standard": "NEDC",
+      "certificado_wltp": "no"
     }
   },
   {
@@ -402,7 +486,10 @@
       "weight_kg": 1850,
       "peak_charging_kw": 153,
       "wltp_range_km": 476,
-      "charger_type": "CCS1"
+      "charger_type": "CCS1",
+      "commercial_range_km": 476,
+      "commercial_standard": "WLTP",
+      "certificado_wltp": "si"
     }
   },
   {
@@ -416,7 +503,10 @@
       "weight_kg": 1669,
       "peak_charging_kw": 50,
       "wltp_range_km": 456,
-      "charger_type": "CCS1"
+      "charger_type": "CCS1",
+      "commercial_range_km": 397,
+      "commercial_standard": "EPA",
+      "certificado_wltp": "si"
     }
   },
   {
@@ -429,8 +519,11 @@
       "frontal_area_m2": 2.3,
       "weight_kg": 1250,
       "peak_charging_kw": 70,
-      "wltp_range_km": 330,
-      "charger_type": "GB/T"
+      "wltp_range_km": 274,
+      "charger_type": "GB/T",
+      "commercial_range_km": 322,
+      "commercial_standard": "NEDC",
+      "certificado_wltp": "no"
     }
   },
   {
@@ -443,8 +536,11 @@
       "frontal_area_m2": 2.6,
       "weight_kg": 1615,
       "peak_charging_kw": 100,
-      "wltp_range_km": 430,
-      "charger_type": "GB/T"
+      "wltp_range_km": 451,
+      "charger_type": "GB/T",
+      "commercial_range_km": 530,
+      "commercial_standard": "CLTC",
+      "certificado_wltp": "no"
     }
   },
   {
@@ -457,8 +553,11 @@
       "frontal_area_m2": 2.8,
       "weight_kg": 1800,
       "peak_charging_kw": 30,
-      "wltp_range_km": 83,
-      "charger_type": "GB/T"
+      "wltp_range_km": 128,
+      "charger_type": "GB/T",
+      "commercial_range_km": 150,
+      "commercial_standard": "CLTC",
+      "certificado_wltp": "no"
     }
   },
   {
@@ -471,8 +570,11 @@
       "frontal_area_m2": 2.3,
       "weight_kg": 1450,
       "peak_charging_kw": 60,
-      "wltp_range_km": 374,
-      "charger_type": "GB/T"
+      "wltp_range_km": 344,
+      "charger_type": "GB/T",
+      "commercial_range_km": 405,
+      "commercial_standard": "CLTC",
+      "certificado_wltp": "no"
     }
   },
   {
@@ -486,7 +588,10 @@
       "weight_kg": 1125,
       "peak_charging_kw": 45,
       "wltp_range_km": 280,
-      "charger_type": "GB/T"
+      "charger_type": "GB/T",
+      "commercial_range_km": 418,
+      "commercial_standard": "CLTC",
+      "certificado_wltp": "si"
     }
   },
   {
@@ -500,7 +605,10 @@
       "weight_kg": 1800,
       "peak_charging_kw": 80,
       "wltp_range_km": 420,
-      "charger_type": "GB/T"
+      "charger_type": "GB/T",
+      "commercial_range_km": 530,
+      "commercial_standard": "CLTC",
+      "certificado_wltp": "si"
     }
   },
   {
@@ -514,7 +622,10 @@
       "weight_kg": 2233,
       "peak_charging_kw": 150,
       "wltp_range_km": 653,
-      "charger_type": "CCS1"
+      "charger_type": "CCS1",
+      "commercial_range_km": 513,
+      "commercial_standard": "EPA",
+      "certificado_wltp": "si"
     }
   },
   {
@@ -527,8 +638,11 @@
       "frontal_area_m2": 2.4,
       "weight_kg": 1450,
       "peak_charging_kw": 60,
-      "wltp_range_km": 330,
-      "charger_type": "GB/T"
+      "wltp_range_km": 510,
+      "charger_type": "GB/T",
+      "commercial_range_km": 600,
+      "commercial_standard": "CLTC",
+      "certificado_wltp": "no"
     }
   },
   {
@@ -541,8 +655,11 @@
       "frontal_area_m2": 2.4,
       "weight_kg": 1665,
       "peak_charging_kw": 60,
-      "wltp_range_km": 320,
-      "charger_type": "GB/T"
+      "wltp_range_km": 391,
+      "charger_type": "GB/T",
+      "commercial_range_km": 460,
+      "commercial_standard": "NEDC",
+      "certificado_wltp": "no"
     }
   },
   {
@@ -556,7 +673,10 @@
       "weight_kg": 1880,
       "peak_charging_kw": 180,
       "charger_type": "CCS2",
-      "wltp_range_km": 500
+      "wltp_range_km": 510,
+      "commercial_range_km": 600,
+      "commercial_standard": "NEDC",
+      "certificado_wltp": "no"
     }
   },
   {
@@ -570,7 +690,10 @@
       "weight_kg": 2626,
       "peak_charging_kw": 150,
       "wltp_range_km": 578,
-      "charger_type": "CCS1"
+      "charger_type": "CCS1",
+      "commercial_range_km": 521,
+      "commercial_standard": "EPA",
+      "certificado_wltp": "si"
     }
   },
   {
@@ -583,8 +706,11 @@
       "frontal_area_m2": 2.2,
       "weight_kg": 1350,
       "peak_charging_kw": 50,
-      "wltp_range_km": 298,
-      "charger_type": "CCS2"
+      "wltp_range_km": 306,
+      "charger_type": "CCS2",
+      "commercial_range_km": 360,
+      "commercial_standard": "NEDC",
+      "certificado_wltp": "no"
     }
   },
   {
@@ -597,8 +723,11 @@
       "frontal_area_m2": 2.5,
       "weight_kg": 1750,
       "peak_charging_kw": 120,
-      "wltp_range_km": 415,
-      "charger_type": "GB/T"
+      "wltp_range_km": 340,
+      "charger_type": "GB/T",
+      "commercial_range_km": 400,
+      "commercial_standard": "CLTC",
+      "certificado_wltp": "no"
     }
   },
   {
@@ -611,8 +740,11 @@
       "frontal_area_m2": 2.7,
       "weight_kg": 1830,
       "peak_charging_kw": 100,
-      "wltp_range_km": 430,
-      "charger_type": "GB/T"
+      "wltp_range_km": 527,
+      "charger_type": "GB/T",
+      "commercial_range_km": 620,
+      "commercial_standard": "CLTC",
+      "certificado_wltp": "no"
     }
   },
   {
@@ -625,8 +757,11 @@
       "frontal_area_m2": 2.5,
       "weight_kg": 1650,
       "peak_charging_kw": 75,
-      "wltp_range_km": 445,
-      "charger_type": "GB/T"
+      "wltp_range_km": 378,
+      "charger_type": "GB/T",
+      "commercial_range_km": 445,
+      "commercial_standard": "CLTC",
+      "certificado_wltp": "no"
     }
   },
   {
@@ -639,8 +774,11 @@
       "frontal_area_m2": 2.7,
       "weight_kg": 1930,
       "peak_charging_kw": 120,
-      "wltp_range_km": 620,
-      "charger_type": "GB/T"
+      "wltp_range_km": 442,
+      "charger_type": "GB/T",
+      "commercial_range_km": 520,
+      "commercial_standard": "CLTC",
+      "certificado_wltp": "no"
     }
   },
   {
@@ -653,8 +791,11 @@
       "frontal_area_m2": 2.27,
       "weight_kg": 1235,
       "peak_charging_kw": 40,
-      "wltp_range_km": 401,
-      "charger_type": "GB/T"
+      "wltp_range_km": 283,
+      "charger_type": "GB/T",
+      "commercial_range_km": 333,
+      "commercial_standard": "CLTC",
+      "certificado_wltp": "no"
     }
   },
   {
@@ -667,8 +808,11 @@
       "frontal_area_m2": 2.4,
       "weight_kg": 1325,
       "peak_charging_kw": 40,
-      "wltp_range_km": 430,
-      "charger_type": "CCS2"
+      "wltp_range_km": 349,
+      "charger_type": "CCS2",
+      "commercial_range_km": 410,
+      "commercial_standard": "CLTC",
+      "certificado_wltp": "no"
     }
   },
   {
@@ -682,7 +826,10 @@
       "weight_kg": 1710,
       "peak_charging_kw": 80,
       "wltp_range_km": 430,
-      "charger_type": "GB/T"
+      "charger_type": "GB/T",
+      "commercial_range_km": 450,
+      "commercial_standard": "CLTC",
+      "certificado_wltp": "si"
     }
   },
   {
@@ -696,7 +843,10 @@
       "weight_kg": 1850,
       "peak_charging_kw": 40,
       "wltp_range_km": 90,
-      "charger_type": "GB/T"
+      "charger_type": "GB/T",
+      "commercial_range_km": 90,
+      "commercial_standard": "WLTP",
+      "certificado_wltp": "si"
     }
   }
 ]

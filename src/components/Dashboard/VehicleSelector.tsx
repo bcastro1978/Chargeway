@@ -139,7 +139,7 @@ export const VehicleSelector: React.FC<VehicleSelectorProps> = ({
               {selectedVehicle.specs.usable_battery_kwh} kWh
             </div>
             <div style={{ fontSize: '0.7rem', padding: '2px 8px', borderRadius: '4px', background: 'rgba(255, 255, 255, 0.1)', color: 'var(--color-text-dim)' }}>
-              {selectedVehicle.specs.wltp_range_km} km WLTP
+              {selectedVehicle.specs.commercial_range_km ? `${selectedVehicle.specs.commercial_range_km} km / ` : ''}{selectedVehicle.specs.wltp_range_km} km WLTP
             </div>
             {selectedVehicle.specs.charger_type && (
               <div style={{ fontSize: '0.7rem', padding: '2px 8px', borderRadius: '4px', background: 'rgba(255, 255, 255, 0.1)', color: 'var(--color-text-dim)' }}>
