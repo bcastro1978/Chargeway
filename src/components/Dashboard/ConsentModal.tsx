@@ -72,16 +72,7 @@ Para consultas legales: chargewayec@gmail.com
 \`;
 
 export const PRIVACY_TEXT = `
-POLÃ�TICA DE PRIVACIDAD â€“ ChargeWay
-VersiÃ³n 1.0 | Vigente desde: junio 2025
-
-10. CONTACTO
-
-Para consultas legales: chargewayec@gmail.com
-`;
-
-const PRIVACY_TEXT = `
-POLÃ�TICA DE PRIVACIDAD â€“ ChargeWay
+POLÃTICA DE PRIVACIDAD â€“ ChargeWay
 VersiÃ³n 1.0 | Vigente desde: junio 2025
 Conforme a la Ley OrgÃ¡nica de ProtecciÃ³n de Datos Personales (LOPDP) del Ecuador
 
@@ -104,7 +95,7 @@ Al registrarse y utilizar ChargeWay, recopilamos:
 â€¢ Mantener el historial de viajes del usuario.
 â€¢ Recordar preferencias del vehÃ­culo entre sesiones.
 
-3.2 FINALIDADES ESTADÃ�STICAS CON ANONIMIZACIÃ“N (base legal: interÃ©s legÃ­timo + consentimiento):
+3.2 FINALIDADES ESTADÃSTICAS CON ANONIMIZACIÃ“N (base legal: interÃ©s legÃ­timo + consentimiento):
 Los datos de movilidad son sometidos a un proceso tÃ©cnico de ANONIMIZACIÃ“N IRREVERSIBLE, conforme a la ResoluciÃ³n No. SPDP-SPD-2025-0030-R, antes de ser compartidos en los siguientes dashboards:
 â€¢ Operadores de carga: anÃ¡lisis de rutas frecuentes por provincia y cantÃ³n para planificaciÃ³n de electrolineras.
 â€¢ Fabricantes de vehÃ­culos: anÃ¡lisis de participaciÃ³n de mercado por regiÃ³n, benchmarking entre marcas.
@@ -132,7 +123,7 @@ Conforme al CapÃ­tulo IV de la LOPDP, tienes derecho a:
 
 Para ejercer tus derechos, escrÃ­benos a: chargewayec@gmail.com
 
-6. MODIFICACIONES A ESTA POLÃ�TICA
+6. MODIFICACIONES A ESTA POLÃTICA
 
 Cualquier cambio sustancial serÃ¡ notificado por correo electrÃ³nico y requerirÃ¡ nueva aceptaciÃ³n explÃ­cita del usuario antes de continuar usando la plataforma.
 `;
@@ -414,7 +405,7 @@ export const ConsentModal: React.FC<ConsentModalProps> = ({ onAccept }) => {
         }}>
           {!requiredOk && (
             <p style={{ fontSize: '0.68rem', color: '#f59e0b', display: 'flex', alignItems: 'center', gap: '4px', margin: 0 }}>
-              <span>âš ï¸�</span>
+              <span>âš ï¸</span>
               <span>Debes aceptar los dos consentimientos requeridos para continuar.</span>
             </p>
           )}
