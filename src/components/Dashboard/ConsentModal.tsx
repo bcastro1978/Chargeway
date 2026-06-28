@@ -69,7 +69,7 @@ Los presentes TÃ©rminos se rigen por las leyes de la RepÃºblica del Ecuador.
 10. CONTACTO
 
 Para consultas legales: chargewayec@gmail.com
-\`;
+`;
 
 export const PRIVACY_TEXT = `
 POLÃTICA DE PRIVACIDAD â€“ ChargeWay
