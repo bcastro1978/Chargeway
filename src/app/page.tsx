@@ -350,11 +350,6 @@ export default function Home() {
             </svg>
             <span>Iniciar con Google</span>
           </button>
-
-          <div className="flex flex-col gap-2 mt-6 w-full max-w-sm mx-auto">
-            <ExpandableDoc title="Leer Términos y Condiciones de Uso" content={TERMS_TEXT} />
-            <ExpandableDoc title="Leer Política de Privacidad" content={PRIVACY_TEXT} />
-          </div>
         </div>
       </div>
     );
