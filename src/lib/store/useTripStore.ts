@@ -37,7 +37,7 @@ interface TripState {
   currentDistance: number;
   setCurrentDistance: (val: number) => void;
   fetchFavorites: () => Promise<void>;
-  addFavorite: (wp: Waypoint) => Promise<void>;
+  addFavorite: (wp: Waypoint, originalAddress?: string) => Promise<void>;
   removeFavorite: (id: string) => Promise<void>;
   saveConsent: (choices: ConsentChoices) => Promise<void>;
   mapSelectionIndex: number | null;
@@ -346,7 +346,7 @@ export const useTripStore = create<TripState>((set, get) => ({
     }
   },
 
-  addFavorite: async (wp: Waypoint) => {
+  addFavorite: async (wp: Waypoint, originalAddress?: string) => {
     const { user, favoriteLocations } = get();
     if (!user) return;
     
@@ -359,7 +359,7 @@ export const useTripStore = create<TripState>((set, get) => ({
         .insert({
           user_id: user.id,
           name: wp.name,
-          address: wp.name, // We store name as address for now
+          address: originalAddress || wp.name,
           lat: wp.lat,
           lng: wp.lng
         })

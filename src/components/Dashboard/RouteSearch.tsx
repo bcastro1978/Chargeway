@@ -64,7 +64,16 @@ const SearchInput: React.FC<SearchInputProps> = ({
     if (currentFav) {
       await removeFavorite(currentFav.id);
     } else {
-      await addFavorite(location);
+      const alias = window.prompt('Ingresa un nombre o alias para este lugar favorito (opcional):', location.name);
+      if (alias === null) return; // User cancelled
+      const finalName = alias.trim() || location.name;
+
+      await addFavorite({
+        id: `fav-${Date.now()}`,
+        name: finalName,
+        lat: location.lat,
+        lng: location.lng
+      }, location.name);
     }
   };
 
