@@ -13,6 +13,7 @@ import { PwaInstallButton } from '@/components/Dashboard/PwaInstallButton';
 import { Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { fetchAllEcuadorChargers, Charger } from '@/lib/services/charging';
 import { useTripStore } from '@/lib/store/useTripStore';
+import { useWakeLock } from '@/hooks/useWakeLock';
 
 const EV_FACTS = [
   {
@@ -69,6 +70,8 @@ export default function Home() {
     needsConsent,
     saveConsent,
   } = useTripStore();
+
+  useWakeLock(isNavigating);
 
   const [allChargers, setAllChargers] = useState<Charger[]>([]);
   const [hoveredSegment, setHoveredSegment] = useState<number | null>(null);
