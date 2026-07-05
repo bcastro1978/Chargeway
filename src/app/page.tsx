@@ -706,13 +706,13 @@ export default function Home() {
               <div className="p-8 text-center text-neutral-500 bg-neutral-900/30 rounded-2xl border border-neutral-800 border-dashed">
                 Los cargadores en ruta apareceran una vez calculado el trayecto
               </div>
-            ) : tripPlan.chargers.length === 0 ? (
+            ) : mergedChargers.filter(c => routeChargerIds.has(c.id)).length === 0 ? (
               <div className="p-8 text-center text-neutral-400 bg-neutral-900/30 rounded-2xl border border-neutral-800 border-dashed">
-                No se encontraron cargadores en un radio de 30 km del trayecto
+                No se encontraron cargadores muy cercanos (5 km) al trayecto
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {tripPlan.chargers.slice(0, 8).map(charger => (
+                {mergedChargers.filter(c => routeChargerIds.has(c.id)).slice(0, 8).map(charger => (
                   <ChargerCard key={charger.id} charger={charger} onNavigateToCharger={handleNavigateToCharger} />
                 ))}
               </div>

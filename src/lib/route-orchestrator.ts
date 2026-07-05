@@ -76,11 +76,24 @@ function pickBestChargingStop(
   const reachableLimit = initialRangeKm * 0.88; // 12% reserve to reach the charger
   const idealKm = initialRangeKm * 0.70;        // stop at ~70% of range for efficiency
 
-  const reachable = chargers
+  let reachable = chargers
     .map(c => ({ charger: c, posKm: chargerPositionKm(c, coords, cumDist) }))
     .filter(({ posKm }) => posKm > 0 && posKm <= reachableLimit);
 
-  if (reachable.length === 0) return null;
+  if (reachable.length === 0) {
+    // Fallback: if no chargers are within the safe reachable limit,
+    // at least suggest the FIRST charger available on the route, 
+    // so the user knows where the closest option is.
+    const allOnRoute = chargers
+      .map(c => ({ charger: c, posKm: chargerPositionKm(c, coords, cumDist) }))
+      .filter(({ posKm }) => posKm > 0)
+      .sort((a, b) => a.posKm - b.posKm);
+      
+    if (allOnRoute.length > 0) {
+      return allOnRoute[0].charger;
+    }
+    return null;
+  }
 
   // Prefer fast chargers
   const fast = reachable.filter(({ charger }) =>
