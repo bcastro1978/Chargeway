@@ -10,6 +10,7 @@ export interface Waypoint {
   name: string;
   lat: number;
   lng: number;
+  address?: string;
 }
 
 interface RouteSearchProps {
@@ -48,6 +49,9 @@ const SearchInput: React.FC<SearchInputProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [proximity, setProximity] = useState<[number, number] | null>(null);
+  const [promptOpen, setPromptOpen] = useState(false);
+  const [aliasValue, setAliasValue] = useState('');
+  const [alertMsg, setAlertMsg] = useState('');
   
   const favoriteLocations = useTripStore(state => state.favoriteLocations);
   const addFavorite = useTripStore(state => state.addFavorite);
@@ -58,23 +62,27 @@ const SearchInput: React.FC<SearchInputProps> = ({
   
   const toggleFavorite = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!user) return alert('Debes iniciar sesión para guardar favoritos');
-    if (!location || !hasCoords) return alert('Selecciona una ubicación válida primero');
+    if (!user) return setAlertMsg('Debes iniciar sesión para guardar favoritos');
+    if (!location || !hasCoords) return setAlertMsg('Selecciona una ubicación válida primero');
     
     if (currentFav) {
       await removeFavorite(currentFav.id);
     } else {
-      const alias = window.prompt('Ingresa un nombre o alias para este lugar favorito (opcional):', location.name);
-      if (alias === null) return; // User cancelled
-      const finalName = alias.trim() || location.name;
-
-      await addFavorite({
-        id: `fav-${Date.now()}`,
-        name: finalName,
-        lat: location.lat,
-        lng: location.lng
-      }, location.name);
+      setAliasValue(location.name);
+      setPromptOpen(true);
     }
+  };
+
+  const handleSaveFavorite = async () => {
+    if (!location) return;
+    const finalName = aliasValue.trim() || location.name;
+    await addFavorite({
+      id: `fav-${Date.now()}`,
+      name: finalName,
+      lat: location.lat,
+      lng: location.lng
+    }, location.name);
+    setPromptOpen(false);
   };
 
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -150,7 +158,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
 
   const useCurrentLocation = () => {
     if (typeof window === 'undefined' || !navigator.geolocation) {
-      alert('Tu navegador no soporta geolocalización.');
+      setAlertMsg('Tu navegador no soporta geolocalización.');
       return;
     }
     setIsLoading(true);
@@ -334,9 +342,11 @@ const SearchInput: React.FC<SearchInputProps> = ({
               onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
             >
               <Star size={16} color="#f59e0b" fill="#f59e0b" style={{ flexShrink: 0 }} />
-              <div>
-                <div style={{ fontWeight: 600, fontSize: '0.875rem', color: 'var(--color-text)' }}>{f.name}</div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--color-text-dim)' }}>Guardado en Favoritos</div>
+              <div style={{ overflow: 'hidden', flex: 1 }}>
+                <div style={{ fontWeight: 600, fontSize: '0.875rem', color: 'var(--color-text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{f.name}</div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--color-text-dim)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {f.address && f.address !== f.name ? f.address : 'Guardado en Favoritos'}
+                </div>
               </div>
             </div>
           ))}
@@ -353,6 +363,38 @@ const SearchInput: React.FC<SearchInputProps> = ({
               <div style={{ fontSize: '0.75rem', color: 'var(--color-text-dim)' }}>{s.place_name}</div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Modals para alertas y alias */}
+      {alertMsg && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={(e) => { e.stopPropagation(); setAlertMsg(''); }}>
+          <div style={{ background: 'var(--color-bg)', padding: '24px', borderRadius: '12px', width: '90%', maxWidth: '360px', border: '1px solid var(--color-outline)', textAlign: 'center' }} onClick={(e) => e.stopPropagation()}>
+            <h3 style={{ marginTop: 0, marginBottom: '16px', color: 'var(--color-text)', fontSize: '1.125rem' }}>Atención</h3>
+            <p style={{ color: 'var(--color-text-dim)', fontSize: '0.875rem', marginBottom: '24px' }}>{alertMsg}</p>
+            <button type="button" onClick={() => setAlertMsg('')} style={{ width: '100%', padding: '10px 16px', background: 'var(--color-primary)', color: 'var(--color-bg)', border: 'none', cursor: 'pointer', borderRadius: '8px', fontWeight: 600 }}>Entendido</button>
+          </div>
+        </div>
+      )}
+
+      {promptOpen && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={(e) => { e.stopPropagation(); setPromptOpen(false); }}>
+          <div style={{ background: 'var(--color-bg)', padding: '24px', borderRadius: '12px', width: '90%', maxWidth: '400px', border: '1px solid var(--color-outline)' }} onClick={(e) => e.stopPropagation()}>
+            <h3 style={{ marginTop: 0, marginBottom: '16px', color: 'var(--color-text)', fontSize: '1.125rem' }}>Guardar lugar favorito</h3>
+            <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.875rem', color: 'var(--color-text-dim)' }}>Nombre o alias (opcional):</label>
+            <input 
+              autoFocus
+              type="text" 
+              value={aliasValue} 
+              onChange={e => setAliasValue(e.target.value)} 
+              onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); handleSaveFavorite(); } }}
+              style={{ width: '100%', padding: '12px', borderRadius: '8px', background: 'var(--color-bg-secondary)', border: '1px solid var(--color-outline)', color: 'var(--color-text)', marginBottom: '24px', outline: 'none' }} 
+            />
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
+              <button type="button" onClick={() => setPromptOpen(false)} style={{ padding: '8px 16px', background: 'transparent', color: 'var(--color-text)', border: 'none', cursor: 'pointer', borderRadius: '8px' }}>Cancelar</button>
+              <button type="button" onClick={handleSaveFavorite} style={{ padding: '8px 16px', background: 'var(--color-primary)', color: 'var(--color-bg)', border: 'none', cursor: 'pointer', borderRadius: '8px', fontWeight: 600 }}>Guardar</button>
+            </div>
+          </div>
         </div>
       )}
     </div>

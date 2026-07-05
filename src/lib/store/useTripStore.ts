@@ -339,7 +339,7 @@ export const useTripStore = create<TripState>((set, get) => ({
         .order('created_at', { ascending: false });
       
       if (data && !error) {
-        set({ favoriteLocations: data.map(d => ({ id: d.id, name: d.name, lat: d.lat, lng: d.lng })) });
+        set({ favoriteLocations: data.map(d => ({ id: d.id, name: d.name, address: d.address, lat: d.lat, lng: d.lng })) });
       }
     } catch (err) {
       console.error('Error fetching favorites', err);
@@ -367,15 +367,12 @@ export const useTripStore = create<TripState>((set, get) => ({
         .single();
         
       if (data && !error) {
-        set({ favoriteLocations: [{ id: data.id, name: data.name, lat: data.lat, lng: data.lng }, ...favoriteLocations] });
-        alert('Lugar guardado en favoritos 🌟');
+        set({ favoriteLocations: [{ id: data.id, name: data.name, address: data.address, lat: data.lat, lng: data.lng }, ...favoriteLocations] });
       } else if (error) {
         console.error('Supabase Error:', error);
-        alert(`Error al guardar en base de datos: ${error.message}`);
       }
     } catch (err: any) {
       console.error('Error adding favorite', err);
-      alert(`Error inesperado: ${err.message || 'Desconocido'}`);
     }
   },
 
