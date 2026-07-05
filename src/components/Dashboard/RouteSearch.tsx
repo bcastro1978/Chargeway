@@ -319,8 +319,8 @@ const SearchInput: React.FC<SearchInputProps> = ({
           {query.length === 0 && favoriteLocations.map((f) => (
             <div
               key={`fav-${f.id}`}
-              onClick={() => handleSelect({ id: f.id, name: f.name, place_name: f.name, center: [f.lng, f.lat], geometry: { type: 'Point', coordinates: [f.lng, f.lat] }, place_type: ['favorite'], properties: {}, text: f.name, type: 'Feature' })}
-              style={{ padding: '12px', cursor: 'pointer', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', gap: '8px', transition: 'background 0.2s' }}
+              onClick={() => handleSelect({ id: f.id, name: f.name, place_name: f.name, center: [f.lng, f.lat] } as SearchSuggestion)}
+              style={{ padding: '12px', cursor: 'pointer', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--color-primary)', fontSize: '0.875rem', fontWeight: 500, transition: 'background 0.2s' }}
               onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; }}
               onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
             >
