@@ -765,6 +765,40 @@
     }
   },
   {
+    "id": "dongfeng-nammi-01-e2",
+    "brand": "Dongfeng",
+    "model": "Nammi 01 E2",
+    "specs": {
+      "usable_battery_kwh": 32,
+      "drag_coefficient": 0.29,
+      "frontal_area_m2": 2.3,
+      "weight_kg": 1210,
+      "peak_charging_kw": 40,
+      "wltp_range_km": 281,
+      "charger_type": "CCS2",
+      "commercial_range_km": 330,
+      "commercial_standard": "CLTC",
+      "certificado_wltp": "no"
+    }
+  },
+  {
+    "id": "dongfeng-nammi-01-e3",
+    "brand": "Dongfeng",
+    "model": "Nammi 01 E3",
+    "specs": {
+      "usable_battery_kwh": 43,
+      "drag_coefficient": 0.29,
+      "frontal_area_m2": 2.3,
+      "weight_kg": 1315,
+      "peak_charging_kw": 55,
+      "wltp_range_km": 366,
+      "charger_type": "CCS2",
+      "commercial_range_km": 430,
+      "commercial_standard": "CLTC",
+      "certificado_wltp": "no"
+    }
+  },
+  {
     "id": "skywell-be11",
     "brand": "Skywell",
     "model": "BE11",
@@ -847,6 +881,40 @@
       "commercial_range_km": 90,
       "commercial_standard": "WLTP",
       "certificado_wltp": "si"
+    }
+  },
+  {
+    "id": "gac-aion-v-premium-505",
+    "brand": "GAC",
+    "model": "Aion V Premium 505",
+    "specs": {
+      "usable_battery_kwh": 64.5,
+      "drag_coefficient": 0.28,
+      "frontal_area_m2": 2.5,
+      "weight_kg": 1800,
+      "peak_charging_kw": 100,
+      "wltp_range_km": 429,
+      "charger_type": "CCS2",
+      "commercial_range_km": 505,
+      "commercial_standard": "NEDC",
+      "certificado_wltp": "no"
+    }
+  },
+  {
+    "id": "gac-aion-v-luxury-602",
+    "brand": "GAC",
+    "model": "Aion V Luxury 602",
+    "specs": {
+      "usable_battery_kwh": 75.26,
+      "drag_coefficient": 0.28,
+      "frontal_area_m2": 2.5,
+      "weight_kg": 1850,
+      "peak_charging_kw": 120,
+      "wltp_range_km": 512,
+      "charger_type": "CCS2",
+      "commercial_range_km": 602,
+      "commercial_standard": "NEDC",
+      "certificado_wltp": "no"
     }
   }
 ]

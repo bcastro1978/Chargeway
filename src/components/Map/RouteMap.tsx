@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import * as turf from '@turf/turf';
 import { Charger } from '@/lib/services/charging';
 import { ChargerInfoPanel } from './ChargerInfoPanel';
 import { Waypoint } from '../Dashboard/RouteSearch';
@@ -93,32 +94,54 @@ export const RouteMap: React.FC<RouteMapProps> = ({
 
     if (!geometry) {
       if (map.current.getLayer('route-glow')) map.current.removeLayer('route-glow');
-      if (map.current.getLayer('route')) map.current.removeLayer('route');
-      if (map.current.getSource('route')) map.current.removeSource('route');
+      if (map.current.getLayer('route-remaining')) map.current.removeLayer('route-remaining');
+      if (map.current.getLayer('route-completed')) map.current.removeLayer('route-completed');
+      if (map.current.getSource('route-remaining')) map.current.removeSource('route-remaining');
+      if (map.current.getSource('route-completed')) map.current.removeSource('route-completed');
     } else {
       const geom = JSON.parse(geometry);
       // Strip elevation (z) so Mapbox GL renders as 2D line
       const decodedCoords = (geom.coordinates as number[][]).map(c => [c[0], c[1]]);
-      const sourceData: any = { type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: decodedCoords } };
+      const fullLine = turf.lineString(decodedCoords);
       
-      if (map.current.getSource('route')) {
-        (map.current.getSource('route') as mapboxgl.GeoJSONSource).setData(sourceData);
+      // Initially, remaining is the full line, completed is empty
+      const remainingData: any = { type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: decodedCoords } };
+      const completedData: any = { type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: [] } };
+      
+      if (map.current.getSource('route-remaining')) {
+        (map.current.getSource('route-remaining') as mapboxgl.GeoJSONSource).setData(remainingData);
+        (map.current.getSource('route-completed') as mapboxgl.GeoJSONSource).setData(completedData);
       } else {
-        map.current.addSource('route', { type: 'geojson', data: sourceData });
-        // Glow layer underneath
+        map.current.addSource('route-completed', { type: 'geojson', data: completedData });
+        map.current.addSource('route-remaining', { type: 'geojson', data: remainingData });
+        
+        // Completed route (gray)
         map.current.addLayer({
-          id: 'route-glow', type: 'line', source: 'route',
+          id: 'route-completed', type: 'line', source: 'route-completed',
+          layout: { 'line-join': 'round', 'line-cap': 'round' },
+          paint: { 'line-color': '#9ca3af', 'line-width': 5, 'line-opacity': 0.6 }
+        });
+
+        // Glow layer for remaining
+        map.current.addLayer({
+          id: 'route-glow', type: 'line', source: 'route-remaining',
           layout: { 'line-join': 'round', 'line-cap': 'round' },
           paint: { 'line-color': '#10b981', 'line-width': 14, 'line-opacity': 0.15, 'line-blur': 8 }
         });
-        // Main route line
+        
+        // Main remaining route line (green)
         map.current.addLayer({
-          id: 'route', type: 'line', source: 'route',
+          id: 'route-remaining', type: 'line', source: 'route-remaining',
           layout: { 'line-join': 'round', 'line-cap': 'round' },
           paint: { 'line-color': '#10b981', 'line-width': 5, 'line-opacity': 0.9 }
         });
       }
 
+      // We only fitBounds if we are NOT navigating to avoid jumping the user around
+      // if they drag and the component re-renders.
+      // Wait, isFollowingUser is internal state. We shouldn't auto fitBounds unless it's a fresh route.
+      // To prevent jumping on drag, we can use a ref to track if we already fitted bounds for this geometry.
+      // For now, let's just do it if not navigating.
       if (!isNavigating) {
         const bounds = new mapboxgl.LngLatBounds();
         decodedCoords.forEach((coord: number[]) => bounds.extend(coord as [number, number]));
@@ -187,6 +210,8 @@ export const RouteMap: React.FC<RouteMapProps> = ({
   useEffect(() => {
     if (!map.current || !isMapReady) return;
 
+    const setCurrentDistance = useTripStore.getState().setCurrentDistance;
+
     const updateGpsMarker = (lng: number, lat: number) => {
       lastUserPosition.current = { lng, lat };
       if (!gpsMarkerRef.current) {
@@ -200,6 +225,39 @@ export const RouteMap: React.FC<RouteMapProps> = ({
       // Auto-recenter map only if user follow toggle is active
       if (isFollowingUserRef.current) {
         map.current?.easeTo({ center: [lng, lat], zoom: 15, duration: 800 });
+      }
+
+      // Visual Tracking: Slice the route based on current position
+      if (tripPlan?.route?.geometry && map.current?.getSource('route-remaining')) {
+        try {
+          const geom = JSON.parse(tripPlan.route.geometry);
+          const decodedCoords = (geom.coordinates as number[][]).map(c => [c[0], c[1]]);
+          const fullLine = turf.lineString(decodedCoords);
+          const currentPoint = turf.point([lng, lat]);
+          
+          // Find closest point on the route
+          const snapped = turf.nearestPointOnLine(fullLine, currentPoint);
+          
+          // Distance from start to current point (in km)
+          const distanceToPoint = snapped.properties.location || 0;
+          setCurrentDistance(distanceToPoint);
+          
+          const startPoint = turf.point(decodedCoords[0]);
+          const endPoint = turf.point(decodedCoords[decodedCoords.length - 1]);
+          
+          let completedGeom: any = { type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: [] } };
+          let remainingGeom: any = { type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: decodedCoords } };
+          
+          if (distanceToPoint > 0.05) { // If moved more than 50 meters
+            completedGeom = turf.lineSlice(startPoint, snapped, fullLine);
+            remainingGeom = turf.lineSlice(snapped, endPoint, fullLine);
+          }
+
+          (map.current.getSource('route-completed') as mapboxgl.GeoJSONSource).setData(completedGeom);
+          (map.current.getSource('route-remaining') as mapboxgl.GeoJSONSource).setData(remainingGeom);
+        } catch (e) {
+          console.warn('Error slicing route line:', e);
+        }
       }
     };
 

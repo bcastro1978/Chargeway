@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Plus, MapPin, Loader2, GripVertical, ArrowUpDown, X, Trash2 } from 'lucide-react';
+import { Plus, MapPin, Loader2, GripVertical, ArrowUpDown, X, Trash2, Star } from 'lucide-react';
 import { fetchSuggestions, SearchSuggestion } from '../../lib/services/mapbox';
 import { useTripStore } from '@/lib/store/useTripStore';
 
@@ -24,9 +24,11 @@ interface RouteSearchProps {
 interface SearchInputProps {
   value: string;
   hasCoords: boolean;
+  location?: Waypoint;
   placeholder: string;
   isLast?: boolean;
   onSelect: (loc: Waypoint) => void;
+  onSelectFromMap?: () => void;
   onTextChange?: (text: string) => void;
   onFocusChange?: (focused: boolean) => void;
 }
@@ -34,8 +36,10 @@ interface SearchInputProps {
 const SearchInput: React.FC<SearchInputProps> = ({
   value,
   hasCoords,
+  location,
   placeholder,
   onSelect,
+  onSelectFromMap,
   onTextChange,
   onFocusChange,
 }) => {
@@ -44,6 +48,26 @@ const SearchInput: React.FC<SearchInputProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [proximity, setProximity] = useState<[number, number] | null>(null);
+  
+  const favoriteLocations = useTripStore(state => state.favoriteLocations);
+  const addFavorite = useTripStore(state => state.addFavorite);
+  const removeFavorite = useTripStore(state => state.removeFavorite);
+  const user = useTripStore(state => state.user);
+
+  const currentFav = location ? favoriteLocations.find(f => f.lat === location.lat && f.lng === location.lng) : undefined;
+  
+  const toggleFavorite = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!user) return alert('Debes iniciar sesión para guardar favoritos');
+    if (!location || !hasCoords) return alert('Selecciona una ubicación válida primero');
+    
+    if (currentFav) {
+      await removeFavorite(currentFav.id);
+    } else {
+      await addFavorite(location);
+    }
+  };
+
   const wrapperRef = useRef<HTMLDivElement>(null);
   const debounceTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pendingAutoSelect = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -58,6 +82,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
   useEffect(() => {
     setQuery(value);
   }, [value]);
+
 
   useEffect(() => {
     if (typeof window !== 'undefined' && navigator.geolocation) {
@@ -239,6 +264,16 @@ const SearchInput: React.FC<SearchInputProps> = ({
                   onClick={() => { setQuery(''); setSuggestions([]); onTextChange?.(''); }}
                 />
               )}
+              {hasCoords && (
+                <button
+                  type="button"
+                  onClick={toggleFavorite}
+                  style={{ background: 'none', border: 'none', color: currentFav ? '#f59e0b' : 'var(--color-text-dim)', cursor: 'pointer', padding: '4px' }}
+                  title={currentFav ? 'Quitar de favoritos' : 'Añadir a favoritos'}
+                >
+                  <Star size={16} fill={currentFav ? '#f59e0b' : 'none'} />
+                </button>
+              )}
               <button
                 type="button"
                 onClick={(e) => { e.stopPropagation(); useCurrentLocation(); }}
@@ -269,6 +304,34 @@ const SearchInput: React.FC<SearchInputProps> = ({
             <span>Usar mi ubicación actual</span>
           </div>
 
+          {onSelectFromMap && (
+            <div
+              onClick={(e) => { e.stopPropagation(); onSelectFromMap(); setShowSuggestions(false); onFocusChange?.(false); }}
+              style={{ padding: '12px', cursor: 'pointer', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--color-primary)', fontSize: '0.875rem', fontWeight: 500, transition: 'background 0.2s' }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
+            >
+              <MapPin size={16} />
+              <span>📍 Seleccionar en el mapa</span>
+            </div>
+          )}
+
+          {query.length === 0 && favoriteLocations.map((f) => (
+            <div
+              key={`fav-${f.id}`}
+              onClick={() => handleSelect({ id: f.id, name: f.name, place_name: f.name, center: [f.lng, f.lat], geometry: { type: 'Point', coordinates: [f.lng, f.lat] }, place_type: ['favorite'], properties: {}, text: f.name, type: 'Feature' })}
+              style={{ padding: '12px', cursor: 'pointer', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', gap: '8px', transition: 'background 0.2s' }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
+            >
+              <Star size={16} color="#f59e0b" fill="#f59e0b" style={{ flexShrink: 0 }} />
+              <div>
+                <div style={{ fontWeight: 600, fontSize: '0.875rem', color: 'var(--color-text)' }}>{f.name}</div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--color-text-dim)' }}>Guardado en Favoritos</div>
+              </div>
+            </div>
+          ))}
+
           {suggestions.map((s) => (
             <div
               key={s.id}
@@ -294,11 +357,18 @@ const SearchInput: React.FC<SearchInputProps> = ({
 export const RouteSearch: React.FC<RouteSearchProps> = ({ locations, onChange }) => {
   const filterCompatibleChargers = useTripStore(state => state.filterCompatibleChargers);
   const setFilterCompatibleChargers = useTripStore(state => state.setFilterCompatibleChargers);
+  const setMapSelectionIndex = useTripStore(state => state.setMapSelectionIndex);
+  const mapSelectionIndex = useTripStore(state => state.mapSelectionIndex);
+  
   const [focusedIdx, setFocusedIdx] = useState<number | null>(null);
   const [dragOverIdx, setDragOverIdx] = useState<number | null>(null);
   const dragIdx = useRef<number | null>(null);
 
   const addWaypoint = () => {
+    if (locations.length >= 7) {
+        alert('Máximo 5 paradas intermedias permitidas (7 puntos en total).');
+        return;
+    }
     const newLocations = [...locations];
     const destination = newLocations.pop()!;
     newLocations.push({ id: `wp-${Date.now()}`, name: '', lat: 0, lng: 0 });
@@ -354,14 +424,15 @@ export const RouteSearch: React.FC<RouteSearchProps> = ({ locations, onChange })
     const isDestination = idx === locations.length - 1;
     const iconColor = isOrigin ? '#10b981' : isDestination ? '#ef4444' : '#3b82f6';
     const isDragTarget = dragOverIdx === idx;
+    const isSelectingOnMap = mapSelectionIndex === idx;
     const rowZIndex = focusedIdx === idx ? 2000 : locations.length - idx;
-    const rowBg = isDragTarget ? 'rgba(63,255,139,0.07)' : 'transparent';
-    const rowOutline = isDragTarget ? '1px dashed var(--color-primary)' : 'none';
+    const rowBg = isSelectingOnMap ? 'rgba(59,130,246,0.15)' : isDragTarget ? 'rgba(63,255,139,0.07)' : 'transparent';
+    const rowOutline = isSelectingOnMap ? '1px dashed #3b82f6' : isDragTarget ? '1px dashed var(--color-primary)' : 'none';
     const waypointLabel = isOrigin ? 'Origen' : isDestination ? 'Destino' : 'Añadir parada';
 
     return (
       <React.Fragment key={loc.id}>
-        {isDestination && (
+        {isDestination && locations.length < 7 && (
           <div style={{ paddingLeft: '36px', zIndex: 1, position: 'relative' }}>
             <button
               onClick={addWaypoint}
@@ -392,8 +463,10 @@ export const RouteSearch: React.FC<RouteSearchProps> = ({ locations, onChange })
           <SearchInput
             value={loc.name}
             hasCoords={loc.lat !== 0 && loc.lng !== 0}
+            location={loc}
             placeholder={waypointLabel}
             onSelect={(newLoc) => updateLocation(idx, newLoc)}
+            onSelectFromMap={() => setMapSelectionIndex(idx)}
             onTextChange={(text) => { const u = [...locations]; u[idx] = { ...u[idx], name: text, lat: 0, lng: 0 }; onChange(u); }}
             isLast={isDestination}
             onFocusChange={(focused) => setFocusedIdx(focused ? idx : null)}
@@ -437,7 +510,11 @@ export const RouteSearch: React.FC<RouteSearchProps> = ({ locations, onChange })
 
       <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: 'var(--spacing-sm)' }}>
         <div style={{ position: 'absolute', left: '11px', top: '20px', bottom: '20px', width: '2px', background: 'linear-gradient(to bottom, var(--color-primary), var(--color-secondary))', opacity: 0.3, zIndex: 0 }} />
-        {locations.map(renderRow)}
+        {locations.map((loc, idx) => (
+          <React.Fragment key={`route-point-${loc.id || idx}`}>
+            {renderRow(loc, idx)}
+          </React.Fragment>
+        ))}
       </div>
 
       {hasUnsetPoints && (

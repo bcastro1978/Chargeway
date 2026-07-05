@@ -33,7 +33,15 @@ interface TripState {
   logout: () => Promise<void>;
   checkSession: () => Promise<void>;
   saveTripToDatabase: () => Promise<void>;
+  favoriteLocations: Waypoint[];
+  currentDistance: number;
+  setCurrentDistance: (val: number) => void;
+  fetchFavorites: () => Promise<void>;
+  addFavorite: (wp: Waypoint) => Promise<void>;
+  removeFavorite: (id: string) => Promise<void>;
   saveConsent: (choices: ConsentChoices) => Promise<void>;
+  mapSelectionIndex: number | null;
+  setMapSelectionIndex: (idx: number | null) => void;
 }
 
 export const useTripStore = create<TripState>((set, get) => ({
@@ -48,12 +56,17 @@ export const useTripStore = create<TripState>((set, get) => ({
   isNavigating: false,
   isSimulating: false,
   mapFlyTo: null,
+  favoriteLocations: [],
+  currentDistance: 0,
   user: null,
   isLoadingUser: false,
   needsConsent: false,
   consentRecord: null,
   filterCompatibleChargers: true,
+  mapSelectionIndex: null,
 
+  setMapSelectionIndex: (idx) => set({ mapSelectionIndex: idx }),
+  setCurrentDistance: (val) => set({ currentDistance: val }),
   setSelectedVehicle: (vehicle) => set({ selectedVehicle: vehicle }),
   setSoc: (soc) => set({ soc }),
   setFilterCompatibleChargers: (val) => set({ filterCompatibleChargers: val }),
@@ -134,6 +147,7 @@ export const useTripStore = create<TripState>((set, get) => ({
   checkSession: async () => {
     set({ isLoadingUser: true });
     try {
+      /*
       if (process.env.NODE_ENV === 'development') {
         set({
           user: {
@@ -148,6 +162,7 @@ export const useTripStore = create<TripState>((set, get) => ({
         });
         return;
       }
+      */
 
       const { data: { session } } = await supabase.auth.getSession();
       if (session?.user) {
@@ -202,6 +217,9 @@ export const useTripStore = create<TripState>((set, get) => ({
             existingConsent.privacy_version === PRIVACY_VERSION;
 
           set({ consentRecord: existingConsent, needsConsent: !hasValidConsent });
+          
+          // Load favorites
+          await get().fetchFavorites();
         } else {
           // New user – no profile yet, must accept consent before continuing
           const meta = session.user.user_metadata;
@@ -308,5 +326,69 @@ export const useTripStore = create<TripState>((set, get) => ({
 
     set({ needsConsent: false, consentRecord: data });
     console.log('Consent saved with ID:', data?.id);
+    await get().fetchFavorites();
   },
+
+  fetchFavorites: async () => {
+    const { user } = get();
+    if (!user) return;
+    try {
+      const { data, error } = await supabase
+        .from('favorite_locations')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (data && !error) {
+        set({ favoriteLocations: data.map(d => ({ id: d.id, name: d.name, lat: d.lat, lng: d.lng })) });
+      }
+    } catch (err) {
+      console.error('Error fetching favorites', err);
+    }
+  },
+
+  addFavorite: async (wp: Waypoint) => {
+    const { user, favoriteLocations } = get();
+    if (!user) return;
+    
+    // Check if already exists by coords or name
+    if (favoriteLocations.find(f => f.lat === wp.lat && f.lng === wp.lng)) return;
+
+    try {
+      const { data, error } = await supabase
+        .from('favorite_locations')
+        .insert({
+          user_id: user.id,
+          name: wp.name,
+          address: wp.name, // We store name as address for now
+          lat: wp.lat,
+          lng: wp.lng
+        })
+        .select()
+        .single();
+        
+      if (data && !error) {
+        set({ favoriteLocations: [{ id: data.id, name: data.name, lat: data.lat, lng: data.lng }, ...favoriteLocations] });
+        alert('Lugar guardado en favoritos 🌟');
+      } else if (error) {
+        console.error('Supabase Error:', error);
+        alert(`Error al guardar en base de datos: ${error.message}`);
+      }
+    } catch (err: any) {
+      console.error('Error adding favorite', err);
+      alert(`Error inesperado: ${err.message || 'Desconocido'}`);
+    }
+  },
+
+  removeFavorite: async (id: string) => {
+    const { user, favoriteLocations } = get();
+    if (!user) return;
+    
+    set({ favoriteLocations: favoriteLocations.filter(f => f.id !== id) });
+    
+    try {
+      await supabase.from('favorite_locations').delete().eq('id', id);
+    } catch (err) {
+      console.error('Error removing favorite', err);
+    }
+  }
 }));

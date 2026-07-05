@@ -1,7 +1,8 @@
 import React, { useMemo, useState } from 'react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceArea } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceArea, ReferenceLine } from 'recharts';
 import { ElevationPoint } from '@/lib/services/elevation';
 import { SegmentTip } from '@/lib/agents/RouteAdvisorAgent';
+import { useTripStore } from '@/lib/store/useTripStore';
 
 interface ElevationProfileProps {
   data: ElevationPoint[];
@@ -16,6 +17,8 @@ export const ElevationProfile: React.FC<ElevationProfileProps> = ({
   segmentTips = [],
   hoveredSegment = null
 }) => {
+  const currentDistance = useTripStore(state => state.currentDistance);
+
   const chartData = useMemo(() => {
     if (!data || data.length === 0) return [];
 
@@ -132,6 +135,10 @@ export const ElevationProfile: React.FC<ElevationProfileProps> = ({
                 }
                 fillOpacity={0.15}
               />
+            )}
+            
+            {currentDistance > 0 && (
+              <ReferenceLine x={Math.round(currentDistance * 10) / 10} stroke="#f59e0b" strokeWidth={2} strokeDasharray="3 3" label={{ position: 'top', value: '🚗', fill: '#f59e0b', fontSize: 14 }} />
             )}
 
             <Area

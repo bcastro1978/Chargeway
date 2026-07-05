@@ -103,30 +103,46 @@ export default function Home() {
   }, [selectedVehicle, routePoints]); // intentionally omit planRoute (stable store fn)
 
   const handleMapClick = (lng: number, lat: number) => {
-    const newPoint: Waypoint = {
-      id: `map-${Date.now()}`,
-      name: `Punto en el mapa (${lat.toFixed(4)}, ${lng.toFixed(4)})`,
-      lat,
-      lng
-    };
-    const newRoute = [...routePoints];
+    const { mapSelectionIndex, setMapSelectionIndex, routePoints: currentRoutePoints, setRoutePoints: storeSetRoutePoints } = useTripStore.getState();
+    const newRoute = [...currentRoutePoints];
     
-    // Find if there is any empty point (origin, destination or waypoint) to fill first
-    const emptyIndex = newRoute.findIndex(p => !p.name.trim() || (p.lat === 0 && p.lng === 0));
-    
-    if (emptyIndex !== -1) {
-      newRoute[emptyIndex] = {
-        ...newRoute[emptyIndex],
+    if (mapSelectionIndex !== null) {
+      newRoute[mapSelectionIndex] = {
+        ...newRoute[mapSelectionIndex],
         name: `Punto en el mapa (${lat.toFixed(4)}, ${lng.toFixed(4)})`,
         lat,
         lng
       };
+      setMapSelectionIndex(null);
     } else {
-      // If all are filled, add it as a new waypoint before destination
-      newRoute.splice(newRoute.length - 1, 0, newPoint);
+      const newPoint: Waypoint = {
+        id: `map-${Date.now()}`,
+        name: `Punto en el mapa (${lat.toFixed(4)}, ${lng.toFixed(4)})`,
+        lat,
+        lng
+      };
+      
+      // Find if there is any empty point (origin, destination or waypoint) to fill first
+      const emptyIndex = newRoute.findIndex(p => !p.name.trim() || (p.lat === 0 && p.lng === 0));
+      
+      if (emptyIndex !== -1) {
+        newRoute[emptyIndex] = {
+          ...newRoute[emptyIndex],
+          name: `Punto en el mapa (${lat.toFixed(4)}, ${lng.toFixed(4)})`,
+          lat,
+          lng
+        };
+      } else {
+        // If all are filled, add it as a new waypoint before destination
+        if (newRoute.length < 7) {
+          newRoute.splice(newRoute.length - 1, 0, newPoint);
+        } else {
+          alert('Máximo 5 paradas intermedias permitidas.');
+        }
+      }
     }
     
-    setRoutePoints(newRoute);
+    storeSetRoutePoints(newRoute);
   };
 
   const handleRouteChange = (newPoints: Waypoint[]) => {
