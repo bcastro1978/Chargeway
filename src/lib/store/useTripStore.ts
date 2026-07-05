@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import { Waypoint } from '@/components/Dashboard/RouteSearch';
 import { TripPlan, generateTripPlan } from '@/lib/route-orchestrator';
 import { Vehicle } from '@/components/Dashboard/VehicleSelector';
@@ -44,7 +45,9 @@ interface TripState {
   setMapSelectionIndex: (idx: number | null) => void;
 }
 
-export const useTripStore = create<TripState>((set, get) => ({
+export const useTripStore = create<TripState>()(
+  persist(
+    (set, get) => ({
   selectedVehicle: null as any,
   soc: 0.65,
   routePoints: [
@@ -388,4 +391,13 @@ export const useTripStore = create<TripState>((set, get) => ({
       console.error('Error removing favorite', err);
     }
   }
+}),
+{
+  name: 'chargeway-trip-storage',
+  partialize: (state) => ({
+    selectedVehicle: state.selectedVehicle,
+    soc: state.soc,
+    routePoints: state.routePoints,
+    filterCompatibleChargers: state.filterCompatibleChargers,
+  }),
 }));
