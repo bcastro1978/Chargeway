@@ -58,6 +58,7 @@ export default function Home() {
     setIsSimulating,
     mapFlyTo,
     setMapFlyTo,
+    currentDistance,
     planRoute,
     checkSession,
     saveTripToDatabase,
