@@ -53,6 +53,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
   const [promptOpen, setPromptOpen] = useState(false);
   const [aliasValue, setAliasValue] = useState('');
   const [alertMsg, setAlertMsg] = useState('');
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState<{ isOpen: boolean; id: string }>({ isOpen: false, id: '' });
   
   const favoriteLocations = useTripStore(state => state.favoriteLocations);
   const addFavorite = useTripStore(state => state.addFavorite);
@@ -67,11 +68,21 @@ const SearchInput: React.FC<SearchInputProps> = ({
     if (!location || !hasCoords) return setAlertMsg('Selecciona una ubicación válida primero');
     
     if (currentFav) {
-      await removeFavorite(currentFav.id);
+      setDeleteConfirmOpen({ isOpen: true, id: currentFav.id });
     } else {
+      if (favoriteLocations.length >= 5) {
+        return setAlertMsg('Has alcanzado el límite máximo de 5 ubicaciones favoritas. Por favor, elimina una para añadir otra.');
+      }
       setAliasValue(location.name);
       setPromptOpen(true);
     }
+  };
+
+  const handleConfirmDelete = async () => {
+    if (deleteConfirmOpen.id) {
+      await removeFavorite(deleteConfirmOpen.id);
+    }
+    setDeleteConfirmOpen({ isOpen: false, id: '' });
   };
 
   const handleSaveFavorite = async () => {
@@ -395,6 +406,20 @@ const SearchInput: React.FC<SearchInputProps> = ({
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
               <button type="button" onClick={() => setPromptOpen(false)} style={{ padding: '8px 16px', background: 'transparent', color: 'var(--color-text)', border: 'none', cursor: 'pointer', borderRadius: '8px' }}>Cancelar</button>
               <button type="button" onClick={handleSaveFavorite} style={{ padding: '8px 16px', background: 'var(--color-primary)', color: 'var(--color-bg)', border: 'none', cursor: 'pointer', borderRadius: '8px', fontWeight: 600 }}>Guardar</button>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
+
+      {deleteConfirmOpen.isOpen && typeof document !== 'undefined' && createPortal(
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', zIndex: 99999, display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={(e) => { e.stopPropagation(); setDeleteConfirmOpen({ isOpen: false, id: '' }); }}>
+          <div style={{ background: 'var(--color-bg)', padding: '24px', borderRadius: '12px', width: '90%', maxWidth: '360px', border: '1px solid var(--color-outline)', textAlign: 'center' }} onClick={(e) => e.stopPropagation()}>
+            <h3 style={{ marginTop: 0, marginBottom: '16px', color: 'var(--color-text)', fontSize: '1.125rem' }}>Eliminar favorito</h3>
+            <p style={{ color: 'var(--color-text-dim)', fontSize: '0.875rem', marginBottom: '24px' }}>¿Estás seguro de que deseas eliminar esta ubicación de tus favoritos?</p>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '12px' }}>
+              <button type="button" onClick={() => setDeleteConfirmOpen({ isOpen: false, id: '' })} style={{ padding: '8px 16px', background: 'transparent', color: 'var(--color-text)', border: 'none', cursor: 'pointer', borderRadius: '8px' }}>Cancelar</button>
+              <button type="button" onClick={handleConfirmDelete} style={{ padding: '8px 16px', background: '#ef4444', color: 'white', border: 'none', cursor: 'pointer', borderRadius: '8px', fontWeight: 600 }}>Eliminar</button>
             </div>
           </div>
         </div>,
