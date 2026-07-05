@@ -607,10 +607,19 @@ export default function Home() {
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                       {tripPlan.advisorFeedback.segmentTips.map((tip, idx) => {
-                        const borderCol =
-                          tip.type === 'subida' ? 'border-amber-500/30 bg-amber-500/5 hover:bg-amber-500/10' :
-                          tip.type === 'bajada' ? 'border-emerald-500/30 bg-emerald-500/5 hover:bg-emerald-500/10' :
-                          'border-blue-500/30 bg-blue-500/5 hover:bg-blue-500/10';
+                        const currentDist = currentDistance || 0;
+                        const isActive = currentDist >= tip.startKm && currentDist <= tip.endKm;
+                        
+                        let borderCol = '';
+                        if (isActive) {
+                          borderCol = tip.type === 'subida' ? 'border-amber-400 bg-amber-500/20 shadow-[0_0_15px_rgba(251,191,36,0.3)] scale-[1.02] z-10' :
+                                      tip.type === 'bajada' ? 'border-emerald-400 bg-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.3)] scale-[1.02] z-10' :
+                                      'border-blue-400 bg-blue-500/20 shadow-[0_0_15px_rgba(59,130,246,0.3)] scale-[1.02] z-10';
+                        } else {
+                          borderCol = tip.type === 'subida' ? 'border-amber-500/30 bg-amber-500/5 hover:bg-amber-500/10 opacity-60' :
+                                      tip.type === 'bajada' ? 'border-emerald-500/30 bg-emerald-500/5 hover:bg-emerald-500/10 opacity-60' :
+                                      'border-blue-500/30 bg-blue-500/5 hover:bg-blue-500/10 opacity-60';
+                        }
 
                         const icon =
                           tip.type === 'subida' ? '⛰️' :
@@ -619,7 +628,7 @@ export default function Home() {
                         return (
                           <div
                             key={idx}
-                            className={`p-3 rounded-xl border text-[11px] flex justify-between items-center gap-3 transition-all duration-200 cursor-default ${borderCol}`}
+                            className={`p-3 rounded-xl border text-[11px] flex justify-between items-center gap-3 transition-all duration-300 cursor-default ${borderCol}`}
                             onMouseEnter={() => setHoveredSegment(idx)}
                             onMouseLeave={() => setHoveredSegment(null)}
                           >

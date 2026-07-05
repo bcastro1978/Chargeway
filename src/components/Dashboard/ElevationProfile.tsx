@@ -56,6 +56,11 @@ export const ElevationProfile: React.FC<ElevationProfileProps> = ({
   const yMin = Math.floor((minAlt - padding) / 100) * 100;
   const yMax = Math.ceil((maxAlt + padding) / 100) * 100;
 
+  const progressPercent = useMemo(() => {
+    if (!totalDistanceKm || totalDistanceKm <= 0) return 0;
+    return Math.min(100, Math.max(0, (currentDistance / totalDistanceKm) * 100));
+  }, [currentDistance, totalDistanceKm]);
+
   // Generate readable ticks for Y axis
   const tickCount = 4;
   const tickStep = Math.round((yMax - yMin) / (tickCount - 1) / 100) * 100 || 100;
@@ -89,9 +94,13 @@ export const ElevationProfile: React.FC<ElevationProfileProps> = ({
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={chartData} margin={{ top: 5, right: 5, left: -10, bottom: 0 }}>
             <defs>
-              <linearGradient id="colorAltGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#10b981" stopOpacity={0.4} />
-                <stop offset="95%" stopColor="#10b981" stopOpacity={0.02} />
+              <linearGradient id="strokeProgressGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset={`${progressPercent}%`} stopColor="#10b981" />
+                <stop offset={`${progressPercent}%`} stopColor="#4b5563" />
+              </linearGradient>
+              <linearGradient id="fillProgressGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset={`${progressPercent}%`} stopColor="#10b981" stopOpacity={0.4} />
+                <stop offset={`${progressPercent}%`} stopColor="#4b5563" stopOpacity={0.05} />
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#374151" opacity={0.3} />
@@ -144,9 +153,9 @@ export const ElevationProfile: React.FC<ElevationProfileProps> = ({
             <Area
               type="monotone"
               dataKey="alt"
-              stroke="#10b981"
+              stroke="url(#strokeProgressGrad)"
               fillOpacity={1}
-              fill="url(#colorAltGrad)"
+              fill="url(#fillProgressGrad)"
               strokeWidth={2}
               dot={false}
               activeDot={{ r: 4, fill: '#10b981', stroke: '#fff', strokeWidth: 2 }}
