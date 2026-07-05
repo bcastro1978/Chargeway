@@ -1,36 +1,36 @@
 [
   {
-    "id": "byd-yuan-plus",
-    "brand": "BYD",
-    "model": "Yuan Plus (Atto 3)",
+    "id": "audi-etron-55",
+    "brand": "Audi",
+    "model": "e-tron 55 quattro",
     "specs": {
-      "usable_battery_kwh": 60.48,
-      "drag_coefficient": 0.29,
-      "frontal_area_m2": 2.5,
-      "weight_kg": 1750,
-      "peak_charging_kw": 88,
-      "wltp_range_km": 420,
-      "charger_type": "GB/T",
-      "commercial_range_km": 480,
-      "commercial_standard": "NEDC",
+      "usable_battery_kwh": 86.5,
+      "drag_coefficient": 0.28,
+      "frontal_area_m2": 2.65,
+      "weight_kg": 2565,
+      "peak_charging_kw": 150,
+      "wltp_range_km": 436,
+      "charger_type": "CCS1",
+      "commercial_range_km": 436,
+      "commercial_standard": "WLTP",
       "certificado_wltp": "si"
     }
   },
   {
-    "id": "byd-yuan-pro",
-    "brand": "BYD",
-    "model": "Yuan Pro",
+    "id": "audi-etron-gt",
+    "brand": "Audi",
+    "model": "e-tron GT quattro",
     "specs": {
-      "usable_battery_kwh": 45.1,
-      "drag_coefficient": 0.31,
-      "frontal_area_m2": 2.4,
-      "weight_kg": 1580,
-      "peak_charging_kw": 65,
-      "wltp_range_km": 341,
-      "charger_type": "CCS2",
-      "commercial_range_km": 401,
-      "commercial_standard": "NEDC",
-      "certificado_wltp": "no"
+      "usable_battery_kwh": 83.7,
+      "drag_coefficient": 0.24,
+      "frontal_area_m2": 2.35,
+      "weight_kg": 2276,
+      "peak_charging_kw": 270,
+      "wltp_range_km": 488,
+      "charger_type": "CCS1",
+      "commercial_range_km": 488,
+      "commercial_standard": "WLTP",
+      "certificado_wltp": "si"
     }
   },
   {
@@ -47,6 +47,23 @@
       "charger_type": "GB/T",
       "commercial_range_km": 405,
       "commercial_standard": "NEDC",
+      "certificado_wltp": "si"
+    }
+  },
+  {
+    "id": "byd-han-ev",
+    "brand": "BYD",
+    "model": "Han EV AWD",
+    "specs": {
+      "usable_battery_kwh": 85.4,
+      "drag_coefficient": 0.23,
+      "frontal_area_m2": 2.4,
+      "weight_kg": 2250,
+      "peak_charging_kw": 120,
+      "wltp_range_km": 521,
+      "charger_type": "GB/T",
+      "commercial_range_km": 610,
+      "commercial_standard": "CLTC",
       "certificado_wltp": "si"
     }
   },
@@ -119,20 +136,20 @@
     }
   },
   {
-    "id": "byd-han-ev",
+    "id": "byd-song-plus-ev",
     "brand": "BYD",
-    "model": "Han EV AWD",
+    "model": "Song Plus EV",
     "specs": {
-      "usable_battery_kwh": 85.4,
-      "drag_coefficient": 0.23,
-      "frontal_area_m2": 2.4,
-      "weight_kg": 2250,
-      "peak_charging_kw": 120,
-      "wltp_range_km": 521,
+      "usable_battery_kwh": 71.8,
+      "drag_coefficient": 0.32,
+      "frontal_area_m2": 2.7,
+      "weight_kg": 1920,
+      "peak_charging_kw": 140,
+      "wltp_range_km": 442,
       "charger_type": "GB/T",
-      "commercial_range_km": 610,
+      "commercial_range_km": 520,
       "commercial_standard": "CLTC",
-      "certificado_wltp": "si"
+      "certificado_wltp": "no"
     }
   },
   {
@@ -153,529 +170,53 @@
     }
   },
   {
-    "id": "byd-song-plus-ev",
+    "id": "byd-yuan-plus",
     "brand": "BYD",
-    "model": "Song Plus EV",
+    "model": "Yuan Plus (Atto 3)",
     "specs": {
-      "usable_battery_kwh": 71.8,
-      "drag_coefficient": 0.32,
-      "frontal_area_m2": 2.7,
-      "weight_kg": 1920,
-      "peak_charging_kw": 140,
-      "wltp_range_km": 442,
+      "usable_battery_kwh": 60.48,
+      "drag_coefficient": 0.29,
+      "frontal_area_m2": 2.5,
+      "weight_kg": 1750,
+      "peak_charging_kw": 88,
+      "wltp_range_km": 420,
       "charger_type": "GB/T",
-      "commercial_range_km": 520,
-      "commercial_standard": "CLTC",
-      "certificado_wltp": "no"
-    }
-  },
-  {
-    "id": "kia-ev3-long-range",
-    "brand": "Kia",
-    "model": "EV3 Long Range",
-    "specs": {
-      "usable_battery_kwh": 81.4,
-      "drag_coefficient": 0.263,
-      "frontal_area_m2": 2.5,
-      "weight_kg": 1885,
-      "peak_charging_kw": 128,
-      "wltp_range_km": 600,
-      "charger_type": "CCS1",
-      "commercial_range_km": 600,
-      "commercial_standard": "WLTP",
-      "certificado_wltp": "si"
-    }
-  },
-  {
-    "id": "kia-ev5-standard",
-    "brand": "Kia",
-    "model": "EV5 (64.2 kWh)",
-    "specs": {
-      "usable_battery_kwh": 64.2,
-      "drag_coefficient": 0.29,
-      "frontal_area_m2": 2.8,
-      "weight_kg": 1870,
-      "peak_charging_kw": 102,
-      "wltp_range_km": 400,
-      "charger_type": "CCS1",
-      "commercial_range_km": 530,
-      "commercial_standard": "NEDC",
-      "certificado_wltp": "si"
-    }
-  },
-  {
-    "id": "kia-ev6-77-rwd",
-    "brand": "Kia",
-    "model": "EV6 (77.4 kWh) RWD",
-    "specs": {
-      "usable_battery_kwh": 77.4,
-      "drag_coefficient": 0.28,
-      "frontal_area_m2": 2.6,
-      "weight_kg": 1985,
-      "peak_charging_kw": 233,
-      "wltp_range_km": 528,
-      "charger_type": "CCS1",
-      "commercial_range_km": 528,
-      "commercial_standard": "WLTP",
-      "certificado_wltp": "si"
-    }
-  },
-  {
-    "id": "kia-niro-ev",
-    "brand": "Kia",
-    "model": "Niro EV (64 kWh)",
-    "specs": {
-      "usable_battery_kwh": 64.8,
-      "drag_coefficient": 0.29,
-      "frontal_area_m2": 2.5,
-      "weight_kg": 1739,
-      "peak_charging_kw": 80,
-      "wltp_range_km": 460,
-      "charger_type": "CCS1",
-      "commercial_range_km": 460,
-      "commercial_standard": "NEDC",
-      "certificado_wltp": "si"
-    }
-  },
-  {
-    "id": "kia-ev9-awd",
-    "brand": "Kia",
-    "model": "EV9 GT-Line (99.8 kWh)",
-    "specs": {
-      "usable_battery_kwh": 96,
-      "drag_coefficient": 0.28,
-      "frontal_area_m2": 3.2,
-      "weight_kg": 2560,
-      "peak_charging_kw": 210,
-      "wltp_range_km": 505,
-      "charger_type": "CCS1",
-      "commercial_range_km": 505,
-      "commercial_standard": "WLTP",
-      "certificado_wltp": "si"
-    }
-  },
-  {
-    "id": "renault-kwid-etech",
-    "brand": "Renault",
-    "model": "Kwid E-Tech",
-    "specs": {
-      "usable_battery_kwh": 26.8,
-      "drag_coefficient": 0.33,
-      "frontal_area_m2": 2.1,
-      "weight_kg": 977,
-      "peak_charging_kw": 30,
-      "wltp_range_km": 220,
-      "charger_type": "CCS2",
-      "commercial_range_km": 298,
-      "commercial_standard": "WLTP",
-      "certificado_wltp": "si"
-    }
-  },
-  {
-    "id": "renault-megane-etech",
-    "brand": "Renault",
-    "model": "Megane E-Tech",
-    "specs": {
-      "usable_battery_kwh": 60,
-      "drag_coefficient": 0.29,
-      "frontal_area_m2": 2.4,
-      "weight_kg": 1636,
-      "peak_charging_kw": 130,
-      "wltp_range_km": 450,
-      "charger_type": "CCS2",
-      "commercial_range_km": 450,
-      "commercial_standard": "WLTP",
-      "certificado_wltp": "si"
-    }
-  },
-  {
-    "id": "hyundai-ioniq5-77",
-    "brand": "Hyundai",
-    "model": "Ioniq 5 (77.4 kWh) AWD",
-    "specs": {
-      "usable_battery_kwh": 77.4,
-      "drag_coefficient": 0.288,
-      "frontal_area_m2": 2.65,
-      "weight_kg": 2100,
-      "peak_charging_kw": 233,
-      "wltp_range_km": 507,
-      "charger_type": "CCS1",
       "commercial_range_km": 480,
       "commercial_standard": "NEDC",
       "certificado_wltp": "si"
     }
   },
   {
-    "id": "hyundai-kona-ev",
-    "brand": "Hyundai",
-    "model": "Kona EV (64 kWh)",
+    "id": "byd-yuan-pro",
+    "brand": "BYD",
+    "model": "Yuan Pro",
     "specs": {
-      "usable_battery_kwh": 64,
-      "drag_coefficient": 0.29,
+      "usable_battery_kwh": 45.1,
+      "drag_coefficient": 0.31,
       "frontal_area_m2": 2.4,
-      "weight_kg": 1685,
-      "peak_charging_kw": 77,
-      "wltp_range_km": 484,
-      "charger_type": "CCS1",
-      "commercial_range_km": 484,
-      "commercial_standard": "WLTP",
-      "certificado_wltp": "si"
-    }
-  },
-  {
-    "id": "mg-zs-ev-72",
-    "brand": "MG",
-    "model": "ZS EV Long Range",
-    "specs": {
-      "usable_battery_kwh": 72.6,
-      "drag_coefficient": 0.33,
-      "frontal_area_m2": 2.6,
-      "weight_kg": 1620,
-      "peak_charging_kw": 92,
-      "wltp_range_km": 440,
-      "charger_type": "CCS2",
-      "commercial_range_km": 440,
-      "commercial_standard": "WLTP",
-      "certificado_wltp": "si"
-    }
-  },
-  {
-    "id": "mg-marvel-r",
-    "brand": "MG",
-    "model": "Marvel R AWD",
-    "specs": {
-      "usable_battery_kwh": 70,
-      "drag_coefficient": 0.29,
-      "frontal_area_m2": 2.6,
-      "weight_kg": 1920,
-      "peak_charging_kw": 92,
-      "wltp_range_km": 370,
-      "charger_type": "CCS2",
-      "commercial_range_km": 370,
-      "commercial_standard": "WLTP",
-      "certificado_wltp": "si"
-    }
-  },
-  {
-    "id": "audi-etron-55",
-    "brand": "Audi",
-    "model": "e-tron 55 quattro",
-    "specs": {
-      "usable_battery_kwh": 86.5,
-      "drag_coefficient": 0.28,
-      "frontal_area_m2": 2.65,
-      "weight_kg": 2565,
-      "peak_charging_kw": 150,
-      "wltp_range_km": 436,
-      "charger_type": "CCS1",
-      "commercial_range_km": 436,
-      "commercial_standard": "WLTP",
-      "certificado_wltp": "si"
-    }
-  },
-  {
-    "id": "audi-etron-gt",
-    "brand": "Audi",
-    "model": "e-tron GT quattro",
-    "specs": {
-      "usable_battery_kwh": 83.7,
-      "drag_coefficient": 0.24,
-      "frontal_area_m2": 2.35,
-      "weight_kg": 2276,
-      "peak_charging_kw": 270,
-      "wltp_range_km": 488,
-      "charger_type": "CCS1",
-      "commercial_range_km": 488,
-      "commercial_standard": "WLTP",
-      "certificado_wltp": "si"
-    }
-  },
-  {
-    "id": "porsche-taycan-4s",
-    "brand": "Porsche",
-    "model": "Taycan 4S (Plus)",
-    "specs": {
-      "usable_battery_kwh": 83.7,
-      "drag_coefficient": 0.22,
-      "frontal_area_m2": 2.33,
-      "weight_kg": 2220,
-      "peak_charging_kw": 270,
-      "wltp_range_km": 464,
-      "charger_type": "CCS1",
-      "commercial_range_km": 463,
-      "commercial_standard": "WLTP",
-      "certificado_wltp": "si"
-    }
-  },
-  {
-    "id": "nissan-leaf-40",
-    "brand": "Nissan",
-    "model": "Leaf (40 kWh)",
-    "specs": {
-      "usable_battery_kwh": 39,
-      "drag_coefficient": 0.28,
-      "frontal_area_m2": 2.3,
       "weight_kg": 1580,
-      "peak_charging_kw": 50,
-      "wltp_range_km": 270,
-      "charger_type": "CHAdeMO",
-      "commercial_range_km": 378,
-      "commercial_standard": "NEDC",
-      "certificado_wltp": "si"
-    }
-  },
-  {
-    "id": "tesla-m3-rwd",
-    "brand": "Tesla",
-    "model": "Model 3 RWD",
-    "specs": {
-      "usable_battery_kwh": 57.5,
-      "drag_coefficient": 0.219,
-      "frontal_area_m2": 2.22,
-      "weight_kg": 1765,
-      "peak_charging_kw": 170,
-      "wltp_range_km": 513,
-      "charger_type": "NACS",
-      "commercial_range_km": 438,
-      "commercial_standard": "EPA",
-      "certificado_wltp": "si"
-    }
-  },
-  {
-    "id": "geely-geometry-c",
-    "brand": "Geely",
-    "model": "Geometry C",
-    "specs": {
-      "usable_battery_kwh": 70,
-      "drag_coefficient": 0.273,
-      "frontal_area_m2": 2.45,
-      "weight_kg": 1685,
-      "peak_charging_kw": 75,
-      "wltp_range_km": 460,
-      "charger_type": "GB/T",
-      "commercial_range_km": 550,
-      "commercial_standard": "NEDC",
-      "certificado_wltp": "si"
-    }
-  },
-  {
-    "id": "gac-aion-y-plus",
-    "brand": "GAC Aion",
-    "model": "Y Plus",
-    "specs": {
-      "usable_battery_kwh": 63.2,
-      "drag_coefficient": 0.278,
-      "frontal_area_m2": 2.55,
-      "weight_kg": 1730,
-      "peak_charging_kw": 80,
-      "wltp_range_km": 417,
-      "charger_type": "GB/T",
-      "commercial_range_km": 490,
+      "peak_charging_kw": 65,
+      "wltp_range_km": 323,
+      "charger_type": "CCS2",
+      "commercial_range_km": 380,
       "commercial_standard": "NEDC",
       "certificado_wltp": "no"
     }
   },
   {
-    "id": "volvo-ex30",
-    "brand": "Volvo",
-    "model": "EX30 Ultra Single Motor",
+    "id": "chery-eq7",
+    "brand": "Chery",
+    "model": "eQ7",
     "specs": {
-      "usable_battery_kwh": 64,
-      "drag_coefficient": 0.28,
-      "frontal_area_m2": 2.42,
-      "weight_kg": 1850,
-      "peak_charging_kw": 153,
-      "wltp_range_km": 476,
-      "charger_type": "CCS1",
-      "commercial_range_km": 476,
-      "commercial_standard": "WLTP",
-      "certificado_wltp": "si"
-    }
-  },
-  {
-    "id": "chevrolet-bolt-euv",
-    "brand": "Chevrolet",
-    "model": "Bolt EUV",
-    "specs": {
-      "usable_battery_kwh": 65,
-      "drag_coefficient": 0.32,
-      "frontal_area_m2": 2.58,
-      "weight_kg": 1669,
-      "peak_charging_kw": 50,
-      "wltp_range_km": 456,
-      "charger_type": "CCS1",
-      "commercial_range_km": 397,
-      "commercial_standard": "EPA",
-      "certificado_wltp": "si"
-    }
-  },
-  {
-    "id": "geely-ex2",
-    "brand": "Geely",
-    "model": "EX2",
-    "specs": {
-      "usable_battery_kwh": 40.16,
-      "drag_coefficient": 0.28,
-      "frontal_area_m2": 2.3,
-      "weight_kg": 1250,
-      "peak_charging_kw": 70,
-      "wltp_range_km": 274,
-      "charger_type": "GB/T",
-      "commercial_range_km": 322,
-      "commercial_standard": "NEDC",
-      "certificado_wltp": "no"
-    }
-  },
-  {
-    "id": "geely-ex5",
-    "brand": "Geely",
-    "model": "EX5",
-    "specs": {
-      "usable_battery_kwh": 60.2,
-      "drag_coefficient": 0.269,
-      "frontal_area_m2": 2.6,
-      "weight_kg": 1615,
-      "peak_charging_kw": 100,
-      "wltp_range_km": 451,
-      "charger_type": "GB/T",
-      "commercial_range_km": 530,
-      "commercial_standard": "CLTC",
-      "certificado_wltp": "no"
-    }
-  },
-  {
-    "id": "geely-starray-emi",
-    "brand": "Geely",
-    "model": "Starray EM-i (PHEV)",
-    "specs": {
-      "usable_battery_kwh": 18.4,
-      "drag_coefficient": 0.32,
-      "frontal_area_m2": 2.8,
-      "weight_kg": 1800,
-      "peak_charging_kw": 30,
-      "wltp_range_km": 128,
-      "charger_type": "GB/T",
-      "commercial_range_km": 150,
-      "commercial_standard": "CLTC",
-      "certificado_wltp": "no"
-    }
-  },
-  {
-    "id": "jac-e30x",
-    "brand": "JAC",
-    "model": "E30X",
-    "specs": {
-      "usable_battery_kwh": 51.5,
-      "drag_coefficient": 0.29,
-      "frontal_area_m2": 2.3,
-      "weight_kg": 1450,
-      "peak_charging_kw": 60,
-      "wltp_range_km": 344,
-      "charger_type": "GB/T",
-      "commercial_range_km": 405,
-      "commercial_standard": "CLTC",
-      "certificado_wltp": "no"
-    }
-  },
-  {
-    "id": "leapmotor-t03",
-    "brand": "Leapmotor",
-    "model": "T03",
-    "specs": {
-      "usable_battery_kwh": 36,
-      "drag_coefficient": 0.32,
-      "frontal_area_m2": 2.2,
-      "weight_kg": 1125,
-      "peak_charging_kw": 45,
-      "wltp_range_km": 280,
-      "charger_type": "GB/T",
-      "commercial_range_km": 418,
-      "commercial_standard": "CLTC",
-      "certificado_wltp": "si"
-    }
-  },
-  {
-    "id": "leapmotor-c10",
-    "brand": "Leapmotor",
-    "model": "C10 EV",
-    "specs": {
-      "usable_battery_kwh": 69.9,
-      "drag_coefficient": 0.28,
-      "frontal_area_m2": 2.6,
-      "weight_kg": 1800,
-      "peak_charging_kw": 80,
-      "wltp_range_km": 420,
-      "charger_type": "GB/T",
-      "commercial_range_km": 530,
-      "commercial_standard": "CLTC",
-      "certificado_wltp": "si"
-    }
-  },
-  {
-    "id": "chevrolet-equinox-ev",
-    "brand": "Chevrolet",
-    "model": "Equinox EV FWD",
-    "specs": {
-      "usable_battery_kwh": 85,
+      "usable_battery_kwh": 65.5,
       "drag_coefficient": 0.3,
       "frontal_area_m2": 2.6,
-      "weight_kg": 2233,
-      "peak_charging_kw": 150,
-      "wltp_range_km": 653,
-      "charger_type": "CCS1",
-      "commercial_range_km": 513,
-      "commercial_standard": "EPA",
-      "certificado_wltp": "si"
-    }
-  },
-  {
-    "id": "gac-aion-ut",
-    "brand": "GAC Aion",
-    "model": "UT",
-    "specs": {
-      "usable_battery_kwh": 44.1,
-      "drag_coefficient": 0.28,
-      "frontal_area_m2": 2.4,
-      "weight_kg": 1450,
-      "peak_charging_kw": 60,
-      "wltp_range_km": 510,
+      "weight_kg": 1800,
+      "peak_charging_kw": 90,
+      "wltp_range_km": 435,
       "charger_type": "GB/T",
-      "commercial_range_km": 600,
+      "commercial_range_km": 512,
       "commercial_standard": "CLTC",
-      "certificado_wltp": "no"
-    }
-  },
-  {
-    "id": "gac-aion-es",
-    "brand": "GAC Aion",
-    "model": "ES",
-    "specs": {
-      "usable_battery_kwh": 55.2,
-      "drag_coefficient": 0.27,
-      "frontal_area_m2": 2.4,
-      "weight_kg": 1665,
-      "peak_charging_kw": 60,
-      "wltp_range_km": 391,
-      "charger_type": "GB/T",
-      "commercial_range_km": 460,
-      "commercial_standard": "NEDC",
-      "certificado_wltp": "no"
-    }
-  },
-  {
-    "id": "gac-aion-v",
-    "brand": "GAC Aion",
-    "model": "V",
-    "specs": {
-      "usable_battery_kwh": 75,
-      "drag_coefficient": 0.29,
-      "frontal_area_m2": 2.7,
-      "weight_kg": 1880,
-      "peak_charging_kw": 180,
-      "charger_type": "CCS2",
-      "wltp_range_km": 510,
-      "commercial_range_km": 600,
-      "commercial_standard": "NEDC",
       "certificado_wltp": "no"
     }
   },
@@ -697,20 +238,20 @@
     }
   },
   {
-    "id": "chevrolet-spark-euv",
+    "id": "chevrolet-bolt-euv",
     "brand": "Chevrolet",
-    "model": "Spark EUV",
+    "model": "Bolt EUV",
     "specs": {
-      "usable_battery_kwh": 41.9,
+      "usable_battery_kwh": 65,
       "drag_coefficient": 0.32,
-      "frontal_area_m2": 2.2,
-      "weight_kg": 1350,
+      "frontal_area_m2": 2.58,
+      "weight_kg": 1669,
       "peak_charging_kw": 50,
-      "wltp_range_km": 306,
-      "charger_type": "CCS2",
-      "commercial_range_km": 360,
-      "commercial_standard": "NEDC",
-      "certificado_wltp": "no"
+      "wltp_range_km": 456,
+      "charger_type": "CCS1",
+      "commercial_range_km": 397,
+      "commercial_standard": "EPA",
+      "certificado_wltp": "si"
     }
   },
   {
@@ -731,19 +272,36 @@
     }
   },
   {
-    "id": "skyworth-ev6-ii",
-    "brand": "Skyworth",
-    "model": "EV6 II",
+    "id": "chevrolet-equinox-ev",
+    "brand": "Chevrolet",
+    "model": "Equinox EV FWD",
     "specs": {
-      "usable_battery_kwh": 54.75,
+      "usable_battery_kwh": 85,
       "drag_coefficient": 0.3,
-      "frontal_area_m2": 2.7,
-      "weight_kg": 1830,
-      "peak_charging_kw": 100,
-      "wltp_range_km": 527,
-      "charger_type": "GB/T",
-      "commercial_range_km": 620,
-      "commercial_standard": "CLTC",
+      "frontal_area_m2": 2.6,
+      "weight_kg": 2233,
+      "peak_charging_kw": 150,
+      "wltp_range_km": 653,
+      "charger_type": "CCS1",
+      "commercial_range_km": 513,
+      "commercial_standard": "EPA",
+      "certificado_wltp": "si"
+    }
+  },
+  {
+    "id": "chevrolet-spark-euv",
+    "brand": "Chevrolet",
+    "model": "Spark EUV",
+    "specs": {
+      "usable_battery_kwh": 41.9,
+      "drag_coefficient": 0.32,
+      "frontal_area_m2": 2.2,
+      "weight_kg": 1350,
+      "peak_charging_kw": 50,
+      "wltp_range_km": 306,
+      "charger_type": "CCS2",
+      "commercial_range_km": 360,
+      "commercial_standard": "NEDC",
       "certificado_wltp": "no"
     }
   },
@@ -799,6 +357,516 @@
     }
   },
   {
+    "id": "dongfeng-nammi-06",
+    "brand": "Dongfeng",
+    "model": "Nammi 06 Vigo Plus",
+    "specs": {
+      "usable_battery_kwh": 51.87,
+      "drag_coefficient": 0.29,
+      "frontal_area_m2": 2.3,
+      "weight_kg": 1500,
+      "peak_charging_kw": 167,
+      "wltp_range_km": 400,
+      "charger_type": "CCS2",
+      "commercial_range_km": 471,
+      "commercial_standard": "CLTC",
+      "certificado_wltp": "no"
+    }
+  },
+  {
+    "id": "dongfeng-s7-ev",
+    "brand": "Dongfeng",
+    "model": "S7 EV",
+    "specs": {
+      "usable_battery_kwh": 56.8,
+      "drag_coefficient": 0.191,
+      "frontal_area_m2": 2.2,
+      "weight_kg": 2105,
+      "peak_charging_kw": 80,
+      "wltp_range_km": 459,
+      "charger_type": "CCS2",
+      "commercial_range_km": 540,
+      "commercial_standard": "CLTC",
+      "certificado_wltp": "no"
+    }
+  },
+  {
+    "id": "gac-aion-v-luxury-602",
+    "brand": "GAC",
+    "model": "Aion V Luxury 602",
+    "specs": {
+      "usable_battery_kwh": 75.26,
+      "drag_coefficient": 0.28,
+      "frontal_area_m2": 2.5,
+      "weight_kg": 1850,
+      "peak_charging_kw": 120,
+      "wltp_range_km": 512,
+      "charger_type": "CCS2",
+      "commercial_range_km": 602,
+      "commercial_standard": "NEDC",
+      "certificado_wltp": "no"
+    }
+  },
+  {
+    "id": "gac-aion-v-premium-505",
+    "brand": "GAC",
+    "model": "Aion V Premium 505",
+    "specs": {
+      "usable_battery_kwh": 64.5,
+      "drag_coefficient": 0.28,
+      "frontal_area_m2": 2.5,
+      "weight_kg": 1800,
+      "peak_charging_kw": 100,
+      "wltp_range_km": 429,
+      "charger_type": "CCS2",
+      "commercial_range_km": 505,
+      "commercial_standard": "NEDC",
+      "certificado_wltp": "no"
+    }
+  },
+  {
+    "id": "gac-aion-es",
+    "brand": "GAC Aion",
+    "model": "ES",
+    "specs": {
+      "usable_battery_kwh": 55.2,
+      "drag_coefficient": 0.27,
+      "frontal_area_m2": 2.4,
+      "weight_kg": 1665,
+      "peak_charging_kw": 60,
+      "wltp_range_km": 391,
+      "charger_type": "GB/T",
+      "commercial_range_km": 460,
+      "commercial_standard": "NEDC",
+      "certificado_wltp": "no"
+    }
+  },
+  {
+    "id": "gac-aion-ut",
+    "brand": "GAC Aion",
+    "model": "UT",
+    "specs": {
+      "usable_battery_kwh": 44.1,
+      "drag_coefficient": 0.28,
+      "frontal_area_m2": 2.4,
+      "weight_kg": 1450,
+      "peak_charging_kw": 60,
+      "wltp_range_km": 510,
+      "charger_type": "GB/T",
+      "commercial_range_km": 600,
+      "commercial_standard": "CLTC",
+      "certificado_wltp": "no"
+    }
+  },
+  {
+    "id": "gac-aion-v",
+    "brand": "GAC Aion",
+    "model": "V",
+    "specs": {
+      "usable_battery_kwh": 75,
+      "drag_coefficient": 0.29,
+      "frontal_area_m2": 2.7,
+      "weight_kg": 1880,
+      "peak_charging_kw": 180,
+      "charger_type": "CCS2",
+      "wltp_range_km": 510,
+      "commercial_range_km": 600,
+      "commercial_standard": "NEDC",
+      "certificado_wltp": "no"
+    }
+  },
+  {
+    "id": "gac-aion-y-plus",
+    "brand": "GAC Aion",
+    "model": "Y Plus",
+    "specs": {
+      "usable_battery_kwh": 63.2,
+      "drag_coefficient": 0.278,
+      "frontal_area_m2": 2.55,
+      "weight_kg": 1730,
+      "peak_charging_kw": 80,
+      "wltp_range_km": 417,
+      "charger_type": "GB/T",
+      "commercial_range_km": 490,
+      "commercial_standard": "NEDC",
+      "certificado_wltp": "no"
+    }
+  },
+  {
+    "id": "geely-ex2",
+    "brand": "Geely",
+    "model": "EX2",
+    "specs": {
+      "usable_battery_kwh": 40.16,
+      "drag_coefficient": 0.28,
+      "frontal_area_m2": 2.3,
+      "weight_kg": 1250,
+      "peak_charging_kw": 70,
+      "wltp_range_km": 274,
+      "charger_type": "GB/T",
+      "commercial_range_km": 322,
+      "commercial_standard": "NEDC",
+      "certificado_wltp": "no"
+    }
+  },
+  {
+    "id": "geely-ex5",
+    "brand": "Geely",
+    "model": "EX5",
+    "specs": {
+      "usable_battery_kwh": 60.2,
+      "drag_coefficient": 0.269,
+      "frontal_area_m2": 2.6,
+      "weight_kg": 1615,
+      "peak_charging_kw": 100,
+      "wltp_range_km": 451,
+      "charger_type": "GB/T",
+      "commercial_range_km": 530,
+      "commercial_standard": "CLTC",
+      "certificado_wltp": "no"
+    }
+  },
+  {
+    "id": "geely-geometry-c",
+    "brand": "Geely",
+    "model": "Geometry C",
+    "specs": {
+      "usable_battery_kwh": 70,
+      "drag_coefficient": 0.273,
+      "frontal_area_m2": 2.45,
+      "weight_kg": 1685,
+      "peak_charging_kw": 75,
+      "wltp_range_km": 460,
+      "charger_type": "GB/T",
+      "commercial_range_km": 550,
+      "commercial_standard": "NEDC",
+      "certificado_wltp": "si"
+    }
+  },
+  {
+    "id": "geely-starray-emi",
+    "brand": "Geely",
+    "model": "Starray EM-i (PHEV)",
+    "specs": {
+      "usable_battery_kwh": 18.4,
+      "drag_coefficient": 0.32,
+      "frontal_area_m2": 2.8,
+      "weight_kg": 1800,
+      "peak_charging_kw": 30,
+      "wltp_range_km": 128,
+      "charger_type": "GB/T",
+      "commercial_range_km": 150,
+      "commercial_standard": "CLTC",
+      "certificado_wltp": "no"
+    }
+  },
+  {
+    "id": "hyundai-ioniq5-77",
+    "brand": "Hyundai",
+    "model": "Ioniq 5 (77.4 kWh) AWD",
+    "specs": {
+      "usable_battery_kwh": 77.4,
+      "drag_coefficient": 0.288,
+      "frontal_area_m2": 2.65,
+      "weight_kg": 2100,
+      "peak_charging_kw": 233,
+      "wltp_range_km": 507,
+      "charger_type": "CCS1",
+      "commercial_range_km": 480,
+      "commercial_standard": "NEDC",
+      "certificado_wltp": "si"
+    }
+  },
+  {
+    "id": "hyundai-kona-ev",
+    "brand": "Hyundai",
+    "model": "Kona EV (64 kWh)",
+    "specs": {
+      "usable_battery_kwh": 64,
+      "drag_coefficient": 0.29,
+      "frontal_area_m2": 2.4,
+      "weight_kg": 1685,
+      "peak_charging_kw": 77,
+      "wltp_range_km": 484,
+      "charger_type": "CCS1",
+      "commercial_range_km": 484,
+      "commercial_standard": "WLTP",
+      "certificado_wltp": "si"
+    }
+  },
+  {
+    "id": "jac-e30x",
+    "brand": "JAC",
+    "model": "E30X",
+    "specs": {
+      "usable_battery_kwh": 51.5,
+      "drag_coefficient": 0.29,
+      "frontal_area_m2": 2.3,
+      "weight_kg": 1450,
+      "peak_charging_kw": 60,
+      "wltp_range_km": 344,
+      "charger_type": "GB/T",
+      "commercial_range_km": 405,
+      "commercial_standard": "CLTC",
+      "certificado_wltp": "no"
+    }
+  },
+  {
+    "id": "jaecoo-j7",
+    "brand": "Jaecoo",
+    "model": "J7 (PHEV)",
+    "specs": {
+      "usable_battery_kwh": 18.3,
+      "drag_coefficient": 0.32,
+      "frontal_area_m2": 2.6,
+      "weight_kg": 1850,
+      "peak_charging_kw": 40,
+      "wltp_range_km": 90,
+      "charger_type": "GB/T",
+      "commercial_range_km": 90,
+      "commercial_standard": "WLTP",
+      "certificado_wltp": "si"
+    }
+  },
+  {
+    "id": "kia-ev3-long-range",
+    "brand": "Kia",
+    "model": "EV3 Long Range",
+    "specs": {
+      "usable_battery_kwh": 81.4,
+      "drag_coefficient": 0.263,
+      "frontal_area_m2": 2.5,
+      "weight_kg": 1885,
+      "peak_charging_kw": 128,
+      "wltp_range_km": 600,
+      "charger_type": "CCS1",
+      "commercial_range_km": 600,
+      "commercial_standard": "WLTP",
+      "certificado_wltp": "si"
+    }
+  },
+  {
+    "id": "kia-ev5-standard",
+    "brand": "Kia",
+    "model": "EV5 (64.2 kWh)",
+    "specs": {
+      "usable_battery_kwh": 64.2,
+      "drag_coefficient": 0.29,
+      "frontal_area_m2": 2.8,
+      "weight_kg": 1870,
+      "peak_charging_kw": 102,
+      "wltp_range_km": 400,
+      "charger_type": "CCS1",
+      "commercial_range_km": 530,
+      "commercial_standard": "NEDC",
+      "certificado_wltp": "si"
+    }
+  },
+  {
+    "id": "kia-ev6-77-rwd",
+    "brand": "Kia",
+    "model": "EV6 (77.4 kWh) RWD",
+    "specs": {
+      "usable_battery_kwh": 77.4,
+      "drag_coefficient": 0.28,
+      "frontal_area_m2": 2.6,
+      "weight_kg": 1985,
+      "peak_charging_kw": 233,
+      "wltp_range_km": 528,
+      "charger_type": "CCS1",
+      "commercial_range_km": 528,
+      "commercial_standard": "WLTP",
+      "certificado_wltp": "si"
+    }
+  },
+  {
+    "id": "kia-ev9-awd",
+    "brand": "Kia",
+    "model": "EV9 GT-Line (99.8 kWh)",
+    "specs": {
+      "usable_battery_kwh": 96,
+      "drag_coefficient": 0.28,
+      "frontal_area_m2": 3.2,
+      "weight_kg": 2560,
+      "peak_charging_kw": 210,
+      "wltp_range_km": 505,
+      "charger_type": "CCS1",
+      "commercial_range_km": 505,
+      "commercial_standard": "WLTP",
+      "certificado_wltp": "si"
+    }
+  },
+  {
+    "id": "kia-niro-ev",
+    "brand": "Kia",
+    "model": "Niro EV (64 kWh)",
+    "specs": {
+      "usable_battery_kwh": 64.8,
+      "drag_coefficient": 0.29,
+      "frontal_area_m2": 2.5,
+      "weight_kg": 1739,
+      "peak_charging_kw": 80,
+      "wltp_range_km": 460,
+      "charger_type": "CCS1",
+      "commercial_range_km": 460,
+      "commercial_standard": "NEDC",
+      "certificado_wltp": "si"
+    }
+  },
+  {
+    "id": "leapmotor-c10",
+    "brand": "Leapmotor",
+    "model": "C10 EV",
+    "specs": {
+      "usable_battery_kwh": 69.9,
+      "drag_coefficient": 0.28,
+      "frontal_area_m2": 2.6,
+      "weight_kg": 1800,
+      "peak_charging_kw": 80,
+      "wltp_range_km": 420,
+      "charger_type": "GB/T",
+      "commercial_range_km": 530,
+      "commercial_standard": "CLTC",
+      "certificado_wltp": "si"
+    }
+  },
+  {
+    "id": "leapmotor-t03",
+    "brand": "Leapmotor",
+    "model": "T03",
+    "specs": {
+      "usable_battery_kwh": 36,
+      "drag_coefficient": 0.32,
+      "frontal_area_m2": 2.2,
+      "weight_kg": 1125,
+      "peak_charging_kw": 45,
+      "wltp_range_km": 280,
+      "charger_type": "GB/T",
+      "commercial_range_km": 418,
+      "commercial_standard": "CLTC",
+      "certificado_wltp": "si"
+    }
+  },
+  {
+    "id": "mg-marvel-r",
+    "brand": "MG",
+    "model": "Marvel R AWD",
+    "specs": {
+      "usable_battery_kwh": 70,
+      "drag_coefficient": 0.29,
+      "frontal_area_m2": 2.6,
+      "weight_kg": 1920,
+      "peak_charging_kw": 92,
+      "wltp_range_km": 370,
+      "charger_type": "CCS2",
+      "commercial_range_km": 370,
+      "commercial_standard": "WLTP",
+      "certificado_wltp": "si"
+    }
+  },
+  {
+    "id": "mg-zs-ev-72",
+    "brand": "MG",
+    "model": "ZS EV Long Range",
+    "specs": {
+      "usable_battery_kwh": 72.6,
+      "drag_coefficient": 0.33,
+      "frontal_area_m2": 2.6,
+      "weight_kg": 1620,
+      "peak_charging_kw": 92,
+      "wltp_range_km": 440,
+      "charger_type": "CCS2",
+      "commercial_range_km": 440,
+      "commercial_standard": "WLTP",
+      "certificado_wltp": "si"
+    }
+  },
+  {
+    "id": "nissan-leaf-40",
+    "brand": "Nissan",
+    "model": "Leaf (40 kWh)",
+    "specs": {
+      "usable_battery_kwh": 39,
+      "drag_coefficient": 0.28,
+      "frontal_area_m2": 2.3,
+      "weight_kg": 1580,
+      "peak_charging_kw": 50,
+      "wltp_range_km": 270,
+      "charger_type": "CHAdeMO",
+      "commercial_range_km": 378,
+      "commercial_standard": "NEDC",
+      "certificado_wltp": "si"
+    }
+  },
+  {
+    "id": "omoda-e5",
+    "brand": "Omoda",
+    "model": "E5",
+    "specs": {
+      "usable_battery_kwh": 60,
+      "drag_coefficient": 0.28,
+      "frontal_area_m2": 2.5,
+      "weight_kg": 1710,
+      "peak_charging_kw": 80,
+      "wltp_range_km": 430,
+      "charger_type": "GB/T",
+      "commercial_range_km": 450,
+      "commercial_standard": "CLTC",
+      "certificado_wltp": "si"
+    }
+  },
+  {
+    "id": "porsche-taycan-4s",
+    "brand": "Porsche",
+    "model": "Taycan 4S (Plus)",
+    "specs": {
+      "usable_battery_kwh": 83.7,
+      "drag_coefficient": 0.22,
+      "frontal_area_m2": 2.33,
+      "weight_kg": 2220,
+      "peak_charging_kw": 270,
+      "wltp_range_km": 464,
+      "charger_type": "CCS1",
+      "commercial_range_km": 463,
+      "commercial_standard": "WLTP",
+      "certificado_wltp": "si"
+    }
+  },
+  {
+    "id": "renault-kwid-etech",
+    "brand": "Renault",
+    "model": "Kwid E-Tech",
+    "specs": {
+      "usable_battery_kwh": 26.8,
+      "drag_coefficient": 0.33,
+      "frontal_area_m2": 2.1,
+      "weight_kg": 977,
+      "peak_charging_kw": 30,
+      "wltp_range_km": 220,
+      "charger_type": "CCS2",
+      "commercial_range_km": 298,
+      "commercial_standard": "WLTP",
+      "certificado_wltp": "si"
+    }
+  },
+  {
+    "id": "renault-megane-etech",
+    "brand": "Renault",
+    "model": "Megane E-Tech",
+    "specs": {
+      "usable_battery_kwh": 60,
+      "drag_coefficient": 0.29,
+      "frontal_area_m2": 2.4,
+      "weight_kg": 1636,
+      "peak_charging_kw": 130,
+      "wltp_range_km": 450,
+      "charger_type": "CCS2",
+      "commercial_range_km": 450,
+      "commercial_standard": "WLTP",
+      "certificado_wltp": "si"
+    }
+  },
+  {
     "id": "skywell-be11",
     "brand": "Skywell",
     "model": "BE11",
@@ -813,6 +881,57 @@
       "commercial_range_km": 520,
       "commercial_standard": "CLTC",
       "certificado_wltp": "no"
+    }
+  },
+  {
+    "id": "skyworth-ev6-ii",
+    "brand": "Skyworth",
+    "model": "EV6 II",
+    "specs": {
+      "usable_battery_kwh": 54.75,
+      "drag_coefficient": 0.3,
+      "frontal_area_m2": 2.7,
+      "weight_kg": 1830,
+      "peak_charging_kw": 100,
+      "wltp_range_km": 527,
+      "charger_type": "GB/T",
+      "commercial_range_km": 620,
+      "commercial_standard": "CLTC",
+      "certificado_wltp": "no"
+    }
+  },
+  {
+    "id": "tesla-m3-rwd",
+    "brand": "Tesla",
+    "model": "Model 3 RWD",
+    "specs": {
+      "usable_battery_kwh": 57.5,
+      "drag_coefficient": 0.219,
+      "frontal_area_m2": 2.22,
+      "weight_kg": 1765,
+      "peak_charging_kw": 170,
+      "wltp_range_km": 513,
+      "charger_type": "NACS",
+      "commercial_range_km": 438,
+      "commercial_standard": "EPA",
+      "certificado_wltp": "si"
+    }
+  },
+  {
+    "id": "volvo-ex30",
+    "brand": "Volvo",
+    "model": "EX30 Ultra Single Motor",
+    "specs": {
+      "usable_battery_kwh": 64,
+      "drag_coefficient": 0.28,
+      "frontal_area_m2": 2.42,
+      "weight_kg": 1850,
+      "peak_charging_kw": 153,
+      "wltp_range_km": 476,
+      "charger_type": "CCS1",
+      "commercial_range_km": 476,
+      "commercial_standard": "WLTP",
+      "certificado_wltp": "si"
     }
   },
   {
@@ -846,74 +965,6 @@
       "charger_type": "CCS2",
       "commercial_range_km": 410,
       "commercial_standard": "CLTC",
-      "certificado_wltp": "no"
-    }
-  },
-  {
-    "id": "omoda-e5",
-    "brand": "Omoda",
-    "model": "E5",
-    "specs": {
-      "usable_battery_kwh": 60,
-      "drag_coefficient": 0.28,
-      "frontal_area_m2": 2.5,
-      "weight_kg": 1710,
-      "peak_charging_kw": 80,
-      "wltp_range_km": 430,
-      "charger_type": "GB/T",
-      "commercial_range_km": 450,
-      "commercial_standard": "CLTC",
-      "certificado_wltp": "si"
-    }
-  },
-  {
-    "id": "jaecoo-j7",
-    "brand": "Jaecoo",
-    "model": "J7 (PHEV)",
-    "specs": {
-      "usable_battery_kwh": 18.3,
-      "drag_coefficient": 0.32,
-      "frontal_area_m2": 2.6,
-      "weight_kg": 1850,
-      "peak_charging_kw": 40,
-      "wltp_range_km": 90,
-      "charger_type": "GB/T",
-      "commercial_range_km": 90,
-      "commercial_standard": "WLTP",
-      "certificado_wltp": "si"
-    }
-  },
-  {
-    "id": "gac-aion-v-premium-505",
-    "brand": "GAC",
-    "model": "Aion V Premium 505",
-    "specs": {
-      "usable_battery_kwh": 64.5,
-      "drag_coefficient": 0.28,
-      "frontal_area_m2": 2.5,
-      "weight_kg": 1800,
-      "peak_charging_kw": 100,
-      "wltp_range_km": 429,
-      "charger_type": "CCS2",
-      "commercial_range_km": 505,
-      "commercial_standard": "NEDC",
-      "certificado_wltp": "no"
-    }
-  },
-  {
-    "id": "gac-aion-v-luxury-602",
-    "brand": "GAC",
-    "model": "Aion V Luxury 602",
-    "specs": {
-      "usable_battery_kwh": 75.26,
-      "drag_coefficient": 0.28,
-      "frontal_area_m2": 2.5,
-      "weight_kg": 1850,
-      "peak_charging_kw": 120,
-      "wltp_range_km": 512,
-      "charger_type": "CCS2",
-      "commercial_range_km": 602,
-      "commercial_standard": "NEDC",
       "certificado_wltp": "no"
     }
   }
