@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { Plus, MapPin, Loader2, GripVertical, ArrowUpDown, X, Trash2, Star } from 'lucide-react';
 import { fetchSuggestions, SearchSuggestion } from '../../lib/services/mapbox';
 import { useTripStore } from '@/lib/store/useTripStore';
@@ -367,18 +368,19 @@ const SearchInput: React.FC<SearchInputProps> = ({
       )}
 
       {/* Modals para alertas y alias */}
-      {alertMsg && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={(e) => { e.stopPropagation(); setAlertMsg(''); }}>
+      {alertMsg && typeof document !== 'undefined' && createPortal(
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', zIndex: 99999, display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={(e) => { e.stopPropagation(); setAlertMsg(''); }}>
           <div style={{ background: 'var(--color-bg)', padding: '24px', borderRadius: '12px', width: '90%', maxWidth: '360px', border: '1px solid var(--color-outline)', textAlign: 'center' }} onClick={(e) => e.stopPropagation()}>
             <h3 style={{ marginTop: 0, marginBottom: '16px', color: 'var(--color-text)', fontSize: '1.125rem' }}>Atención</h3>
             <p style={{ color: 'var(--color-text-dim)', fontSize: '0.875rem', marginBottom: '24px' }}>{alertMsg}</p>
             <button type="button" onClick={() => setAlertMsg('')} style={{ width: '100%', padding: '10px 16px', background: 'var(--color-primary)', color: 'var(--color-bg)', border: 'none', cursor: 'pointer', borderRadius: '8px', fontWeight: 600 }}>Entendido</button>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
-      {promptOpen && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={(e) => { e.stopPropagation(); setPromptOpen(false); }}>
+      {promptOpen && typeof document !== 'undefined' && createPortal(
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', zIndex: 99999, display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={(e) => { e.stopPropagation(); setPromptOpen(false); }}>
           <div style={{ background: 'var(--color-bg)', padding: '24px', borderRadius: '12px', width: '90%', maxWidth: '400px', border: '1px solid var(--color-outline)' }} onClick={(e) => e.stopPropagation()}>
             <h3 style={{ marginTop: 0, marginBottom: '16px', color: 'var(--color-text)', fontSize: '1.125rem' }}>Guardar lugar favorito</h3>
             <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.875rem', color: 'var(--color-text-dim)' }}>Nombre o alias (opcional):</label>
@@ -395,7 +397,8 @@ const SearchInput: React.FC<SearchInputProps> = ({
               <button type="button" onClick={handleSaveFavorite} style={{ padding: '8px 16px', background: 'var(--color-primary)', color: 'var(--color-bg)', border: 'none', cursor: 'pointer', borderRadius: '8px', fontWeight: 600 }}>Guardar</button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
