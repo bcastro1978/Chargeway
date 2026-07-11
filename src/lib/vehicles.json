@@ -1001,5 +1001,22 @@
       "commercial_standard": "NEDC",
       "certificado_wltp": "no"
     }
+  },
+  {
+    "id": "wuling-bingo-plus",
+    "brand": "Wuling",
+    "model": "Bingo Plus",
+    "specs": {
+      "usable_battery_kwh": 37.9,
+      "drag_coefficient": 0.33,
+      "frontal_area_m2": 2.3,
+      "weight_kg": 1300,
+      "peak_charging_kw": 40,
+      "wltp_range_km": 340,
+      "charger_type": "GB/T",
+      "commercial_range_km": 401,
+      "commercial_standard": "CLTC",
+      "certificado_wltp": "no"
+    }
   }
 ]
