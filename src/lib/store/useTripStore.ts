@@ -178,27 +178,63 @@ export const useTripStore = create<TripState>()(
         if (profile) {
           const loadedState: Partial<TripState> = { user: profile };
           
-          // Query the user's last trip to load their previous vehicle and SoC
-          const { data: lastTrip } = await supabase
-            .from('trips')
-            .select('vehicle_model, start_soc')
+          // Query the user's primary vehicle in garage
+          const { data: primaryVehicle } = await supabase
+            .from('user_vehicles')
+            .select(`
+              is_primary,
+              photo_url,
+              vehicle_models!user_vehicles_vehicle_model_id_fkey (
+                id, name, slug, usable_battery_kwh, drag_coefficient, 
+                frontal_area_m2, weight_kg, peak_charging_kw, wltp_range_km, charger_type,
+                vehicle_brands ( id, name )
+              )
+            `)
             .eq('user_id', session.user.id)
-            .order('created_at', { ascending: false })
-            .limit(1)
-            .single();
+            .eq('is_primary', true)
+            .maybeSingle();
 
-          if (lastTrip && lastTrip.vehicle_model) {
-            const foundVehicle = vehicles.find(v => `${v.brand} ${v.model}` === lastTrip.vehicle_model);
-            if (foundVehicle) {
-              loadedState.selectedVehicle = foundVehicle as Vehicle;
+          if (primaryVehicle && primaryVehicle.vehicle_models) {
+            const dbModel = primaryVehicle.vehicle_models;
+            loadedState.selectedVehicle = {
+              id: dbModel.slug,
+              brand: dbModel.vehicle_brands?.name || 'Genérico',
+              model: dbModel.name,
+              logo: '',
+              photoUrl: primaryVehicle.photo_url || '',
+              specs: {
+                usable_battery_kwh: Number(dbModel.usable_battery_kwh),
+                drag_coefficient: Number(dbModel.drag_coefficient),
+                frontal_area_m2: Number(dbModel.frontal_area_m2),
+                weight_kg: Number(dbModel.weight_kg),
+                peak_charging_kw: Number(dbModel.peak_charging_kw),
+                wltp_range_km: Number(dbModel.wltp_range_km),
+                charger_type: dbModel.charger_type,
+              }
+            } as Vehicle;
+          } else {
+            // Fallback to query the user's last trip or default to first vehicle
+            const { data: lastTrip } = await supabase
+              .from('trips')
+              .select('vehicle_model, start_soc')
+              .eq('user_id', session.user.id)
+              .order('created_at', { ascending: false })
+              .limit(1)
+              .single();
+
+            if (lastTrip && lastTrip.vehicle_model) {
+              const foundVehicle = vehicles.find(v => `${v.brand} ${v.model}` === lastTrip.vehicle_model);
+              if (foundVehicle) {
+                loadedState.selectedVehicle = foundVehicle as Vehicle;
+              } else {
+                loadedState.selectedVehicle = vehicles[0] as Vehicle;
+              }
+              if (lastTrip.start_soc !== null && lastTrip.start_soc !== undefined) {
+                loadedState.soc = Number(lastTrip.start_soc);
+              }
             } else {
               loadedState.selectedVehicle = vehicles[0] as Vehicle;
             }
-            if (lastTrip.start_soc !== null && lastTrip.start_soc !== undefined) {
-              loadedState.soc = Number(lastTrip.start_soc);
-            }
-          } else {
-            loadedState.selectedVehicle = vehicles[0] as Vehicle;
           }
           
           set(loadedState);

@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceArea, ReferenceLine } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceArea, ReferenceLine, ReferenceDot } from 'recharts';
 import { ElevationPoint } from '@/lib/services/elevation';
 import { SegmentTip } from '@/lib/agents/RouteAdvisorAgent';
 import { useTripStore } from '@/lib/store/useTripStore';
@@ -18,6 +18,7 @@ export const ElevationProfile: React.FC<ElevationProfileProps> = ({
   hoveredSegment = null
 }) => {
   const currentDistance = useTripStore(state => state.currentDistance);
+  const selectedVehiclePhoto = useTripStore(state => state.selectedVehicle?.photoUrl);
 
   const chartData = useMemo(() => {
     if (!data || data.length === 0) return [];
@@ -60,6 +61,22 @@ export const ElevationProfile: React.FC<ElevationProfileProps> = ({
     if (!totalDistanceKm || totalDistanceKm <= 0) return 0;
     return Math.min(100, Math.max(0, (currentDistance / totalDistanceKm) * 100));
   }, [currentDistance, totalDistanceKm]);
+
+  const currentAlt = useMemo(() => {
+    if (!chartData || chartData.length === 0) return 0;
+    const targetDist = Math.round(currentDistance * 10) / 10;
+    
+    let closestPoint = chartData[0];
+    let minDiff = Infinity;
+    for (const p of chartData) {
+      const diff = Math.abs(p.dist - targetDist);
+      if (diff < minDiff) {
+        minDiff = diff;
+        closestPoint = p;
+      }
+    }
+    return closestPoint?.alt || 0;
+  }, [chartData, currentDistance]);
 
   // Generate readable ticks for Y axis
   const tickCount = 4;
@@ -146,8 +163,51 @@ export const ElevationProfile: React.FC<ElevationProfileProps> = ({
               />
             )}
             
-            {currentDistance > 0 && (
-              <ReferenceLine x={Math.round(currentDistance * 10) / 10} stroke="#f59e0b" strokeWidth={2} strokeDasharray="3 3" label={{ position: 'top', value: '🚗', fill: '#f59e0b', fontSize: 14 }} />
+            {currentDistance >= 0 && (
+              <ReferenceLine 
+                x={Math.round(currentDistance * 10) / 10} 
+                stroke="#3fff8b" 
+                strokeWidth={1}
+                strokeDasharray="3 3"
+              />
+            )}
+
+            {currentDistance >= 0 && (
+              <ReferenceDot
+                x={Math.round(currentDistance * 10) / 10}
+                y={currentAlt}
+                r={14}
+                shape={(props: any) => {
+                  const { cx, cy } = props;
+                  return (
+                    <g transform={`translate(${cx - 14}, ${cy - 14})`}>
+                      {selectedVehiclePhoto ? (
+                        <foreignObject width="28" height="28">
+                          <img 
+                            src={selectedVehiclePhoto} 
+                            alt="Auto" 
+                            style={{ 
+                              width: '28px', 
+                              height: '28px', 
+                              borderRadius: '50%', 
+                              objectFit: 'cover', 
+                              border: '1.5px solid var(--color-primary)', 
+                              boxShadow: '0 0 8px rgba(63, 255, 139, 0.6)' 
+                            }} 
+                          />
+                        </foreignObject>
+                      ) : (
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#3fff8b" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: '28px', height: '28px' }}>
+                          <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/>
+                          <circle cx="7" cy="17" r="2"/>
+                          <path d="M9 17h6"/>
+                          <circle cx="17" cy="17" r="2"/>
+                        </svg>
+                      )}
+                    </g>
+                  );
+                }}
+              />
             )}
 
             <Area

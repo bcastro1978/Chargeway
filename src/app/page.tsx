@@ -10,6 +10,7 @@ import { RouteSearch, Waypoint } from '@/components/Dashboard/RouteSearch';
 import { AuthButton } from '@/components/Dashboard/AuthButton';
 import { ConsentModal, ExpandableDoc, TERMS_TEXT, PRIVACY_TEXT } from '@/components/Dashboard/ConsentModal';
 import { PwaInstallButton } from '@/components/Dashboard/PwaInstallButton';
+import { ProfileModal } from '@/components/Profile/ProfileModal';
 import { Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { fetchAllEcuadorChargers, Charger } from '@/lib/services/charging';
 import { useTripStore } from '@/lib/store/useTripStore';
@@ -76,6 +77,7 @@ export default function Home() {
   const [allChargers, setAllChargers] = useState<Charger[]>([]);
   const [hoveredSegment, setHoveredSegment] = useState<number | null>(null);
   const [currentFactIndex, setCurrentFactIndex] = useState(0);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -382,6 +384,14 @@ export default function Home() {
         <ConsentModal onAccept={saveConsent} />
       )}
 
+      {/* Profile Modal */}
+      {isProfileModalOpen && user && (
+        <ProfileModal 
+          userId={user.id} 
+          onClose={() => setIsProfileModalOpen(false)} 
+        />
+      )}
+
       <div className="grid grid-cols-1 lg:grid-cols-[350px_1fr] gap-8 pt-4">
         {/* Left Sidebar */}
         <aside className="flex flex-col gap-6">
@@ -393,6 +403,7 @@ export default function Home() {
             soc={soc}
             onSocChange={setSoc}
             rangeKm={selectedVehicle ? Math.round(selectedVehicle.specs.wltp_range_km * soc) : 0}
+            onOpenProfile={() => setIsProfileModalOpen(true)}
           />
 
           <div className="relative z-[100]">

@@ -8,6 +8,7 @@ export interface Vehicle {
   id: string;
   model: string;
   brand: string;
+  photoUrl?: string;
   specs: {
     usable_battery_kwh: number;
     wltp_range_km: number;
@@ -25,15 +26,22 @@ interface VehicleSelectorProps {
   soc: number;
   onSocChange: (newSoc: number) => void;
   rangeKm: number;
+  onOpenProfile: () => void;
 }
+
+import { useTripStore } from '@/lib/store/useTripStore';
 
 export const VehicleSelector: React.FC<VehicleSelectorProps> = ({ 
   selectedId, 
   onSelect,
   soc,
   onSocChange,
-  rangeKm
+  rangeKm,
+  onOpenProfile
 }) => {
+  const storeSelectedVehicle = useTripStore((state) => state.selectedVehicle);
+  const selectedVehiclePhoto = storeSelectedVehicle?.photoUrl;
+  
   const selectedVehicle = vehiclesData.find(v => v.id === selectedId) || vehiclesData[0];
   
   // Extract unique brands
@@ -66,9 +74,60 @@ export const VehicleSelector: React.FC<VehicleSelectorProps> = ({
   return (
     <div className="glass-card animate-fade-in" style={{ padding: 'var(--spacing-md)' }}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-sm)' }}>
-        <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--color-text-dim)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-          Vehículo Seleccionado
-        </span>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--color-text-dim)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            Vehículo Seleccionado
+          </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            {selectedVehiclePhoto ? (
+              <img 
+                src={selectedVehiclePhoto} 
+                alt="Miniatura Vehículo" 
+                style={{ 
+                  width: '24px', 
+                  height: '24px', 
+                  borderRadius: '50%', 
+                  objectFit: 'cover', 
+                  border: '1px solid var(--color-primary)',
+                  boxShadow: '0 0 8px rgba(63, 255, 139, 0.4)'
+                }} 
+              />
+            ) : (
+              <div style={{
+                width: '24px',
+                height: '24px',
+                borderRadius: '50%',
+                background: 'rgba(63, 255, 139, 0.15)',
+                border: '1.5px solid var(--color-primary)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'var(--color-primary)',
+                boxShadow: '0 0 8px rgba(63, 255, 139, 0.3)'
+              }}>
+                <Car size={12} />
+              </div>
+            )}
+            <button 
+              onClick={onOpenProfile}
+              style={{ 
+                background: 'rgba(255, 255, 255, 0.1)', 
+                border: 'none', 
+                color: '#fff', 
+                padding: '4px 10px', 
+                borderRadius: '6px', 
+                fontSize: '0.7rem', 
+                fontWeight: 600, 
+                cursor: 'pointer',
+                transition: 'all 0.2s'
+              }}
+              onMouseOver={(e) => e.currentTarget.style.background = 'var(--color-primary)'}
+              onMouseOut={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)'}
+            >
+              Perfil
+            </button>
+          </div>
+        </div>
         
         {/* Brand Selector */}
         <div style={{ position: 'relative' }}>

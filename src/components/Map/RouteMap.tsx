@@ -59,10 +59,12 @@ export const RouteMap: React.FC<RouteMapProps> = ({
     });
 
     // Detect user navigation actions (drag/pan/zoom) to stop autosteering
-    const stopFollowing = () => {
-      setIsFollowingUser(false);
+    const stopFollowing = (e: any) => {
+      if (e && e.originalEvent) {
+        setIsFollowingUser(false);
+      }
     };
-    map.current.on('dragstart', stopFollowing);
+    map.current.on('dragstart', () => setIsFollowingUser(false)); // drag is always user
     map.current.on('zoomstart', stopFollowing);
     map.current.on('pitchstart', stopFollowing);
     map.current.on('rotatestart', stopFollowing);
@@ -212,13 +214,52 @@ export const RouteMap: React.FC<RouteMapProps> = ({
 
     const setCurrentDistance = useTripStore.getState().setCurrentDistance;
 
+    const updateMarkerElement = (el: HTMLElement, photoUrl: string | undefined) => {
+      const img = el.querySelector('img');
+      if (photoUrl) {
+        if (img) {
+          if (img.src !== photoUrl) img.src = photoUrl;
+        } else {
+          el.innerHTML = '';
+          el.style.width = '40px';
+          el.style.height = '40px';
+          el.className = 'border-2 border-primary rounded-full shadow-[0_0_15px_rgba(63,255,139,0.7)] z-20 overflow-hidden bg-neutral-900 flex items-center justify-center';
+          const newImg = document.createElement('img');
+          newImg.src = photoUrl;
+          newImg.style.width = '100%';
+          newImg.style.height = '100%';
+          newImg.style.objectFit = 'cover';
+          el.appendChild(newImg);
+        }
+      } else {
+        if (img || !el.className.includes('border-primary')) {
+          el.innerHTML = '';
+          el.style.width = '40px';
+          el.style.height = '40px';
+          el.className = 'border-2 border-primary rounded-full shadow-[0_0_15px_rgba(63,255,139,0.7)] z-20 bg-neutral-950 flex items-center justify-center';
+          el.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#3fff8b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px;">
+              <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/>
+              <circle cx="7" cy="17" r="2"/>
+              <path d="M9 17h6"/>
+              <circle cx="17" cy="17" r="2"/>
+            </svg>
+          `;
+        }
+      }
+    };
+
     const updateGpsMarker = (lng: number, lat: number) => {
       lastUserPosition.current = { lng, lat };
+      const photoUrl = useTripStore.getState().selectedVehicle?.photoUrl;
+      
       if (!gpsMarkerRef.current) {
         const el = document.createElement('div');
-        el.className = 'w-6 h-6 bg-blue-500 border-[3px] border-white rounded-full shadow-[0_0_15px_rgba(59,130,246,0.9)] z-20';
+        updateMarkerElement(el, photoUrl);
         gpsMarkerRef.current = new mapboxgl.Marker({ element: el, anchor: 'center' }).setLngLat([lng, lat]).addTo(map.current!);
       } else {
+        const el = gpsMarkerRef.current.getElement();
+        updateMarkerElement(el, photoUrl);
         gpsMarkerRef.current.setLngLat([lng, lat]);
       }
       
