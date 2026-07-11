@@ -14,7 +14,7 @@ const withPWA = require("@ducanh2912/next-pwa").default({
 });
 
 const nextConfig: NextConfig = {
-  // Opciones de configuración de Next.js
+  serverExternalPackages: ['@google-cloud/vision', 'sharp']
 };
 
 export default withPWA(nextConfig);
