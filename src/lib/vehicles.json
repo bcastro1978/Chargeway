@@ -426,7 +426,7 @@
   },
   {
     "id": "gac-aion-es",
-    "brand": "GAC Aion",
+    "brand": "GAC",
     "model": "ES",
     "specs": {
       "usable_battery_kwh": 55.2,
@@ -434,16 +434,16 @@
       "frontal_area_m2": 2.4,
       "weight_kg": 1665,
       "peak_charging_kw": 60,
-      "wltp_range_km": 391,
-      "charger_type": "GB/T",
-      "commercial_range_km": 460,
+      "wltp_range_km": 375,
+      "charger_type": "CCS2",
+      "commercial_range_km": 442,
       "commercial_standard": "NEDC",
       "certificado_wltp": "no"
     }
   },
   {
     "id": "gac-aion-ut",
-    "brand": "GAC Aion",
+    "brand": "GAC",
     "model": "UT",
     "specs": {
       "usable_battery_kwh": 44.1,
@@ -451,16 +451,16 @@
       "frontal_area_m2": 2.4,
       "weight_kg": 1450,
       "peak_charging_kw": 60,
-      "wltp_range_km": 510,
+      "wltp_range_km": 350,
       "charger_type": "GB/T",
-      "commercial_range_km": 600,
-      "commercial_standard": "CLTC",
+      "commercial_range_km": 420,
+      "commercial_standard": "NEDC",
       "certificado_wltp": "no"
     }
   },
   {
     "id": "gac-aion-v",
-    "brand": "GAC Aion",
+    "brand": "GAC",
     "model": "V",
     "specs": {
       "usable_battery_kwh": 75,
@@ -477,7 +477,7 @@
   },
   {
     "id": "gac-aion-y-plus",
-    "brand": "GAC Aion",
+    "brand": "GAC",
     "model": "Y Plus",
     "specs": {
       "usable_battery_kwh": 63.2,
@@ -965,6 +965,40 @@
       "charger_type": "CCS2",
       "commercial_range_km": 410,
       "commercial_standard": "CLTC",
+      "certificado_wltp": "no"
+    }
+  },
+  {
+    "id": "neta-u",
+    "brand": "Neta",
+    "model": "U",
+    "specs": {
+      "usable_battery_kwh": 66,
+      "drag_coefficient": 0.31,
+      "frontal_area_m2": 2.5,
+      "weight_kg": 1650,
+      "peak_charging_kw": 80,
+      "wltp_range_km": 400,
+      "charger_type": "GB/T",
+      "commercial_range_km": 501,
+      "commercial_standard": "CLTC",
+      "certificado_wltp": "no"
+    }
+  },
+  {
+    "id": "neta-v",
+    "brand": "Neta",
+    "model": "V",
+    "specs": {
+      "usable_battery_kwh": 40.7,
+      "drag_coefficient": 0.33,
+      "frontal_area_m2": 2.3,
+      "weight_kg": 1150,
+      "peak_charging_kw": 50,
+      "wltp_range_km": 320,
+      "charger_type": "GB/T",
+      "commercial_range_km": 401,
+      "commercial_standard": "NEDC",
       "certificado_wltp": "no"
     }
   }
