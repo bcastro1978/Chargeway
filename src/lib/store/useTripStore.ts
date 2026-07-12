@@ -207,8 +207,6 @@ export const useTripStore = create<TripState>()(
   checkSession: async () => {
     set({ isLoadingUser: true });
     try {
-      /*
-      if (process.env.NODE_ENV === 'development') {
       const { data: { session } } = await supabase.auth.getSession();
       if (session?.user) {
         const { data: profile } = await supabase
