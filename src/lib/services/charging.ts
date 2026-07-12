@@ -30,7 +30,7 @@ import corrections from '@/lib/data/chargers-corrections.json';
 
 export async function fetchAllEcuadorChargers(): Promise<Charger[]> {
   try {
-    const { data, error } = await supabase.from('charging_points').select('*');
+    const { data, error } = await supabase.from('charging_stations').select('*').eq('is_active', true);
 
     if (error || !data || data.length === 0) {
       return ECUADOR_CHARGERS_FALLBACK;
@@ -61,15 +61,16 @@ export async function fetchAllEcuadorChargers(): Promise<Charger[]> {
         id: item.id,
         nombre: item.name,
         provincia: item.province || '',
-        canton: item.city_or_canton || '',
+        canton: item.canton || '',
         velocidad: item.speed || '',
         tipo_cargador: item.charger_type || '',
-        potencia: item.power || '',
+        potencia: item.power_kw || '',
         horario: item.schedule || '',
-        costo: item.cost_type || '',
+        costo: item.cost || '',
         enlace_gps: item.gps_link || '',
-        fuente: 'Supabase',
-        location: { lat, lng }
+        fuente: item.source || 'Supabase',
+        location: { lat, lng },
+        is_active: item.is_active
       };
     }).filter((c: Charger) => c.location.lat !== 0 && c.location.lng !== 0) as Charger[];
   } catch {

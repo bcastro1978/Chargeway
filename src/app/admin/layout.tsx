@@ -12,6 +12,7 @@ import {
   ChevronRight,
   Loader2,
   Activity,
+  MapPin,
 } from 'lucide-react';
 
 const NAV = [
@@ -19,6 +20,7 @@ const NAV = [
   { href: '/admin/vehiculos', label: 'Vehículos', icon: Car },
   { href: '/admin/fabricantes', label: 'Fabricantes EV', icon: Activity },
   { href: '/admin/operadores', label: 'Operadores de Carga', icon: Zap },
+  { href: '/admin/puntos-carga', label: 'Puntos de Carga', icon: MapPin },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
