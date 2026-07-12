@@ -8,15 +8,15 @@ import * as Dialog from '@radix-ui/react-dialog';
 interface ChargingStation {
   id: string;
   name: string;
+  region: string;
   province: string;
-  canton: string;
+  city_or_canton: string;
   speed: string;
   charger_type: string;
-  power_kw: string;
+  power: string;
   schedule: string;
-  cost: string;
+  cost_type: string;
   gps_link: string;
-  source: string;
   lat: number;
   lng: number;
   is_active: boolean;
@@ -32,7 +32,7 @@ export default function PuntosCargaAdmin() {
 
   const loadData = async () => {
     setIsLoading(true);
-    const { data } = await supabase.from('charging_stations').select('*').order('name');
+    const { data } = await supabase.from('charging_points').select('*').order('name');
     if (data) setStations(data);
     setIsLoading(false);
   };
@@ -46,10 +46,10 @@ export default function PuntosCargaAdmin() {
       setEditingStation(station);
     } else {
       setEditingStation({
-        name: '', province: '', canton: '', speed: 'Rápida', 
-        charger_type: 'CCS2 / CHAdeMO', power_kw: '50 kW', 
-        schedule: '24h', cost: 'Tarifa EERSA', gps_link: '', 
-        source: 'EPMMOP', lat: 0, lng: 0, is_active: true
+        name: '', region: 'Sierra', province: '', city_or_canton: '', speed: 'Rápida', 
+        charger_type: 'CCS2 / CHAdeMO', power: '50 kW', 
+        schedule: '24h', cost_type: 'Tarifa EERSA', gps_link: '', 
+        lat: 0, lng: 0, is_active: true
       });
     }
     setIsModalOpen(true);
@@ -61,9 +61,9 @@ export default function PuntosCargaAdmin() {
     
     try {
       if (editingStation.id) {
-        await supabase.from('charging_stations').update(editingStation).eq('id', editingStation.id);
+        await supabase.from('charging_points').update(editingStation).eq('id', editingStation.id);
       } else {
-        await supabase.from('charging_stations').insert(editingStation);
+        await supabase.from('charging_points').insert(editingStation);
       }
       setIsModalOpen(false);
       loadData();
@@ -73,14 +73,14 @@ export default function PuntosCargaAdmin() {
   };
 
   const toggleStatus = async (id: string, currentStatus: boolean) => {
-    await supabase.from('charging_stations').update({ is_active: !currentStatus }).eq('id', id);
+    await supabase.from('charging_points').update({ is_active: !currentStatus }).eq('id', id);
     loadData();
   };
 
   const filteredStations = stations.filter(s => 
-    s.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    s.province.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    s.canton.toLowerCase().includes(searchTerm.toLowerCase())
+    s.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    s.province?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    s.city_or_canton?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -139,27 +139,26 @@ export default function PuntosCargaAdmin() {
                   <tr key={station.id} className="hover:bg-white/[0.02] transition-colors">
                     <td className="p-4">
                       <div className="font-medium text-white">{station.name}</div>
-                      <div className="text-xs text-neutral-500">{station.source}</div>
                     </td>
                     <td className="p-4">
-                      <div className="text-sm text-neutral-300">{station.canton}, {station.province}</div>
+                      <div className="text-sm text-neutral-300">{station.city_or_canton}, {station.province}</div>
                       <div className="text-xs text-neutral-500">
                         {station.lat}, {station.lng}
                       </div>
                     </td>
                     <td className="p-4 text-sm text-neutral-300">{station.charger_type}</td>
-                    <td className="p-4 text-sm text-neutral-300">{station.power_kw}</td>
+                    <td className="p-4 text-sm text-neutral-300">{station.power}</td>
                     <td className="p-4">
                       <button
                         onClick={() => toggleStatus(station.id, station.is_active)}
                         className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${
-                          station.is_active 
+                          station.is_active !== false
                             ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' 
                             : 'bg-red-500/10 text-red-400 border-red-500/20'
                         }`}
                       >
-                        {station.is_active ? <CheckCircle2 size={14} /> : <XCircle size={14} />}
-                        {station.is_active ? 'Activo' : 'Inactivo'}
+                        {station.is_active !== false ? <CheckCircle2 size={14} /> : <XCircle size={14} />}
+                        {station.is_active !== false ? 'Activo' : 'Inactivo'}
                       </button>
                     </td>
                     <td className="p-4 text-right">
@@ -211,12 +210,12 @@ export default function PuntosCargaAdmin() {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-neutral-400 mb-1.5">Fuente / Operador</label>
+                  <label className="block text-xs font-medium text-neutral-400 mb-1.5">Región</label>
                   <input
                     type="text"
                     required
-                    value={editingStation?.source || ''}
-                    onChange={e => setEditingStation({...editingStation, source: e.target.value})}
+                    value={editingStation?.region || ''}
+                    onChange={e => setEditingStation({...editingStation, region: e.target.value})}
                     className="w-full px-3 py-2 bg-black/50 border border-white/10 rounded-lg text-white"
                   />
                 </div>
@@ -235,8 +234,8 @@ export default function PuntosCargaAdmin() {
                   <input
                     type="text"
                     required
-                    value={editingStation?.canton || ''}
-                    onChange={e => setEditingStation({...editingStation, canton: e.target.value})}
+                    value={editingStation?.city_or_canton || ''}
+                    onChange={e => setEditingStation({...editingStation, city_or_canton: e.target.value})}
                     className="w-full px-3 py-2 bg-black/50 border border-white/10 rounded-lg text-white"
                   />
                 </div>
@@ -245,8 +244,7 @@ export default function PuntosCargaAdmin() {
                   <input
                     type="number"
                     step="any"
-                    required
-                    value={editingStation?.lat || 0}
+                    value={editingStation?.lat || ''}
                     onChange={e => setEditingStation({...editingStation, lat: parseFloat(e.target.value)})}
                     className="w-full px-3 py-2 bg-black/50 border border-white/10 rounded-lg text-white"
                   />
@@ -256,8 +254,7 @@ export default function PuntosCargaAdmin() {
                   <input
                     type="number"
                     step="any"
-                    required
-                    value={editingStation?.lng || 0}
+                    value={editingStation?.lng || ''}
                     onChange={e => setEditingStation({...editingStation, lng: parseFloat(e.target.value)})}
                     className="w-full px-3 py-2 bg-black/50 border border-white/10 rounded-lg text-white"
                   />
@@ -287,8 +284,8 @@ export default function PuntosCargaAdmin() {
                   <input
                     type="text"
                     required
-                    value={editingStation?.power_kw || ''}
-                    onChange={e => setEditingStation({...editingStation, power_kw: e.target.value})}
+                    value={editingStation?.power || ''}
+                    onChange={e => setEditingStation({...editingStation, power: e.target.value})}
                     className="w-full px-3 py-2 bg-black/50 border border-white/10 rounded-lg text-white"
                   />
                 </div>
@@ -297,8 +294,8 @@ export default function PuntosCargaAdmin() {
                   <input
                     type="text"
                     required
-                    value={editingStation?.cost || ''}
-                    onChange={e => setEditingStation({...editingStation, cost: e.target.value})}
+                    value={editingStation?.cost_type || ''}
+                    onChange={e => setEditingStation({...editingStation, cost_type: e.target.value})}
                     className="w-full px-3 py-2 bg-black/50 border border-white/10 rounded-lg text-white"
                   />
                 </div>
