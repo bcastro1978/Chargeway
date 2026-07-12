@@ -3,7 +3,6 @@ import { createClient } from '@supabase/supabase-js';
 // Utilizamos eval('require') para engañar a Webpack y evitar que intente empaquetar 
 // estos módulos nativos de Node.js durante la construcción en Vercel,
 // los cuales serán resueltos en tiempo de ejecución de Node.js sin problemas.
-const vision = eval('require')('@google-cloud/vision');
 const sharp = eval('require')('sharp');
 import { randomUUID } from 'crypto';
 
@@ -22,63 +21,11 @@ export async function POST(request: Request) {
 
     const buffer = Buffer.from(await file.arrayBuffer());
 
-    // 1. Detección de placas con Google Cloud Vision
+    // 1. Detección de placas con Google Cloud Vision (TEMPORALMENTE DESHABILITADO PARA DESPLIEGUE)
     let finalBuffer = buffer;
-    try {
-      // Necesita configuración de credenciales de Google (GOOGLE_APPLICATION_CREDENTIALS)
-      // Si no están configuradas, esto fallará, lo cual es normal en un ambiente sin llaves
-      const client = new vision.ImageAnnotatorClient();
-      const [result] = await client.textDetection(buffer);
-      const detections = result.textAnnotations;
-
-      if (detections && detections.length > 0) {
-        // En una implementación robusta buscaríamos el bounding box de la matrícula.
-        // Aquí asumiremos que cualquier texto que parezca matrícula se difumina.
-        // Para este ejemplo, usamos objectLocalization buscando 'License plate'.
-        const [objResult] = await client.objectLocalization(buffer);
-        const objects = objResult.localizedObjectAnnotations;
-        
-        if (objects) {
-          const plates = objects.filter(obj => obj.name?.toLowerCase().includes('license plate'));
-          
-          if (plates.length > 0) {
-            // Conseguimos metadatos originales de la imagen
-            const metadata = await sharp(buffer).metadata();
-            const imgWidth = metadata.width || 1000;
-            const imgHeight = metadata.height || 1000;
-
-            let img = sharp(buffer);
-
-            // Difuminar cada placa detectada
-            for (const plate of plates) {
-              const vertices = plate.boundingPoly?.normalizedVertices;
-              if (vertices && vertices.length === 4) {
-                // Calcular caja en pixeles
-                const left = Math.round(vertices[0].x! * imgWidth);
-                const top = Math.round(vertices[0].y! * imgHeight);
-                const width = Math.round((vertices[1].x! - vertices[0].x!) * imgWidth);
-                const height = Math.round((vertices[2].y! - vertices[1].y!) * imgHeight);
-
-                // Asegurar que las coordenadas son válidas
-                if (width > 0 && height > 0) {
-                  const region = await img
-                    .clone()
-                    .extract({ left, top, width, height })
-                    .blur(20) // Nivel de difuminado
-                    .toBuffer();
-                  
-                  img = img.composite([{ input: region, top, left }]);
-                }
-              }
-            }
-            finalBuffer = await img.toBuffer();
-          }
-        }
-      }
-    } catch (visionError) {
-      console.warn('Google Cloud Vision error (probablemente faltan credenciales):', visionError);
-      // Fallback: se usa la imagen original sin difuminar si falla la IA
-    }
+    
+    // TODO: Implementar difuminación de placas mediante REST API en lugar de @google-cloud/vision
+    // para evitar problemas con el empaquetado de dependencias nativas en Vercel.
 
     // 2. Subir al Storage de Supabase
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
