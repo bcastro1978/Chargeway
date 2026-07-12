@@ -16,9 +16,9 @@ const withPWA = require("@ducanh2912/next-pwa").default({
 const nextConfig: NextConfig = {
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },
-  serverExternalPackages: ['@google-cloud/vision', 'sharp'],
+  serverExternalPackages: ['sharp'],
   experimental: {
-    serverComponentsExternalPackages: ['@google-cloud/vision', 'sharp']
+    serverComponentsExternalPackages: ['sharp']
   }
 };
 
