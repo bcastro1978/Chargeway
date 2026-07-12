@@ -1,7 +1,10 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import vision from '@google-cloud/vision';
-import sharp from 'sharp';
+// Utilizamos eval('require') para engañar a Webpack y evitar que intente empaquetar 
+// estos módulos nativos de Node.js durante la construcción en Vercel,
+// los cuales serán resueltos en tiempo de ejecución de Node.js sin problemas.
+const vision = eval('require')('@google-cloud/vision');
+const sharp = eval('require')('sharp');
 import { randomUUID } from 'crypto';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;

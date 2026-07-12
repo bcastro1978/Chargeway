@@ -19,13 +19,6 @@ const nextConfig: NextConfig = {
   serverExternalPackages: ['@google-cloud/vision', 'sharp'],
   experimental: {
     serverComponentsExternalPackages: ['@google-cloud/vision', 'sharp']
-  },
-  webpack: (config, { isServer }) => {
-    if (isServer) {
-      if (!config.externals) config.externals = [];
-      config.externals.push('@google-cloud/vision', 'sharp');
-    }
-    return config;
   }
 };
 
