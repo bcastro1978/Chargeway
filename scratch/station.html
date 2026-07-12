@@ -1,0 +1,808 @@
+<!DOCTYPE html><!-- Last Published: Wed Jun 10 2026 10:41:10 GMT+0000 (Coordinated Universal Time) --><html data-wf-domain="live.electromaps.com" data-wf-page="6437e7fb5ac6ff23f06bcec2" data-wf-site="6278f767c8039e09089ab08c" lang="es"><head><meta charset="utf-8"><link href="https://cdn.prod.website-files.com" rel="preconnect" crossorigin="anonymous"><meta content="Chargepoints for electric vehicles near you - Electromaps" property="og:title"><meta content="Find electric vehicle charging stations around the world with our detailed map. Plan your routes and charge with confidence on Electromaps." property="og:description"><meta content="Chargepoints for electric vehicles near you - Electromaps" name="twitter:title"><meta content="Find electric vehicle charging stations around the world with our detailed map. Plan your routes and charge with confidence on Electromaps." name="twitter:description"><meta property="og:type" content="website"><meta content="summary_large_image" name="twitter:card"><meta content="width=device-width, initial-scale=1" name="viewport"><link href="https://cdn.prod.website-files.com/6278f767c8039e09089ab08c/css/electromaps.webflow.shared.41e365223.min.css" rel="stylesheet" type="text/css" integrity="sha384-QeNlIjihacAEsfRBMifuBjb6jeubNIidF4lOdey/5RcdCuBZkOT5/fYQGkoE8qan" crossorigin="anonymous"><link href="https://cdn.prod.website-files.com/6278f767c8039e09089ab08c/css/electromaps.webflow.6437e7fb5ac6ff23f06bcec2.6e83eca4c.opt.min.css" rel="stylesheet" type="text/css" integrity="sha384-boPspMnC7RGTOCXhbgMTN6NfQBgU8DwgnOyuq1Ev90LdnDzItX5QPGUncgxunrVt" crossorigin="anonymous"><script type="text/javascript">!function(o,c){var n=c.documentElement,t=" w-mod-";n.className+=t+"js",("ontouchstart"in o||o.DocumentTouch&&c instanceof DocumentTouch)&&(n.className+=t+"touch")}(window,document);</script><link href="https://cdn.prod.website-files.com/6278f767c8039e09089ab08c/62949593168ed75e2a765719_favicon.svg" rel="shortcut icon" type="image/x-icon"><link href="https://cdn.prod.website-files.com/6278f767c8039e09089ab08c/629495a2b64554432869a8d5_webclip.png" rel="apple-touch-icon">
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-N98VCX6');</script>
+  
+<!-- End Google Tag Manager -->
+<!-- Google Publisher Tag NEW 5-->
+<script async="" src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
+<script>
+  window.googletag = window.googletag || {cmd: []};
+  googletag.cmd.push(function() {
+    
+    // Mapeo Responsive para evitar impresiones invisibles
+    var headerMapping = googletag.sizeMapping()
+      .addSize([1024, 0], [970, 90]) // Escritorio
+      .addSize([768, 0], [728, 90]) // Tablet
+      .addSize([0, 0], [320, 50]) // Móvil
+      .build();
+
+    var midMapping = googletag.sizeMapping()
+      .addSize([1024, 0], [970, 90])  // Escritorio
+      .addSize([768, 0], [728, 90])  // Tablet
+      .addSize([0, 0], [300, 250]) // Formato cuadrado para móvil en medio del post
+      .build();
+    
+    var listMapping = googletag.sizeMapping()
+      .addSize([1024, 0], [728, 90]) // Escritorio
+      .addSize([768, 0], [468, 60])  // Tablet
+      .addSize([0, 0], [320, 50]) // Móvil   
+      .build();
+
+    // Definición de Slots
+    googletag.defineSlot('/68055579/header_top', [[970, 90], [728, 90], [320, 50]], 'div-gpt-ad-main-header')
+      .defineSizeMapping(headerMapping)
+      .addService(googletag.pubads());
+
+    googletag.defineSlot('/68055579/mid_blog_banner', [[970, 90], [728, 90], [300, 250], [320, 50]], 'div-gpt-ad-secondary-zone')
+      .defineSizeMapping(midMapping)
+      .addService(googletag.pubads());
+    
+    googletag.defineSlot('/68055579/Charging_points_middle', [[728, 90], [468, 60], [320, 50]], 'div-gpt-ad-list-middle')
+      .defineSizeMapping(listMapping) // ESTA LÍNEA ES LA QUE HACE QUE SEA ADAPTABLE
+      .addService(googletag.pubads());
+    
+    // Lazy Loading y Optimización
+    googletag.pubads().enableLazyLoad({
+      fetchMarginPercent: 100,
+      renderMarginPercent: 50,
+      mobileScaling: 1.5
+    });
+
+    googletag.pubads().enableSingleRequest();
+    googletag.pubads().collapseEmptyDivs(); 
+    googletag.enableServices();
+  });
+</script>
+
+<!-- END Google Publisher Tag NEW 3-->
+  
+<!-- Hotjar Tracking Code for https://www.electromaps.com/ -->
+<script>
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:3091564,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+</script>
+
+<!-- [Cookiebot] -->
+<script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="fe5c5c23-06e4-4311-8328-6afa69ab9028" data-blockingmode="auto" type="text/javascript"></script>
+
+<meta name="google-adsense-account" content="ca-pub-7773734529125057">
+<!-- Adsense
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client-ca-pub-7773734529125057" crossorigin="anonymous"></script> -->
+
+<!-- [Attributes by Finsweet] Disable scrolling -->
+<script defer="" src="https://cdn.jsdelivr.net/npm/@finsweet/attributes-scrolldisable@1/scrolldisable.js"></script>
+<script>
+// Obtener el parámetro de la URL que deseas comprobar
+var parametro = "for-businesses"; // Reemplaza "tu_parametro" con el nombre del parámetro que deseas verificar
+
+// Función para comprobar si la URL contiene el parámetro especificado
+function comprobarURLConParametro() {
+  // Obtener la URL actual
+  var url = window.location.href;
+
+  // Verificar si la URL contiene el parámetro
+  if (url.indexOf(parametro) > -1) {
+    // El parámetro está presente en la URL
+    console.log("La URL contiene el parámetro " + parametro);
+    // Aquí puedes agregar el código que deseas ejecutar cuando la URL contiene el parámetro
+   	var link = document.getElementById("for-businesses");
+	// Llamar a la función después de 3 segundos
+	falsoClickDespuesDeTiempo("for-businesses-id", 2000); // Reemplaza "tu_elemento_id" con el ID del elemento en el que deseas simular el clic
+
+    // Simular el clic en el enlace
+    //if (link) {
+			//console.log('click')
+     // link.click();
+   // }
+  } else {
+    // El parámetro no está presente en la URL
+    //console.log("La URL no contiene el parámetro " + parametro);
+    // Aquí puedes agregar el código que deseas ejecutar cuando la URL no contiene el parámetro
+  }
+}
+function falsoClickDespuesDeTiempo(elementoId, tiempo) {
+  setTimeout(function() {
+    var elemento = document.getElementById(elementoId); // Obtener el elemento por su ID
+    if (elemento) {
+      elemento.click(); // Realizar el falso clic en el elemento
+    }
+  }, tiempo);
+}
+
+// Llamar a la función para comprobar la URL cuando sea necesario
+comprobarURLConParametro();
+</script>
+ 
+<script>
+
+document.addEventListener('submit', async (event) => {
+  if (!event.target.action?.endsWith('/xx/newsletter')) {
+    return;
+  }
+
+  event.preventDefault();
+
+  const form = event.target;
+  const submitButton = form.querySelector('[type="submit"]');
+
+  submitButton.disabled = true
+  form.querySelectorAll(`[data-result]`).forEach(message => {
+    message.classList.remove('show');
+  });
+
+  //const language = location.pathname.split('/')[1]; old
+  //const qs = new URLSearchParams({ language }); old
+	const qs = new URLSearchParams();
+  
+  form.querySelectorAll('input[name]').forEach(input => {
+    if (['hidden', 'text', 'email', 'tel'].includes(input.type)) {
+      qs.set(input.name, input.value);
+    }
+  });
+
+  const response = await fetch(`${form.action}?${qs}`);
+  const result = response.status < 299 ? 'success' : 'error';
+  submitButton.disabled = false
+  
+  	form.querySelector(`[data-result="${result}"]`)?.classList.add('show');
+	var elementoBodyForm = form.querySelector(`[data-result="${result}"]`);
+
+    // Modal
+    var elementoPadreBodyForm = encontrarPadreConClase(form, "body-form");
+ 	var elementoFormMessage = elementoPadreBodyForm.querySelector('.newsletter-Message');
+
+    // Verificar si se encontró el elemento padre con la clase
+    if (elementoPadreBodyForm) {
+        //console.log("Se encontró el elemento padre con la clase 'body-form':", elementoPadreBodyForm);
+
+        // Verificar si el resultado es "success" y si el elemento body-form se encontró
+        if (result === "success" && elementoBodyForm) {
+            // Agregar la clase 'show' al elemento body-form
+			$('.form-message').addClass('show');
+        }
+    } else {
+      console.log("No se encontró el elemento padre con la clase 'body-form'.");
+
+    }
+});
+
+
+
+// Función para buscar el elemento padre con una clase específica
+function encontrarPadreConClase(elemento, clase) {
+    // Comprobamos si el elemento tiene la clase deseada
+    if (elemento.classList.contains(clase)) {
+        return elemento; // Si tiene la clase, devolvemos el elemento
+    } else {
+        // Si no tiene la clase, recurrimos al elemento padre (parentNode)
+        if (elemento.parentNode) {
+            // Llamamos recursivamente a la función para el elemento padre
+            return encontrarPadreConClase(elemento.parentNode, clase);
+        } else {
+            // Si llegamos al elemento raíz y no se encuentra la clase, devolvemos null
+            return null;
+        }
+    }
+}
+
+
+
+</script>
+  
+<style>
+:root {
+--navbar-mobile-height: 80px;
+}
+  
+*{
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; 
+  text-rendering: optimizeLegibility;
+}
+
+@media only screen and (max-width: 991px){
+  [css="nav-menu-height"] {
+       height: 100vh;
+       height: calc(var(--vh, 1vh) * 100 - var(--navbar-mobile-height))!important;
+  }
+}
+
+.svg-menu-toggle {
+  fill: #fff;
+  pointer-events: all;
+  cursor: pointer;
+}
+.svg-menu-toggle .bar {
+  -webkit-transform: rotate(0) translateY(0) translateX(0);
+  transform: rotate(0) translateY(0) translateX(0);
+  opacity: 1;
+  -webkit-transform-origin: 25px 12px;
+  transform-origin: 25px 12px;
+  -webkit-transition: -webkit-transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
+  transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
+}
+.svg-menu-toggle .bar:nth-of-type(1) {
+  -webkit-transform-origin: 25px 12px;
+  transform-origin: 25px 12px;
+}
+.svg-menu-toggle .bar:nth-of-type(3) {
+  -webkit-transform-origin: 26px 20px;
+  transform-origin: 26px 20px;
+}
+
+.w--open .bar:nth-of-type(1) {
+  -webkit-transform: rotate(-45deg) translateY(0) translateX(0);
+  transform: rotate(-45deg) translateY(0) translateX(0);
+}
+.w--open .bar:nth-of-type(2) {
+  opacity: 0;
+}
+.w--open .bar:nth-of-type(3) {
+  -webkit-transform: rotate(45deg) translateY(0em) translateX(0em);
+  transform: rotate(45deg) translateY(0em) translateX(0em);
+}
+
+.inline-svg {
+  display: block;
+  margin: 0 auto;
+}  
+  
+[css="/"]:after {
+  display: inline;
+  content: "/";
+  color: #33c88c;
+}
+[css="."]:after {
+  display: inline;
+  content: ".";
+  color: #33c88c;
+}
+[css="?"]:after {
+  display: inline;
+  content: "?";
+  color: #33c88c;
+}
+.w-webflow-badge {
+  display: none!important;
+}
+
+  
+.subscribe-form {
+  width: 100%;
+}
+
+.subscribe-form fieldset{
+  outline: none;
+  border: none;
+  display: flex;
+  align-items: center;
+}
+
+.subscribe-form input:not([type="submit"]) {
+	font-family: 'Heywallbox Regular',sans-serif;
+	box-sizing: border-box;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	box-shadow: none;
+	padding: 8px 16px;
+	display: block;
+	width: 100%;
+	outline: none;
+	border-radius: 50px;
+	border: 2px solid #fff;   
+  background-color: white;
+  color: #221c35;
+  line-height: 20px;
+  font-size: 16px;
+  max-height: 40px;
+}
+
+.subscribe-form button{
+  
+  display: inline;
+    padding: 8px 24px;
+	border: 2px solid #33c88c;
+    border-radius: 10px;
+    background-color: #33c88c;
+    -webkit-transition: all  .2s,color .2s;
+    transition: all .2s,color .2s;
+    font-family: 'Heywallbox Regular',sans-serif;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 400;
+  cursor: pointer;
+  margin-left: 8px;
+}
+.subscribe-form button:hover{
+	border: 2px solid #fff;
+}
+  
+/* cropped images */
+.w-richtext figure {
+    max-width: 100%!important;
+    margin-bottom: 40px;
+}
+  
+.w-richtext figcaption {
+  color: #7a7a7b;
+}
+  
+  
+/*menu nav responsive hidden links*/
+@media only screen and (max-width: 1100px) and (min-width: 991px)  {
+  #header-community-link{
+    display: none;
+  }  
+}
+  
+  
+  /*load more button (city/region)*/
+#loadMore.disabled,
+.button.disabled {
+	opacity: 0.5;
+	background-color: #a8a8a8;
+	pointer-events: none;  
+}
+  
+.chargepoints-stations-item {
+	display: none;
+}
+.chargepoints-stations-item:nth-child(-n+10) {
+	display: flex;
+}
+.chargepoints-stations-item.show {
+	display: flex;
+}
+  
+.dropdown-link.w-dropdown-link.w--current {
+  color: #289f6f;
+}
+  
+</style>
+
+<style>
+ /* Cookiebot minimum.run custom styles */
+ #CybotCookiebotDialog {
+   --font-size: 14px;
+   --color-primary: #33c88c;
+   --border-radius: 8px;
+   --container-width: 1400px;
+ }
+ #CybotCookiebotDialogHeader,#CybotCookiebotDialogPoweredByText,.CybotCookiebotDialogBodyBottomWrapper{display:none!important}#CybotCookiebotDialog *,#CybotCookiebotDialogBodyUnderlay *{font-size:var(--font-size)!important}#CybotCookiebotDialogFooter #CybotCookiebotDialogBodyButtonAccept,#CybotCookiebotDialogFooter #CybotCookiebotDialogBodyLevelButtonAccept,#CybotCookiebotDialogFooter #CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll{background-color:var(--color-primary)!important;border-color:var(--color-primary)!important}#CybotCookiebotDialogBodyButtonDecline,#CybotCookiebotDialogFooter #CybotCookiebotDialogBodyLevelButtonCustomize,#CybotCookiebotDialogFooter #CybotCookiebotDialogBodyLevelButtonLevelOptinAllowallSelection{border-color:var(--color-primary)!important;color:var(--color-primary)!important}#CybotCookiebotDialogFooter .CybotCookiebotDialogBodyButton{border-radius:var(--border-radius)!important}#CybotCookiebotDialogNav .CybotCookiebotDialogNavItemLink.CybotCookiebotDialogActive{border-bottom:1px solid var(--color-primary)!important;color:var(--color-primary)!important}#CybotCookiebotDialogTabContent input:checked+.CybotCookiebotDialogBodyLevelButtonSlider{background-color:var(--color-primary)!important}#CybotCookiebotDialog #CybotCookiebotDialogBodyContentText a,#CybotCookiebotDialog #CybotCookiebotDialogBodyLevelButtonIABHeaderViewPartnersLink,#CybotCookiebotDialog #CybotCookiebotDialogDetailBulkConsentList dt a,#CybotCookiebotDialog #CybotCookiebotDialogDetailFooter a,#CybotCookiebotDialog .CookieCard .CybotCookiebotDialogDetailBodyContentCookieContainerButton:hover,#CybotCookiebotDialog .CookieCard .CybotCookiebotDialogDetailBodyContentIABv2Tab:hover,#CybotCookiebotDialog .CybotCookiebotDialogBodyLevelButtonIABDescription a,#CybotCookiebotDialog .CybotCookiebotDialogDetailBodyContentCookieLink,#CybotCookiebotDialogDetailBodyContentCookieContainerTypes .CybotCookiebotDialogDetailBodyContentCookieProvider:not(.CybotCookiebotDialogDetailBodyContentCookieInfoCount):hover,#CybotCookiebotDialogDetailBodyContentTextAbout a,#CybotCookiebotDialogNav .CybotCookiebotDialogNavItemLink:hover{color:var(--color-primary)!important}.CybotCookiebotDialogDetailBodyContentCookieContainerButton{display:-webkit-box;display:-ms-flexbox;display:flex}#CybotCookiebotDialog[data-template=bottom]{top:100%;-webkit-transform:translate(-50%,-100%);-ms-transform:translate(-50%,-100%);transform:translate(-50%,-100%);border-radius:0!important}#CybotCookiebotDialog.CybotEdge{-webkit-box-shadow:0 30px 70px rgb(0 0 0 / 30%);box-shadow:0 30px 70px rgb(0 0 0 / 30%);height:auto;max-height:70vh;max-width:100vw;min-width:100vw;padding:0;width:100vw}#CybotCookiebotDialog{left:50%;max-height:80vh;top:0;-webkit-transform:translate(-50%);-ms-transform:translate(-50%);transform:translate(-50%)}@media screen and (min-width:1280px){#CybotCookiebotDialog.CybotEdge .CybotCookiebotDialogContentWrapper{max-width:var(--container-width)!important}}
+</style>
+  <style>
+[class^="connector-"], [class*=" connector-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'Connector' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+}
+
+[class^="connector-"]:before,
+[class*="connector-"]:before{
+  content: "\e90c";
+    font-size: 22px;
+    color: #6B768A;    
+}    
+    
+.connector-5:before {
+  content: "\e93d";
+}
+.connector-4:before {
+  content: "\e93e";
+}
+.connector-31:before {
+  content: "\e93f";
+}
+.connector-7:before {
+  content: "\e940";
+}
+.connector-8:before {
+  content: "\e941";
+}
+.connector-2:before {
+  content: "\e942";
+}
+.connector-3:before {
+  content: "\e943";
+}
+.connector-33:before {
+  content: "\e944";
+}
+.connector-37:before {
+  content: "\e945";
+}
+.connector-34:before {
+  content: "\e946";
+}
+.connector-1:before {
+  content: "\e948";
+}
+.connector-25:before {
+  content: "\e949";
+}
+.connector-35:before {
+  content: "\e94a";
+}
+.connector-39:before {
+  content: "\e94b";
+}
+.connector-10:before {
+  content: "\e94c";
+}
+.connector-28:before {
+  content: "\e94d";
+}
+.connector-27:before {
+  content: "\e94e";
+}
+.connector-26:before {
+  content: "\e94f";
+}
+.connector-15:before {
+  content: "\e950";
+}
+.connector-16:before {
+  content: "\e951";
+}
+</style>
+  <style>
+[class^="location-"], [class*=" location-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'Location' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+}
+
+[class^="location-"]:before,
+[class*="location-"]:before{
+  content: "\e90c";
+    font-size: 22px;
+    color: #6B768A;  
+}    
+    
+.location-4:before {
+  content: "\e900";
+}
+.location-11:before {
+  content: "\e901";
+}
+.location-5:before {
+  content: "\e902";
+}
+.location-3:before {
+  content: "\e903";
+}
+.location-10:before {
+  content: "\e904";
+}
+.location-12:before {
+  content: "\e905";
+}
+.location-2:before {
+  content: "\e906";
+}
+.location-14:before {
+  content: "\e907";
+}
+.location-1:before {
+  content: "\e908";
+}
+.location-7:before {
+  content: "\e909";
+}
+.location-8:before {
+  content: "\e90a";
+}
+.location-9:before {
+  content: "\e90b";
+}    
+</style>  <script async="" src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
+
+
+<title>Puntos de recarga para vehículos eléctricos cerca de ti - ElectromapsConectz</title>
+
+
+
+
+
+
+
+<meta name="description" content="Encuentra estaciones de carga para vehículos eléctricos en todo el mundo con nuestro mapa detallado. Planifica tus rutas y carga con confianza en Electromaps.">
+
+
+
+
+		
+
+<script>
+  window.googletag = window.googletag || {cmd: []};
+  googletag.cmd.push(function() {
+    googletag.defineSlot('/68055579/Charging_points_middle', [728, 90], 'div-gpt-ad-1673454751580-0').addService(googletag.pubads());
+    googletag.pubads().enableSingleRequest();
+    googletag.enableServices();
+  });
+</script>
+<script>
+  window.googletag = window.googletag || {cmd: []};
+  googletag.cmd.push(function() {
+    googletag.defineSlot('/68055579/Charging_points_middle', [484, 90], 'div-gpt-ad-1673454725993-0').addService(googletag.pubads());
+    googletag.pubads().enableSingleRequest();
+    googletag.enableServices();
+  });
+</script>
+<script>
+  window.googletag = window.googletag || {cmd: []};
+  googletag.cmd.push(function() {
+    googletag.defineSlot('/68055579/Charging_points_middle', [320, 50], 'div-gpt-ad-1673454671538-0').addService(googletag.pubads());
+    googletag.pubads().enableSingleRequest();
+    googletag.enableServices();
+  });
+</script>
+
+<style>
+.breadcrumb-item:hover {
+	color: #33c88c;
+}
+.chargepoints-stations-item {
+	min-width: 0;
+}
+
+.chargepoints-stations-title h3 {
+	white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+  @media only screen and (min-width: 1100px)  {
+    .ga-desktop {
+      display: block;
+    }
+    .ga-tablet {
+      display: none;
+    }
+    .ga-mobile {
+      display: none;
+    }
+  }
+  
+  @media only screen and (max-width: 1099px) and (min-width: 537px)  {
+    .ga-desktop {
+      display: none;
+    }
+    .ga-tablet {
+      display: block;
+    }
+    .ga-mobile {
+      display: none;
+    }
+  }
+  
+  @media only screen and (max-width: 536px)  {
+    .ga-desktop {
+      display: none;
+    }
+    .ga-tablet {
+      display: none;
+    }
+    .ga-mobile {
+      display: block;
+    }
+  }
+
+</style>
+
+<title>Puntos de recarga para vehículos eléctricos cerca de ti - ElectromapsConectz</title>
+
+
+	
+	
+
+
+
+
+<meta name="description" content="Encuentra estaciones de carga para vehículos eléctricos en todo el mundo con nuestro mapa detallado. Planifica tus rutas y carga con confianza en Electromaps.">
+
+
+
+
+
+
+
+
+<style>
+.breadcrumb-item:hover {
+	color: #33c88c;
+}
+
+/****/
+
+/*
+.comments-item
+.photos-item
+*/
+
+.comments-item {
+	display: none;
+}
+.comments-item:nth-child(-n+4) {
+	display: block;
+}
+.comments-item.show {
+	display: block;
+}
+
+/***/
+
+.photos-item {
+	display: none;
+}
+.photos-item:nth-child(-n+8) {
+	display: block;
+}
+.photos-item.show {
+	display: block;
+}
+
+</style><link href="https://www.electromaps.com/es/puntos-carga/ecuador/distrito-metropolitano-de-quito/quito/conectz-avenida-francisco-de-orellana" rel="canonical"><link rel="alternate" hreflang="en" href="https://www.electromaps.com/en/charging-stations/ecuador/distrito-metropolitano-de-quito/quito/conectz-avenida-francisco-de-orellana"><link rel="alternate" hreflang="es" href="https://www.electromaps.com/es/puntos-carga/ecuador/distrito-metropolitano-de-quito/quito/conectz-avenida-francisco-de-orellana"><link rel="alternate" hreflang="fr" href="https://www.electromaps.com/fr/stations-de-recharge/equateur/distrito-metropolitano-de-quito/quito/conectz-avenida-francisco-de-orellana"><link rel="alternate" hreflang="de" href="https://www.electromaps.com/de/ladestationen/ecuador/distrito-metropolitano-de-quito/quito/conectz-avenida-francisco-de-orellana"><link rel="alternate" hreflang="ca" href="https://www.electromaps.com/ca/estacions-de-recarrega/equador/distrito-metropolitano-de-quito/quito/conectz-avenida-francisco-de-orellana"><link rel="alternate" hreflang="it" href="https://www.electromaps.com/it/stazioni-di-ricarica/ecuador/distrito-metropolitano-de-quito/quito/conectz-avenida-francisco-de-orellana"><link rel="alternate" hreflang="nl" href="https://www.electromaps.com/nl/laadstations/ecuador/distrito-metropolitano-de-quito/quito/conectz-avenida-francisco-de-orellana"><link rel="alternate" hreflang="pt" href="https://www.electromaps.com/pt/estacoes-de-carregamento/equador/distrito-metropolitano-de-quito/quito/conectz-avenida-francisco-de-orellana"><script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [{"@type":"ListItem","position":1,"name":"Countries","item":"https://www.electromaps.com/es/puntos-carga"},{"@type":"ListItem","position":2,"name":"Ecuador","item":"https://www.electromaps.com/es/puntos-carga/ecuador"},{"@type":"ListItem","position":3,"name":"Distrito Metropolitano de Quito","item":"https://www.electromaps.com/es/puntos-carga/ecuador/distrito-metropolitano-de-quito"},{"@type":"ListItem","position":4,"name":"Quito","item":"https://www.electromaps.com/es/puntos-carga/ecuador/distrito-metropolitano-de-quito/quito"},{"@type":"ListItem","position":5,"name":"Conectz"}]
+  }
+</script><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "Conectz",
+  "address": "E6-15 Avenida Francisco de Orellana 170517 Quito - Ecuador",
+  "brand": "Electromaps"
+}</script></head><body class="body-clear"><div data-animation="default" data-collapse="medium" data-duration="400" data-easing="ease" data-easing2="ease" role="banner" class="navbar hidden show w-nav"><div class="navbar-container w-container"><div class="navbar-wrapper"><a href="/" class="nav-logo-mobile w-inline-block"><img src="https://cdn.prod.website-files.com/6278f767c8039e09089ab08c/62aae556d19e952671230c8b_horitzontal-logo.svg" loading="lazy" alt="" class="nav-logo-image mobile"></a><nav role="navigation" css="nav-menu-height" class="nav-menu v2 w-nav-menu"><a href="/" class="nav-logo-desktop w-inline-block"><img src="https://cdn.prod.website-files.com/6278f767c8039e09089ab08c/62aae556d19e952671230c8b_horitzontal-logo.svg" loading="eager" alt="" class="nav-logo-image"></a><div class="nav-menu-center"><a class="nav-link w-nav-link" datalayer="ClickOnMap" href="https://map.electromaps.com/es/" target="_blank">Mapa</a><a class="nav-link w-nav-link" href="/es/app">La app</a><div data-hover="false" data-delay="0" data-w-id="bb7b4ee3-741f-e721-1849-fa3efcd6223a" class="dropdown-nav-link w-dropdown"><div class="dropdown-nav-item-link w-dropdown-toggle"><div class="dropdown-nav-arrow w-icon-dropdown-toggle"></div><div class="nav-link-text">Soluciones</div></div><nav class="dropdown-list-submenu horizontal-menu w-dropdown-list"><div class="partners-dropdown"><div class="dropdown-nav-sublink submenu-dropdown">Empresas</div><a class="dropdown-nav-sublink mobile dropdown-submenu-vertical hover-01 w-dropdown-link" href="/es/empresas">Gestión de cargadores</a><a class="dropdown-nav-sublink mobile dropdown-submenu-vertical hover-01 w-dropdown-link" href="/es/empresas/gestion-flotas-electricas">Gestión de flotas</a><a class="dropdown-nav-sublink mobile dropdown-submenu-vertical hover-01 w-dropdown-link" href="/es/sector-turismo-carga-electrica">Turismo</a><a href="/es/empresas/ev-recarga-aparcamiento-instalacion-soluciones" class="dropdown-nav-sublink mobile dropdown-submenu-vertical hover-01 w-dropdown-link">Parking</a><a href="/es/empresas/soluciones-carga-oficinas" class="dropdown-nav-sublink mobile dropdown-submenu-vertical hover-01 w-dropdown-link">Workplace</a><a href="/es/empresas/soluciones-carga-residencial-vehiculos-electricos" class="dropdown-nav-sublink mobile dropdown-submenu-vertical hover-01 w-dropdown-link">Residential</a><a href="/es/empresas/soluciones-carga-electrica-centros-comerciales" class="dropdown-nav-sublink mobile dropdown-submenu-vertical hover-01 w-dropdown-link">Shopping Center</a></div><div class="partners-dropdown"><div class="dropdown-nav-sublink submenu-dropdown">Partners</div><a class="dropdown-nav-sublink mobile dropdown-submenu-vertical hover-01 w-dropdown-link" href="/es/for-partners">Instaladores</a><a href="/es/for-partners#Certification-de-Wallbox-para-Instaladores" class="dropdown-nav-sublink mobile dropdown-submenu-vertical hover-01 large w-dropdown-link">Certification de Wallbox para Instaladores</a></div></nav></div><a href="/es/blog" class="nav-link w-nav-link">Blog</a><a href="/es/electropass" class="nav-link w-nav-link">Electropass</a><a href="/es/marketing" class="nav-link w-nav-link">Marketing</a><a class="nav-link w-nav-link" datalayer="Shop" href="https://shop.electromaps.com/" target="_blank" id="header-community-link">Tienda</a></div><div class="navbar-log one-link"></div></nav><div class="menu-button w-nav-button"><div class="icon w-icon-nav-menu"></div><div class="w-embed"><!--<svg class="inline-svg" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="100%" height="100%" viewBox="0 0 32 22.5" enable-background="new 0 0 32 22.5" xml:space="preserve">
+					<title>Mobile Menu</title>
+					<g class="svg-menu-toggle">
+
+					<path class="bar" d="M20.945,8.75c0,0.69-0.5,1.25-1.117,1.25H3.141c-0.617,0-1.118-0.56-1.118-1.25l0,0
+						c0-0.69,0.5-1.25,1.118-1.25h16.688C20.445,7.5,20.945,8.06,20.945,8.75L20.945,8.75z">
+					</path>
+					<path class="bar" d="M20.923,15c0,0.689-0.501,1.25-1.118,1.25H3.118C2.5,16.25,2,15.689,2,15l0,0c0-0.689,0.5-1.25,1.118-1.25 h16.687C20.422,13.75,20.923,14.311,20.923,15L20.923,15z">
+					</path>
+					<path class="bar" d="M20.969,21.25c0,0.689-0.5,1.25-1.117,1.25H3.164c-0.617,0-1.118-0.561-1.118-1.25l0,0
+						c0-0.689,0.5-1.25,1.118-1.25h16.688C20.469,20,20.969,20.561,20.969,21.25L20.969,21.25z">
+					</path>
+
+          <rect width="320" height="220" fill="none">
+
+					</rect>
+					</g>
+
+		</svg>-->
+    
+    <svg class="inline-svg" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+  <g class="svg-menu-toggle">
+<path class="bar" fill-rule="evenodd" clip-rule="evenodd" d="M3 8C3 7.44772 3.44772 7 4 7H28C28.5523 7 29 7.44772 29 8C29 8.55228 28.5523 9 28 9H4C3.44772 9 3 8.55228 3 8Z" fill="white"></path>
+<path class="bar" fill-rule="evenodd" clip-rule="evenodd" d="M3 16C3 15.4477 3.44772 15 4 15H28C28.5523 15 29 15.4477 29 16C29 16.5523 28.5523 17 28 17H4C3.44772 17 3 16.5523 3 16Z" fill="white"></path>
+<path class="bar" fill-rule="evenodd" clip-rule="evenodd" d="M3 24C3 23.4477 3.44772 23 4 23H28C28.5523 23 29 23.4477 29 24C29 24.5523 28.5523 25 28 25H4C3.44772 25 3 24.5523 3 24Z" fill="white"></path>
+    </g>
+</svg></div></div></div></div></div><div class="char-heading"><div class="container-chargepoint w-container"><div class="breadcrumbs desktop"><a href="/es/puntos-carga" class="breadcrumb-item w-inline-block"><div class="body-s">Estaciones de carga</div></a><img src="https://cdn.prod.website-files.com/6278f767c8039e09089ab08c/6304a567ccf114f7b3b0093a_breadcrumb-arow.svg" loading="lazy" alt="" class="breadcrumb-icon"><a href="/es/puntos-carga/ecuador" class="breadcrumb-item w-inline-block"><div class="body-s">Ecuador</div></a><img src="https://cdn.prod.website-files.com/6278f767c8039e09089ab08c/6304a567ccf114f7b3b0093a_breadcrumb-arow.svg" loading="lazy" alt="" class="breadcrumb-icon"><a href="/es/puntos-carga/ecuador/distrito-metropolitano-de-quito" class="breadcrumb-item w-inline-block"><div class="body-s">Distrito Metropolitano de Quito</div></a><img src="https://cdn.prod.website-files.com/6278f767c8039e09089ab08c/6304a567ccf114f7b3b0093a_breadcrumb-arow.svg" loading="lazy" alt="" class="breadcrumb-icon"><a href="/es/puntos-carga/ecuador/distrito-metropolitano-de-quito/quito" class="breadcrumb-item w-inline-block"><div class="body-s">Quito</div></a><img src="https://cdn.prod.website-files.com/6278f767c8039e09089ab08c/6304a567ccf114f7b3b0093a_breadcrumb-arow.svg" loading="lazy" alt="" class="breadcrumb-icon"><div class="breadcrumb-item last"><div class="body-s">Conectz</div></div></div><div class="breadcrumbs mobile"><img src="https://cdn.prod.website-files.com/6278f767c8039e09089ab08c/6305ea111ec5530e5e7930c1_breadcrumb-arrow-back.svg" loading="lazy" alt="" class="breadcrumb-icon"><a href="/es/puntos-carga/ecuador/distrito-metropolitano-de-quito/quito" class="breadcrumb-item w-inline-block"><div class="body-s">Quito</div></a></div><div class="advertising-banner"><div class="wide-container w-container"><div class="blog-advertising"><div class="blog-advertising-html-embed w-embed w-script"><div id="div-gpt-ad-main-header" style="text-align: center; margin: 0 auto; min-height: 90px;">
+  <script>
+    googletag.cmd.push(function() { googletag.display('div-gpt-ad-main-header'); });
+  </script>
+</div></div></div></div></div><div class="char-header"><div class="char-heading-title"><h1 class="l"><span class="title-charge-point">Conectz</span></h1><div class="w-embed"><style>
+	.title-charge-point,
+	.nearest-connectors-title{
+     line-break: anywhere;
+    }
+   
+</style></div></div><div class="char-header-subtitle-wrapper"><div class="char-header-visual"><div class="chargepoints-stations-visual-inner"><div class="chargepoints-stations-visual-icon location-2"></div><div class="chargepoints-stations-visual-text"><div class="body-m">Parking</div></div></div></div><div class="char-heading-subtitle"><div class="body-m">Creado el <span>05/05/2026</span> y actualizado el <span>30/05/2026</span></div></div></div></div></div><div class="wide-container-2"><div class="margin-bottom"><div class="default-image"><img src="https://cdn.prod.website-files.com/6278f767c8039e09089ab08c/66e4103547f3450cc657d5a3_image%20not%20available.png" alt="image Conectz"></div></div></div></div><div class="char-main"><div class="wide-container-2 w-container"><div class="char-main-grid"><div class="char-main-aside"><div class="caps-title"><h2 class="xs">INFORMACIÓN</h2></div><div class="char-aside-info-container"><div class="char-aside-info-item"><div class="char-aside-info-title"><div class="body-m">Dirección</div></div><div class="char-aside-info-text"><div class="body-s">E6-15 Avenida Francisco de Orellana 170517</div></div></div><div class="char-aside-info-item"><div class="char-aside-info-title"><div class="body-m">Indicaciones</div></div><div class="char-aside-info-text"><div class="body-s">Alado del Macdonald</div></div></div><div class="char-aside-info-item"><div class="char-aside-info-title"><div class="body-m">Instrucciones</div></div><div class="char-aside-info-text"><div class="body-s">se paga ingreso 12 dólares </div></div></div><div class="char-aside-info-item"><div class="char-aside-info-title"><div class="body-m">Precio de carga</div></div><div class="char-aside-info-text"><div class="body-s">0.29</div></div></div></div><div class="aside-cta"><div class="aside-cta-title"><h4 class="body-l bold">DESCARGAR LA APP</h4></div><div class="aside-cta-text"><div class="body-m">Consulta el estado de los puntos de carga en tiempo real en nuestra app.</div></div><div class="aside-cta-buttons"><a href="https://play.google.com/store/apps/details?id=com.enredats.electromaps" target="_blank" class="app-download android aside w-inline-block"><img src="https://cdn.prod.website-files.com/6278f767c8039e09089ab08c/6453bc92b6498149ffc7047b_android_badge%202.png" loading="lazy" alt=""></a><a href="https://apps.apple.com/app/electromaps/id606186464" target="_blank" class="app-download apple aside w-inline-block"><img src="https://cdn.prod.website-files.com/6278f767c8039e09089ab08c/6453da9a2485fc154451b073_applelarge.svg" loading="lazy" alt=""></a></div></div></div><div class="char-main-content"><div class="char-main-heading"><div class="char-main-title"><h2 class="xs">CONECTORES</h2></div><div class="char-separator"><div>·</div></div><div class="char-main-title-info"><div class="body-m">Conectado a Electromaps</div></div></div><div class="embed-banner-wrapper"><div class="embed-banner w-embed w-script"><div id="div-gpt-ad-list-middle" style="text-align: center; margin: 20px auto; min-height: 50px;">
+  <script>
+    googletag.cmd.push(function() { googletag.display('div-gpt-ad-list-middle'); });
+  </script>
+</div></div></div><div class="city-main-top-banner hide"><img src="https://cdn.prod.website-files.com/6278f767c8039e09089ab08c/6304cf6d4c55c0b563326863_small-token.svg" loading="lazy" alt="" class="city-man-top-banner-icon"><div class="city-man-top-banner-text"><div class="body-m">Muchas estaciones de carga requieren un pase o una app. El pase  Electromaps te permite cargar tu vehículo eléctrico en un máximo  de redes de carga.</div></div><div class="city-man-top-banner-button"><a class="button w-button" href="https://electromaps.com/es-ES/electropass" target="_blank">Ver más</a></div></div><div class="char-connectos-container"><div id="w-node-e0dcab5f-ee12-9d78-de01-67ffa2a553d4-f06bcec2" class="char-connectors-item"><div class="char-connectors-visual connector-31"></div><div class="char-connectors-content"><div class="char-connectors-heading"><div class="char-connectors-title"><h3 class="xs">CCS2</h3></div><div class="char-lenght"><div class="body-s">x<span>6</span></div></div></div><div class="char-kw"><div class="body-s"><span>80</span> kw</div></div><div class="char-connectors-info-container"><div class="char-connectors-info"><img src="https://cdn.prod.website-files.com/6278f767c8039e09089ab08c/630612dabd6e4008af113d4e_small-token.svg" loading="lazy" alt="" class="char-connectors-info-icon"><div class="char-connectors-info-text"><div>Funciona con Electropass</div></div></div></div></div></div><div id="w-node-e0dcab5f-ee12-9d78-de01-67ffa2a553d4-f06bcec2" class="char-connectors-item"><div class="char-connectors-visual connector-31"></div><div class="char-connectors-content"><div class="char-connectors-heading"><div class="char-connectors-title"><h3 class="xs">CCS2</h3></div><div class="char-lenght"><div class="body-s">x<span>1</span></div></div></div><div class="char-kw"><div class="body-s"><span>3</span> kw</div></div><div class="char-connectors-info-container"><div class="char-connectors-info"><img src="https://cdn.prod.website-files.com/6278f767c8039e09089ab08c/630612dabd6e4008af113d4e_small-token.svg" loading="lazy" alt="" class="char-connectors-info-icon"><div class="char-connectors-info-text"><div>Funciona con Electropass</div></div></div></div></div></div><div id="w-node-e0dcab5f-ee12-9d78-de01-67ffa2a553d4-f06bcec2" class="char-connectors-item"><div class="char-connectors-visual connector-35"></div><div class="char-connectors-content"><div class="char-connectors-heading"><div class="char-connectors-title"><h3 class="xs">GB/T (DC) </h3></div><div class="char-lenght"><div class="body-s">x<span>1</span></div></div></div><div class="char-kw"><div class="body-s"><span>3</span> kw</div></div><div class="char-connectors-info-container"><div class="char-connectors-info"><img src="https://cdn.prod.website-files.com/6278f767c8039e09089ab08c/630612dabd6e4008af113d4e_small-token.svg" loading="lazy" alt="" class="char-connectors-info-icon"><div class="char-connectors-info-text"><div>Funciona con Electropass</div></div></div></div></div></div></div><div class="main-bottom-banner"><div class="city-main-bottom-banner-content"><div class="city-main-bottom-banner-title"><h4 class="body-l bold">GET&nbsp;OUR&nbsp;KEYFOB</h4></div><div class="city-main-bottom-banner-text"><div class="body-m">The map only shows the charging points of this location, if you want to see all of them and move freely, use our webapp</div></div><div class="city-main-bottom-banner-button"><a class="button dark w-button" href="https://map.electromaps.com" target="_blank">...</a></div></div></div><div class="narest-caps-title"><h2 class="xs">PUNTOS DE CARGA MÁS CERCANOS</h2></div><div class="nearest-container"><a id="w-node-_99b42427-432b-bebf-f973-0dd750098efd-f06bcec2" href="/es/puntos-carga/ecuador/distrito-metropolitano-de-quito/quito/kia-quito-avenida-francisco-de-orellana" class="nearest-connectors-item w-inline-block"><div class="nearest-connectors-content"><div class="nearest-connectors-icon"><div class="nearest-connectors-icon-inner"><div class="nearest-connectors-visual-icon location-2 location-11"></div><div class="nearest-connectors-visual-text"><div class="body-m">Concesionario</div></div></div></div><div class="nearest-connectors-title"><div class="body-m title-charge-point">KIA Quito</div></div><div class="nearest-connectors-text"><div class="body-s">766 Avenida Francisco de Orellana 170517</div></div></div><div class="nearest-connectors-meters-container"><div class="nearest-connectors-meters"><div class="nearest-connectors-meters-number"><div class="xs">0</div></div><div class="nearest-connectors-meters-text"><div class="body-s">km</div></div></div></div></a><a id="w-node-_99b42427-432b-bebf-f973-0dd750098efd-f06bcec2" href="/es/puntos-carga/ecuador/distrito-metropolitano-de-quito/quito/mall-el-jardin-avenida-de-la-republica" class="nearest-connectors-item w-inline-block"><div class="nearest-connectors-content"><div class="nearest-connectors-icon"><div class="nearest-connectors-icon-inner"><div class="nearest-connectors-visual-icon location-2 location-12"></div><div class="nearest-connectors-visual-text"><div class="body-m">Centro comercial</div></div></div></div><div class="nearest-connectors-title"><div class="body-m title-charge-point">Mall El Jardín</div></div><div class="nearest-connectors-text"><div class="body-s">16114 Avenida de la República 170518</div></div></div><div class="nearest-connectors-meters-container"><div class="nearest-connectors-meters"><div class="nearest-connectors-meters-number"><div class="xs">1</div></div><div class="nearest-connectors-meters-text"><div class="body-s">km</div></div></div></div></a><a id="w-node-_99b42427-432b-bebf-f973-0dd750098efd-f06bcec2" href="/es/puntos-carga/ecuador/distrito-metropolitano-de-quito/quito/parque-la-carolina-avenida-eloy-alfaro" class="nearest-connectors-item w-inline-block"><div class="nearest-connectors-content"><div class="nearest-connectors-icon"><div class="nearest-connectors-icon-inner"><div class="nearest-connectors-visual-icon location-2"></div><div class="nearest-connectors-visual-text"><div class="body-m">Parking</div></div></div></div><div class="nearest-connectors-title"><div class="body-m title-charge-point">Parque la Carolina</div></div><div class="nearest-connectors-text"><div class="body-s">1496 Avenida Eloy Alfaro 170517</div></div></div><div class="nearest-connectors-meters-container"><div class="nearest-connectors-meters"><div class="nearest-connectors-meters-number"><div class="xs">1</div></div><div class="nearest-connectors-meters-text"><div class="body-s">km</div></div></div></div></a><a id="w-node-_99b42427-432b-bebf-f973-0dd750098efd-f06bcec2" href="/es/puntos-carga/ecuador/distrito-metropolitano-de-quito/quito/kia-e-ground-madrid" class="nearest-connectors-item w-inline-block"><div class="nearest-connectors-content"><div class="nearest-connectors-icon"><div class="nearest-connectors-icon-inner"><div class="nearest-connectors-visual-icon location-2"></div><div class="nearest-connectors-visual-text"><div class="body-m">Parking</div></div></div></div><div class="nearest-connectors-title"><div class="body-m title-charge-point">KIA E-GROUND</div></div><div class="nearest-connectors-text"><div class="body-s">0 Madrid 170143</div></div></div><div class="nearest-connectors-meters-container"><div class="nearest-connectors-meters"><div class="nearest-connectors-meters-number"><div class="xs">1</div></div><div class="nearest-connectors-meters-text"><div class="body-s">km</div></div></div></div></a><a id="w-node-_99b42427-432b-bebf-f973-0dd750098efd-f06bcec2" href="/es/puntos-carga/ecuador/distrito-metropolitano-de-quito/quito/carolina-2-ruta-parque-la-carolina" class="nearest-connectors-item w-inline-block"><div class="nearest-connectors-content"><div class="nearest-connectors-icon"><div class="nearest-connectors-icon-inner"><div class="nearest-connectors-visual-icon location-2"></div><div class="nearest-connectors-visual-text"><div class="body-m">Parking</div></div></div></div><div class="nearest-connectors-title"><div class="body-m title-charge-point">Carolina 2</div></div><div class="nearest-connectors-text"><div class="body-s">3 Ruta Parque La Carolina 170135</div></div></div><div class="nearest-connectors-meters-container"><div class="nearest-connectors-meters"><div class="nearest-connectors-meters-number"><div class="xs">1</div></div><div class="nearest-connectors-meters-text"><div class="body-s">km</div></div></div></div></a></div></div></div></div></div><div class="city-bottom-content"><div class="wide-container-2 w-container"></div><div class="wide-container-2 w-container"><div class="city-bottom-text"><div class="body-s mb-8"><span>Conectz</span> es una estación de carga emplazada en <span>Quito</span>, <span>Distrito Metropolitano de Quito</span>. Esta estación de carga tiene un total de <span>8</span> conectores, de lo cuales&nbsp; <span>6</span> son de carga rápida.<br><br>Se añadió el <span>05/05/2026</span> y se actualizó por última vez el <span>30/05/2026</span>.<strong><br><br>¡Carga tu energía con Wallbox! La elección inteligente para la carga de tu coche eléctrico<br><br>‍</strong>¿Buscas una solución de carga confiable para tu coche eléctrico?es líder global en carga de coches eléctricos, ofreciendo cargadores de última generación que combinan tecnología innovadora con un diseño elegante. Ya sea para tu hogar o negocio, Wallbox tiene la solución perfecta para ti.Nuestros cargadores están diseñados para ser eficientes, seguros y fáciles de instalar, haciendo que mantener tu vehículo cargado sea más sencillo que nunca.<br><br>Con un cargador Wallbox, disfrutarás de tiempos de carga más rápidos y la comodidad de gestionarlo desde una app dedicada, poniendo todo el control en tus manos. Además, nuestros cargadores son compatibles con las principales marcas de vehículos eléctricos, asegurando una experiencia de carga sin complicaciones.<br><span><br>‍<strong>¿Por qué elegir Wallbox?<br>‍<br>Carga Inteligente</strong>: Funciones avanzadas que te permiten optimizar horarios de carga, ahorrar energía y monitorear tu consumo.<br>‍<strong>Alto Rendimiento</strong>: Acelera los tiempos de carga con cargadores potentes y diseñados para durar.<br>‍<strong>Preparado para el Futuro</strong>: Los cargadores Wallbox están listos para adaptarse a las necesidades de los coches eléctricos del mañana.<br><br></span>Descubre más sobre nuestros <a href="https://wallbox.com/en/home-ev-charging">Cargadores EV para el Hogar</a> y encuentra la mejor solución de carga para ti. Si tienes un negocio y quieres ofrecer servicios de carga EV, explora nuestras opciones de <a href="https://wallbox.com/en/business-ev-charger">Cargadores Comerciales para Empresas</a>.</div><div class="faq3_accordion"><div data-w-id="abdc3897-1356-186c-70ff-85bbc5b6f44c" class="faq3_question"><div location="header" trigger="hub_como_llegar" class="button is-link is-icon is-dropdown"><div class="btn-text is-big mas">Leer más</div><div class="btn-text is-big menos">Leer menos</div><div class="faq3_icon-wrapper rotate-icon"><div class="icon-embed-small w-embed"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M4.5 11C4.22386 11 4 10.7761 4 10.5C4 10.2239 4.22386 10 4.5 10V11ZM15.8536 10.1464C16.0488 10.3417 16.0488 10.6583 15.8536 10.8536L12.6716 14.0355C12.4763 14.2308 12.1597 14.2308 11.9645 14.0355C11.7692 13.8403 11.7692 13.5237 11.9645 13.3284L14.7929 10.5L11.9645 7.67157C11.7692 7.47631 11.7692 7.15973 11.9645 6.96447C12.1597 6.7692 12.4763 6.7692 12.6716 6.96447L15.8536 10.1464ZM4.5 10L15.5 10V11L4.5 11V10Z" fill="currentColor"></path>
+</svg></div></div></div></div><div style="width:100%;height:0px" class="faq3_answer"><div class="margin-bottom margin-small"><div>Te recomendamos que consultes las fotos y los comentarios proporcionados por nuestra comunidad, ya que ofrecen información útil sobre el estado del cargador. Una vez hayas finalizado la sesión de carga, prueba a añadir tus propios comentarios y fotos para ayudar a otros usuarios y conductores a la hora de decidir dónde y cómo realizar la próxima carga de su vehículo eléctrico.<br><br>Si <span>Conectz</span> no es el punto de carga que necesitas, comprueba en la parte inferior cuál es el punto de carga que está más cerca de tí en “puntos de carga más cercanos” y podrás ver un listado de otras estaciones de carga para vehículos eléctricos cercanas, así como si están en un parking, en superficie y la distancia en KM a la que están.&nbsp;<br><br>En la parte de información de la estación de carga puedes consultar todo lo que necesites para cargar tu vehículo. La dirección exacta del punto de carga <span>Conectz</span> está disponible, así como las indicaciones de acceso en coche al punto de carga, el precio de carga de esta estación y las instrucciones necesarias para que puedas realizar fácilmente la carga de tu vehículo.<br><br>Para conocer a tiempo real el estado de los puntos de carga en <span>Quito</span><span>Conectz</span> Electromaps ofrece información acerca de los puntos de carga en tiempo real en la app.<br><br>Si este cargador de <span>Quito</span> no vale para tu coche, existen alternativas. Puedes consultar otros cargadores en <span>Quito</span> o ir a otras ciudades como &nbsp;<a href="/es/puntos-carga/ecuador/distrito-metropolitano-de-quito/calacali">Calacalí</a>, <a href="/es/puntos-carga/ecuador/distrito-metropolitano-de-quito/puembo">Puembo</a>, <a href="/es/puntos-carga/ecuador/distrito-metropolitano-de-quito/170135">170135</a>, porque están cerca y se encuentran dentro de <span>Distrito Metropolitano de Quito</span>.</div></div></div></div></div></div></div><footer class="footer"><div class="footer-container w-container"><div class="w-layout-grid footer-grid"><div id="w-node-_37444ec8-cb40-68e8-32da-fe5bafba9f73-a9df9634" class="footer-logo"><a id="w-node-_550c6f1f-84c3-455e-7020-2f23ca858838-a9df9634" href="/" class="w-inline-block"><img src="https://cdn.prod.website-files.com/6278f767c8039e09089ab08c/62aae556d19e952671230c8b_horitzontal-logo.svg" loading="lazy" alt="" class="footer-logo-desktop footer-logo-big"></a><a href="https://wallbox.com/" target="_blank" class="wallbox-logo w-inline-block"><div class="wallbox-logo-text"><div class="body-m">A</div></div><img src="https://cdn.prod.website-files.com/6278f767c8039e09089ab08c/62ceb44df22d872050b022b2_wallbox.png" loading="lazy" alt="" class="wallbox-logo-image"><div class="wallbox-logo-text"><div class="body-m">company</div></div></a><div class="rrss-footer"><div class="footer-text small-margin"><div class="body-m">Síguenos</div></div><div class="footer-social"><a href="https://www.facebook.com/electromaps" target="_blank" class="footer-social-link w-inline-block"><img src="https://cdn.prod.website-files.com/6278f767c8039e09089ab08c/6567328de6ddf4b48e3aa963_social_icon_master.svg" loading="lazy" alt=""></a><a href="https://www.instagram.com/electromaps/" target="_blank" class="footer-social-link w-inline-block"><img src="https://cdn.prod.website-files.com/6278f767c8039e09089ab08c/6567328d71dfc5b900b2d5ea_social_icon_master%20(1).svg" loading="lazy" alt=""></a><a href="https://www.youtube.com/@Electromaps_EV_charging" target="_blank" class="footer-social-link w-inline-block"><img src="https://cdn.prod.website-files.com/6278f767c8039e09089ab08c/6567328d5a759f0e43d1f653_social_icon_master%20(2).svg" loading="lazy" alt=""></a><a href="https://mobile.twitter.com/electromaps" target="_blank" class="footer-social-link w-inline-block"><div class="twitter-icon"><div class="w-embed"><svg viewBox="0 0 24 24" aria-hidden="true"><g><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" fill="#fff"></path></g></svg></div></div></a><a href="https://www.linkedin.com/company/electromaps" target="_blank" class="footer-social-link w-inline-block"><img src="https://cdn.prod.website-files.com/6278f767c8039e09089ab08c/6567328d9de0c38f97e37ec9_social_icon_master%20(4).svg" loading="lazy" alt=""></a></div></div><div class="footer-copyright margin-top desktop-copyright"><div class="body-s">© 2026 Electromaps</div></div></div><nav id="w-node-_22d1ac5a-4131-d914-9f18-49b4a9df963a-a9df9634" class="footer-nav columns-footer"><a href="/es/about" class="footer-link w-inline-block"><div class="body-m">Sobre nosotros</div></a><a href="https://apply.workable.com/wallbox/" target="_blank" class="footer-link hide w-inline-block"><div class="body-l">About us</div></a><a href="https://map.electromaps.com/en/support" target="_blank" class="footer-link w-inline-block"><div class="body-m">Contáctanos</div></a><a href="https://apply.workable.com/wallbox/?Ing=en" target="_blank" class="footer-link w-inline-block"><div class="body-m">Empleo</div></a><a href="https://shop.electromaps.com/es/" class="footer-link hide w-inline-block"><div class="body-l">Tienda</div></a><a href="/es/puntos-carga/" class="footer-link w-inline-block"><div class="body-m">Punto de carga</div></a></nav><nav id="w-node-_22d1ac5a-4131-d914-9f18-49b4a9df9647-a9df9634" class="footer-nav columns-footer"><a href="/es/terms-and-conditions" class="footer-link w-inline-block"><div class="body-m">Términos y condiciones</div></a><a href="/es/privacy-policy" class="footer-link w-inline-block"><div class="body-m">Política de privacidad</div></a><a href="/es/cookie-declaration" class="footer-link w-inline-block"><div class="body-m">Cookies</div></a><a href="/es/faqs" class="footer-link w-inline-block"><div class="body-m">Soporte/preguntas frecuentes</div></a></nav><div id="w-node-_22d1ac5a-4131-d914-9f18-49b4a9df9654-a9df9634" class="footer-cta columns-footer"><div class="footer-text"><div class="body-m">Descargar app</div></div><div class="footer-cta-buttons"><a href="https://play.google.com/store/apps/details?id=com.enredats.electromaps" target="_blank" class="app-download android-footer w-inline-block"><img src="https://cdn.prod.website-files.com/6278f767c8039e09089ab08c/6453bc92b6498149ffc7047b_android_badge%202.png" loading="lazy" alt=""></a><a href="https://apps.apple.com/app/electromaps/id606186464" target="_blank" class="app-download apple-footer w-inline-block"><img src="https://cdn.prod.website-files.com/6278f767c8039e09089ab08c/628e5fead742f92315ddfc5b_apple_badge-big.png" loading="lazy" alt="apple badge
+"></a></div></div><div id="w-node-_22d1ac5a-4131-d914-9f18-49b4a9df965d-a9df9634" class="footer-lang"><div data-hover="false" data-delay="0" class="footer-dropdown w-dropdown"><div class="dropdown w-dropdown-toggle"><div class="dropdown-text">Idioma</div><img src="https://cdn.prod.website-files.com/6278f767c8039e09089ab08c/628f6b87617e6ec97ffc2df0_dropdown-arrow.svg" loading="lazy" alt="arrow down icon" class="dropdown-arrow"></div><nav class="dropdown-list w-dropdown-list"><a class="dropdown-link w-dropdown-link" href="/en/charging-stations/ecuador/distrito-metropolitano-de-quito/quito/conectz-avenida-francisco-de-orellana">Inglés</a><a class="dropdown-link w-dropdown-link" href="/fr/stations-de-recharge/equateur/distrito-metropolitano-de-quito/quito/conectz-avenida-francisco-de-orellana">Frances</a><a class="dropdown-link w-dropdown-link" href="/es/puntos-carga/ecuador/distrito-metropolitano-de-quito/quito/conectz-avenida-francisco-de-orellana">Español</a><a class="dropdown-link w-dropdown-link" href="/ca/estacions-de-recarrega/equador/distrito-metropolitano-de-quito/quito/conectz-avenida-francisco-de-orellana">Catalán</a><a class="dropdown-link w-dropdown-link" href="/de/ladestationen/ecuador/distrito-metropolitano-de-quito/quito/conectz-avenida-francisco-de-orellana">Alemán</a><a class="dropdown-link w-dropdown-link" href="/it/stazioni-di-ricarica/ecuador/distrito-metropolitano-de-quito/quito/conectz-avenida-francisco-de-orellana">Italiano</a><a class="dropdown-link w-dropdown-link" href="/pt/estacoes-de-carregamento/equador/distrito-metropolitano-de-quito/quito/conectz-avenida-francisco-de-orellana">Portugués</a><a class="dropdown-link w-dropdown-link" href="/nl/laadstations/ecuador/distrito-metropolitano-de-quito/quito/conectz-avenida-francisco-de-orellana">Holandés</a></nav></div></div></div><div class="footer-copyright margin-top mobile-copy"><div class="body-s">© 2023 Electromaps</div></div></div></footer><script src="https://d3e54v103j8qbb.cloudfront.net/js/jquery-3.5.1.min.dc5e7f18c8.js?site=6278f767c8039e09089ab08c" type="text/javascript" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script><script src="https://cdn.prod.website-files.com/6278f767c8039e09089ab08c/js/webflow.f9a9ca7f.fbef483aed641cdd.js" type="text/javascript" integrity="sha384-w51iffjNzBGjOmpZ8SkgyaWKuFssjSHRpzLGoA4xDi9CME9KqyEjeIJONU5kD6+L" crossorigin="anonymous"></script><script>
+// *** Correción de 100vh para menú en móvil iOS  
+let vh = window.innerHeight * 0.01;
+document.documentElement.style.setProperty('--vh', `${vh}px`);
+window.addEventListener('resize', () => {
+ let vh = window.innerHeight * 0.01;
+ document.documentElement.style.setProperty('--vh', `${vh}px`);
+});
+
+/*load more button logic (city/region)*/
+let size = $(".chargepoints-stations-item").length;
+let x = 10;
+
+$('.chargepoints-stations-item:lt('+x+')').addClass('show');
+  $('#loadMore').click(function () {
+    x = (x+10 <= size) ? x+10 : size;
+
+    $('.chargepoints-stations-item:lt('+x+')').addClass('show');
+    if(x == size){
+        $('#loadMore').addClass('disabled');
+    }
+});
+</script>
+
+<script>
+  //Add data events
+  const elements = document.querySelectorAll('[datalayer]');
+  for (var i = 0; i < elements.length; i++) {
+      elements[i].addEventListener('click', function() {
+          var event = this.getAttribute('datalayer');
+          dataLayer.push({
+              'event': event
+          });
+      });
+  }
+  //chatbot
+</script>
+<script src="https://dxzka9sv37884.cloudfront.net/chat-loader.js" data-host="electromaps-corp" data-label="true"></script><script>
+
+//#loadMoreComments
+//#loadMorePhotos
+
+$(document).ready(function() {
+   
+  let size = $(".comments-item").length;
+  let x = 4;
+  
+  if( size < x) {
+  	$('#loadMoreComments').hide();
+  }
+  
+  $('.comments-item:lt('+x+')').addClass('show');
+  
+  $('#loadMoreComments').click(function () {
+      x = (x+4 <= size) ? x+4 : size;
+
+      $('.comments-item:lt('+x+')').addClass('show');
+      if(x == size){
+          $('#loadMoreComments').addClass('disabled');
+      }
+  }); 
+  
+  /***/
+  
+  let size2 = $(".photos-item").length;
+  let x2 = 8;
+  
+  if( size2 < x2) {
+  	$('#loadMorePhotos').hide();
+  }
+  
+  $('.photos-item:lt('+x2+')').addClass('show');
+  
+  $('#loadMorePhotos').click(function () {
+      x2 = (x2+8 <= size2) ? x2+8 : size2;
+
+      $('.photos-item:lt('+x2+')').addClass('show');
+      if(x2 == size2){
+          $('#loadMorePhotos').addClass('disabled');
+      }
+  }); 
+  
+});
+
+</script></body></html>

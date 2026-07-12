@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ChargeWay - Planifica tus rutas sin ansiedad</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Geist:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #FAF9F6;
+            -webkit-font-smoothing: antialiased;
+        }
+        .tonal-layering-1 {
+            background: #FFFFFF;
+            box-shadow: 0 2px 4px rgba(13, 92, 58, 0.05);
+            backdrop-filter: blur(4px);
+        }
+        .tranquility-gradient {
+            background: linear-gradient(135deg, #0D5C3A 0%, #226B47 100%);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(227, 237, 228, 0.5);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error": "#ba1a1a",
+                        "on-secondary-container": "#4e6952",
+                        "primary-container": "#0d5c3a",
+                        "surface-dim": "#dbdad7",
+                        "on-background": "#1a1c1a",
+                        "inverse-surface": "#2f312f",
+                        "surface-variant": "#e3e2e0",
+                        "surface-bright": "#faf9f6",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed": "#dbe5dc",
+                        "on-surface": "#1a1c1a",
+                        "secondary-fixed": "#cceace",
+                        "surface-container-high": "#e9e8e5",
+                        "on-primary": "#ffffff",
+                        "inverse-primary": "#8ed6aa",
+                        "on-tertiary-fixed": "#151d18",
+                        "tertiary-fixed-dim": "#bfc9c0",
+                        "on-error": "#ffffff",
+                        "surface-container": "#efeeeb",
+                        "outline-variant": "#bfc9c0",
+                        "on-primary-container": "#8ad2a7",
+                        "on-secondary-fixed-variant": "#334d38",
+                        "on-secondary-fixed": "#07200f",
+                        "inverse-on-surface": "#f2f1ee",
+                        "on-tertiary-container": "#bbc5bc",
+                        "on-error-container": "#93000a",
+                        "primary": "#004328",
+                        "on-surface-variant": "#404942",
+                        "surface": "#faf9f6",
+                        "secondary-fixed-dim": "#b0ceb2",
+                        "secondary": "#4a654e",
+                        "surface-container-highest": "#e3e2e0",
+                        "secondary-container": "#c9e8cb",
+                        "surface-container-lowest": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "primary-fixed-dim": "#8ed6aa",
+                        "background": "#faf9f6",
+                        "surface-tint": "#226b47",
+                        "on-primary-fixed-variant": "#005232",
+                        "outline": "#707971",
+                        "on-tertiary-fixed-variant": "#404943",
+                        "surface-container-low": "#f4f3f1",
+                        "on-primary-fixed": "#002111",
+                        "tertiary": "#323b35",
+                        "tertiary-container": "#49524c",
+                        "primary-fixed": "#a9f3c5",
+                        "on-secondary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "xs": "8px",
+                        "gutter": "20px",
+                        "sm": "16px",
+                        "xl": "64px",
+                        "md": "24px",
+                        "base": "4px",
+                        "margin-desktop": "48px",
+                        "lg": "40px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Geist"],
+                        "headline-md": ["Geist"],
+                        "label-md": ["Geist"],
+                        "headline-lg-mobile": ["Geist"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Geist"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", {"lineHeight": "1.2", "letterSpacing": "0.03em", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "500"}],
+                        "label-md": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "headline-lg-mobile": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "headline-lg": ["40px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="font-body-md text-on-surface">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-md dark:bg-background/90 border-b border-outline-variant/30 dark:border-outline/20 shadow-sm dark:shadow-none">
+<div class="flex justify-between items-center h-20 px-margin-desktop max-w-7xl mx-auto">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-primary text-headline-md" data-icon="electric_bolt">electric_bolt</span>
+<span class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim tracking-tight">ChargeWay</span>
+</div>
+<nav class="hidden md:flex items-center gap-lg">
+<a class="text-primary dark:text-primary-fixed-dim font-bold hover:text-primary-container dark:hover:text-primary-fixed transition-colors duration-200" href="#">Inicio</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:text-primary-container dark:hover:text-primary-fixed transition-colors duration-200" href="#">Rutas</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:text-primary-container dark:hover:text-primary-fixed transition-colors duration-200" href="#">Mapa</a>
+</nav>
+<button class="bg-primary text-on-primary px-md py-xs rounded-full font-label-md active:scale-95 transition-transform">Get Started</button>
+</div>
+</header>
+<main class="pt-20">
+<!-- Hero Section -->
+<section class="relative overflow-hidden min-h-[751px] flex items-center px-margin-mobile md:px-margin-desktop">
+<div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-lg items-center relative z-10">
+<div class="flex flex-col gap-md">
+<div class="inline-flex items-center gap-xs px-sm py-1 bg-secondary-container text-on-secondary-fixed-variant rounded-full w-fit">
+<span class="material-symbols-outlined text-[18px]" data-icon="eco">eco</span>
+<span class="font-label-sm text-label-sm">Sostenibilidad Inteligente</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary max-w-xl leading-tight">
+                        Planifica tus rutas sin ansiedad
+                    </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-md">
+                        Optimización inteligente de rutas para vehículos eléctricos en Ecuador. Consideramos elevación, clima y disponibilidad de carga en tiempo real.
+                    </p>
+<div class="flex flex-wrap gap-sm mt-xs">
+<button class="h-[48px] px-lg bg-primary text-on-primary rounded-xl font-label-md hover:bg-primary-container transition-all active:scale-95">
+                            Planificar mi Primer Viaje
+                        </button>
+<button class="h-[48px] px-lg border border-outline-variant text-primary rounded-xl font-label-md hover:bg-surface-container-low transition-all">
+                            Ver Cobertura
+                        </button>
+</div>
+</div>
+<div class="relative">
+<div class="aspect-square rounded-[40px] overflow-hidden tonal-layering-1 border border-outline-variant/30 p-base">
+<img class="w-full h-full object-cover rounded-[36px]" data-alt="A clean, minimalist 3D rendering of a modern electric vehicle dashboard displaying a complex mountain route through the Andes. The lighting is soft, natural daylight with a warm aesthetic. The screen shows a sleek green UI with charging station icons. High-end product photography style with a shallow depth of field and soft eco-friendly green color accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAARijH-cRJXTuZcty5-DoqahnpyDIQzjReImIXheabVGyfoYQqBBEpscJ7PgFXAKtYSX9piCZwGafFki_iQFox6HU-zccvtQ3W1RxH2wYqYejVDeEYCFC7l2M8Z7muxXJbCMysNnu6QuEhLzSI7lBPYCycpz5yApEvYheME2bepoAw6-kacGGsqNZMEWQ1eBxmWstFPtB4pAHMOgcsV-wx4eESIKJwymosop3S8lttYDElaeZVFAOKikXPmxwbODKqLBvP_25xJpQ"/>
+</div>
+<!-- Floating Badge -->
+<div class="absolute -bottom-xl -left-xl md:flex hidden glass-card p-md rounded-2xl flex-col gap-xs max-w-[240px] shadow-lg">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="battery_charging_90" data-weight="fill">battery_charging_90</span>
+</div>
+<span class="font-label-md text-primary">Estado de Red</span>
+</div>
+<p class="text-[13px] text-on-surface-variant">98.4% de los cargadores en la ruta Quito-Cuenca operativos hoy.</p>
+</div>
+</div>
+</div>
+<!-- Background Decoration -->
+<div class="absolute top-0 right-0 -z-10 w-1/2 h-full opacity-20">
+
+</div>
+</section>
+<!-- Stats Section -->
+<section class="py-xl bg-surface-container-low">
+<div class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-md">
+<div class="tonal-layering-1 p-lg rounded-2xl border border-outline-variant/20 flex flex-col items-center text-center gap-xs">
+<span class="text-[48px] font-bold text-primary font-headline-lg tracking-tighter">100+</span>
+<span class="font-label-md text-on-surface-variant uppercase tracking-wider">Cargadores en Ecuador</span>
+</div>
+<div class="tonal-layering-1 p-lg rounded-2xl border border-outline-variant/20 flex flex-col items-center text-center gap-xs">
+<span class="text-[48px] font-bold text-primary font-headline-lg tracking-tighter">98%</span>
+<span class="font-label-md text-on-surface-variant uppercase tracking-wider">Fiabilidad de Red</span>
+</div>
+<div class="tonal-layering-1 p-lg rounded-2xl border border-outline-variant/20 flex flex-col items-center text-center gap-xs">
+<span class="text-[48px] font-bold text-primary font-headline-lg tracking-tighter">24/7</span>
+<span class="font-label-md text-on-surface-variant uppercase tracking-wider">Soporte en Ruta</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Tranquility Index Section (Bento Grid Style) -->
+<section class="py-xl px-margin-mobile md:px-margin-desktop bg-surface">
+<div class="max-w-7xl mx-auto">
+<div class="text-center mb-lg">
+<h2 class="font-headline-lg text-primary mb-sm">Índice de Tranquilidad</h2>
+<p class="font-body-lg text-on-surface-variant max-w-2xl mx-auto">Nuestro algoritmo patentado analiza variables críticas para que tu única preocupación sea disfrutar del paisaje.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Feature 1: Elevation -->
+<div class="md:col-span-8 group relative overflow-hidden rounded-3xl bg-white border border-outline-variant/30 h-[400px]">
+<div class="absolute inset-0 z-0">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A cinematic aerial view of a winding mountain road in the Ecuadorian Andes during a foggy morning. The lighting is ethereal and soft, emphasizing the dramatic elevation changes and lush green landscape. Professional travel photography style with a muted, high-end color palette of deep greens and soft grays." src="https://lh3.googleusercontent.com/aida-public/AB6AXuACMqJKandxD-ZYEq0zbY7KKLwaNtZIr9CCH1e7Cg9rhPKdojuBeUMRxm1csnXTJrK7k6aZK9lOu5gJH_hNzMvp5IZumwlBt03hkFuCljj6jX6iCH1nh9cXUaI-acngY9dtH-GhSpvo9Nn6oA6iWFZQk87dhxR88xy08ensYF6pyq4cz_6NrNo3h6yDIRmgsipQYDYF8L9XF-A0g10McJiCdCcnqSkMuCFf4W94VjoQnZZZ7YRdnpJpCRIXe9T4CsNbexDykzm49J8"/>
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10"></div>
+<div class="absolute bottom-0 left-0 p-lg z-20">
+<div class="bg-secondary-container/20 backdrop-blur-md px-sm py-1 rounded-full w-fit mb-sm border border-white/20">
+<span class="text-white font-label-sm">Topografía Real</span>
+</div>
+<h3 class="font-headline-md text-white mb-xs">Cálculo de Elevación</h3>
+<p class="text-white/80 font-body-md max-w-md">Analizamos cada metro de ascenso y descenso en la geografía ecuatoriana para predecir el consumo exacto de tu batería.</p>
+</div>
+</div>
+<!-- Feature 2: Health -->
+<div class="md:col-span-4 rounded-3xl bg-secondary-container p-lg flex flex-col justify-between border border-outline-variant/30 relative overflow-hidden">
+<div class="relative z-10">
+<span class="material-symbols-outlined text-[40px] text-primary mb-md" data-icon="health_and_safety">health_and_safety</span>
+<h3 class="font-headline-md text-primary mb-xs">Salud de Batería</h3>
+<p class="text-on-secondary-fixed-variant font-body-md">Monitoreo constante de la degradación y temperatura para ajustes de rango dinámicos.</p>
+</div>
+<div class="absolute -right-10 -bottom-10 opacity-10">
+<span class="material-symbols-outlined text-[200px]" data-icon="electric_car">electric_car</span>
+</div>
+</div>
+<!-- Feature 3: Availability -->
+<div class="md:col-span-5 rounded-3xl bg-primary text-on-primary p-lg flex flex-col gap-md border border-outline-variant/10">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-[32px]" data-icon="event_available">event_available</span>
+<div class="px-sm py-1 rounded-full bg-white/10 font-label-sm">Tiempo Real</div>
+</div>
+<div>
+<h3 class="font-headline-md mb-xs">Disponibilidad de Carga</h3>
+<p class="text-on-primary/80 font-body-md">No más sorpresas. Sabrás si un cargador está ocupado, fuera de servicio o reservado antes de llegar.</p>
+</div>
+</div>
+<!-- Feature 4: Peace of Mind Card -->
+<div class="md:col-span-7 rounded-3xl bg-surface-container p-lg border border-outline-variant/30 flex items-center gap-lg">
+<div class="hidden sm:block w-32 h-32 rounded-full border-[8px] border-primary-container/20 flex items-center justify-center relative">
+<div class="w-full h-full rounded-full border-t-[8px] border-primary absolute -top-[8px] -left-[8px] rotate-45"></div>
+<span class="font-headline-md text-primary">95</span>
+</div>
+<div class="flex-1">
+<h3 class="font-headline-md text-primary mb-xs">Puntaje de Ruta</h3>
+<p class="text-on-surface-variant font-body-md">Cada plan de viaje recibe un puntaje de tranquilidad del 1 al 100 basado en la redundancia de cargadores y estado del clima.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Final CTA Section -->
+<section class="py-xl">
+<div class="max-w-5xl mx-auto px-margin-mobile text-center">
+<div class="tonal-layering-1 rounded-[48px] p-xl border border-outline-variant/30 relative overflow-hidden">
+<!-- Background texture -->
+<div class="absolute inset-0 opacity-[0.03] pointer-events-none" style="background-image: url('https://www.transparenttextures.com/patterns/cubes.png')"></div>
+<div class="relative z-10 flex flex-col items-center gap-md">
+<h2 class="font-headline-lg text-primary tracking-tight">¿Listo para tu próximo viaje?</h2>
+<p class="font-body-lg text-on-surface-variant max-w-xl">
+                            Únete a la comunidad de conductores que ya recorren el Ecuador sin límites. Descarga ChargeWay y toma el control de tu energía.
+                        </p>
+<div class="flex flex-col sm:flex-row gap-sm mt-md">
+<button class="bg-primary text-on-primary h-[56px] px-lg rounded-2xl flex items-center gap-sm font-label-md hover:shadow-lg transition-all active:scale-95 group">
+<span class="material-symbols-outlined" data-icon="download">download</span>
+                                Descargar para iOS
+                            </button>
+<button class="bg-surface-container-highest text-primary h-[56px] px-lg rounded-2xl flex items-center gap-sm font-label-md hover:bg-surface-container-high transition-all active:scale-95">
+<span class="material-symbols-outlined" data-icon="download">download</span>
+                                Descargar para Android
+                            </button>
+</div>
+<div class="mt-lg flex items-center gap-md opacity-60">
+<span class="font-label-sm">Disponible en:</span>
+<div class="flex gap-lg grayscale contrast-125">
+<span class="material-symbols-outlined text-[32px]" data-icon="apple">apps</span>
+<span class="material-symbols-outlined text-[32px]" data-icon="android">android</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest dark:bg-surface-container-low border-t border-outline-variant/50 w-full py-xl mt-xl">
+<div class="flex flex-col md:flex-row justify-between items-start gap-lg px-margin-desktop max-w-7xl mx-auto">
+<div class="flex flex-col gap-sm max-w-xs">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-primary text-headline-md" data-icon="electric_bolt">electric_bolt</span>
+<span class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim tracking-tight">ChargeWay</span>
+</div>
+<p class="font-body-md text-on-surface-variant">Intelligent Routing for a Greener Planet. Liderando la transición eléctrica en la región.</p>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-xl">
+<div class="flex flex-col gap-sm">
+<span class="font-label-md text-primary font-bold">Producto</span>
+<a class="text-on-surface-variant hover:text-primary underline-offset-4 hover:underline transition-all" href="#">Route Planner</a>
+<a class="text-on-surface-variant hover:text-primary underline-offset-4 hover:underline transition-all" href="#">Network Status</a>
+</div>
+<div class="flex flex-col gap-sm">
+<span class="font-label-md text-primary font-bold">Compañía</span>
+<a class="text-on-surface-variant hover:text-primary underline-offset-4 hover:underline transition-all" href="#">Support</a>
+<a class="text-on-surface-variant hover:text-primary underline-offset-4 hover:underline transition-all" href="#">Privacy Policy</a>
+</div>
+<div class="flex flex-col gap-sm col-span-2 md:col-span-1">
+<span class="font-label-md text-primary font-bold">Newsletter</span>
+<div class="flex gap-0">
+<input class="bg-surface-container border border-outline-variant rounded-l-xl px-sm w-full focus:ring-1 focus:ring-primary focus:border-primary outline-none" placeholder="Tu email" type="email"/>
+<button class="bg-primary text-on-primary px-sm py-2 rounded-r-xl">
+<span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<div class="max-w-7xl mx-auto px-margin-desktop mt-xl pt-lg border-t border-outline-variant/20 flex flex-col md:flex-row justify-between gap-md opacity-60">
+<p class="font-body-md text-body-md">© 2024 ChargeWay. Intelligent Routing for a Greener Planet.</p>
+<div class="flex gap-md">
+<a class="hover:text-primary transition-colors" href="#">Twitter</a>
+<a class="hover:text-primary transition-colors" href="#">LinkedIn</a>
+<a class="hover:text-primary transition-colors" href="#">Instagram</a>
+</div>
+</div>
+</footer>
+<script>
+        // Simple intersection observer for reveal animations
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100', 'translate-y-0');
+                    entry.target.classList.remove('opacity-0', 'translate-y-10');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section > div').forEach(el => {
+            el.classList.add('transition-all', 'duration-700', 'opacity-0', 'translate-y-10');
+            observer.observe(el);
+        });
+
+        // Header scroll behavior
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 20) {
+                header.classList.add('shadow-md', 'h-16');
+                header.classList.remove('h-20');
+            } else {
+                header.classList.remove('shadow-md', 'h-16');
+                header.classList.add('h-20');
+            }
+        });
+    </script>
+</body></html>

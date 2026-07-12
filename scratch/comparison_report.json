@@ -1,0 +1,2748 @@
+{
+  "totalElectromaps": 167,
+  "totalSupabase": 157,
+  "notRegistered": [
+    {
+      "Provincia": "distrito-metropolitano-de-quito",
+      "Estacion": "Changan",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/distrito-metropolitano-de-quito/quito/changan-avenida-de-los-granados"
+    },
+    {
+      "Provincia": "distrito-metropolitano-de-quito",
+      "Estacion": "Conectz",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "CCS2, GB/T",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/distrito-metropolitano-de-quito/quito/conectz-avenida-francisco-de-orellana"
+    },
+    {
+      "Provincia": "distrito-metropolitano-de-quito",
+      "Estacion": "McDonald's",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/distrito-metropolitano-de-quito/quito/mcdonalds-avenida-eloy-alfaro"
+    },
+    {
+      "Provincia": "distrito-metropolitano-de-quito",
+      "Estacion": "Grupo Mavesa Baker",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/distrito-metropolitano-de-quito/quito/grupo-mavesa-baker-cesar-borja-lavayen-y-galo-plaza-lasso"
+    },
+    {
+      "Provincia": "distrito-metropolitano-de-quito",
+      "Estacion": "Puntos de carga en Quito",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/distrito-metropolitano-de-quito/quito"
+    },
+    {
+      "Provincia": "distrito-metropolitano-de-quito",
+      "Estacion": "Puntos de carga en Calacalí",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/distrito-metropolitano-de-quito/calacali"
+    },
+    {
+      "Provincia": "distrito-metropolitano-de-quito",
+      "Estacion": "Puntos de carga en Puembo",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/distrito-metropolitano-de-quito/puembo"
+    },
+    {
+      "Provincia": "distrito-metropolitano-de-quito",
+      "Estacion": "Puntos de carga en 170135",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/distrito-metropolitano-de-quito/170135"
+    },
+    {
+      "Provincia": "distrito-metropolitano-de-quito",
+      "Estacion": "Puntos de carga en 170184",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/distrito-metropolitano-de-quito/170184"
+    },
+    {
+      "Provincia": "distrito-metropolitano-de-quito",
+      "Estacion": "Puntos de carga en Unknown city (temporary)",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/distrito-metropolitano-de-quito/unknown-city-temporary"
+    },
+    {
+      "Provincia": "guayaquil",
+      "Estacion": "Vermont Plaza Norte - punto de carga EV",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/guayaquil/guayaquil/vermont-plaza-norte-punto-de-carga-ev-pedro-j-valverde-alvarez"
+    },
+    {
+      "Provincia": "guayaquil",
+      "Estacion": "Line Saes",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/guayaquil/la-fae/line-saes-cdla-la-fae-mz-3"
+    },
+    {
+      "Provincia": "guayaquil",
+      "Estacion": "Automotores Continental Orellana",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/guayaquil/guayaquil/automotores-continental-orellana-francisco-de-orellana"
+    },
+    {
+      "Provincia": "guayaquil",
+      "Estacion": "Automotores Continental Tanca Marengo",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/guayaquil/guayaquil/automotores-continental-tanca-marengo-calle-13e-northeast"
+    },
+    {
+      "Provincia": "guayaquil",
+      "Estacion": "BYD Auto - Av. de las Americas",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/guayaquil/guayaquil/byd-auto-av-de-las-americas-avenida-de-las-americas"
+    },
+    {
+      "Provincia": "guayaquil",
+      "Estacion": "Puntos de carga en Guayaquil",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/guayaquil/guayaquil"
+    },
+    {
+      "Provincia": "guayaquil",
+      "Estacion": "Puntos de carga en La Fae",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/guayaquil/la-fae"
+    },
+    {
+      "Provincia": "guayaquil",
+      "Estacion": "Puntos de carga en Herradura",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/guayaquil/herradura"
+    },
+    {
+      "Provincia": "cuenca",
+      "Estacion": "El Mestizo Restaurante",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/cuenca/san-felipe-de-molleturo/el-mestizo-restaurante-6hrxm6w-san-felipe-de-molleturo"
+    },
+    {
+      "Provincia": "cuenca",
+      "Estacion": "Universidad del Azuay",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/cuenca/autopista/universidad-del-azuay-hernan-malo"
+    },
+    {
+      "Provincia": "cuenca",
+      "Estacion": "Puntos de carga en Cuenca",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/cuenca/cuenca"
+    },
+    {
+      "Provincia": "cuenca",
+      "Estacion": "Puntos de carga en San Felipe de Molleturo",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/cuenca/san-felipe-de-molleturo"
+    },
+    {
+      "Provincia": "cuenca",
+      "Estacion": "Puntos de carga en Autopista",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/cuenca/autopista"
+    },
+    {
+      "Provincia": "cuenca",
+      "Estacion": "Puntos de carga en Unknown city (temporary)",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/cuenca/unknown-city-temporary"
+    },
+    {
+      "Provincia": "cuenca",
+      "Estacion": "Puntos de carga en Capulispamba",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/cuenca/capulispamba"
+    },
+    {
+      "Provincia": "canton-ambato",
+      "Estacion": "Paredes Car Service",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "GB/T",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/canton-ambato/ambato/paredes-car-service-medardo-angel-silva-y-luis-felipe-borja"
+    },
+    {
+      "Provincia": "canton-ambato",
+      "Estacion": "Concesionario Kia Ambato",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/canton-ambato/ambato/concesionario-kia-ambato-avenida-atahualpa"
+    },
+    {
+      "Provincia": "canton-ambato",
+      "Estacion": "Automekano",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/canton-ambato/ambato/automekano-indoamerica"
+    },
+    {
+      "Provincia": "canton-ambato",
+      "Estacion": "ASSA Chevrolet Ambato",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/canton-ambato/ambato/assa-chevrolet-ambato-rio-guayllabamba"
+    },
+    {
+      "Provincia": "canton-ambato",
+      "Estacion": "ELECTROLINIERA ISTT",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/canton-ambato/ambato/electroliniera-istt-troncal-de-la-sierra"
+    },
+    {
+      "Provincia": "canton-ambato",
+      "Estacion": "Puntos de carga en Ambato",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/canton-ambato/ambato"
+    },
+    {
+      "Provincia": "manta",
+      "Estacion": "Mavesa Manta",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "CCS2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/manta/130213/mavesa-manta"
+    },
+    {
+      "Provincia": "manta",
+      "Estacion": "Teojama Comercial",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/manta/manta/teojama-comercial-avenida-4-de-noviembre"
+    },
+    {
+      "Provincia": "manta",
+      "Estacion": "Kia Asiauto Barbasquillo",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/manta/manta/kia-asiauto-barbasquillo-calle-34"
+    },
+    {
+      "Provincia": "manta",
+      "Estacion": "Puntos de carga en Manta",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/manta/manta"
+    },
+    {
+      "Provincia": "manta",
+      "Estacion": "Puntos de carga en 130213",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/manta/130213"
+    },
+    {
+      "Provincia": "santo-domingo",
+      "Estacion": "CC Bomboli",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2, CCS1",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/santo-domingo/santo-domingo/cc-bomboli-avenida-abraham-calazacon"
+    },
+    {
+      "Provincia": "santo-domingo",
+      "Estacion": "Kia Empromotor vía Quito",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/santo-domingo/santo-domingo/kia-empromotor-via-quito-avenida-quito"
+    },
+    {
+      "Provincia": "santo-domingo",
+      "Estacion": "Puntos de carga en Santo Domingo",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/santo-domingo/santo-domingo"
+    },
+    {
+      "Provincia": "santo-domingo",
+      "Estacion": "Puntos de carga en Unknown city (temporary)",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/santo-domingo/unknown-city-temporary"
+    },
+    {
+      "Provincia": "machala",
+      "Estacion": "Garaje 24/7",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/machala/machala/garaje-247-avenida-circunvalacion-norte"
+    },
+    {
+      "Provincia": "machala",
+      "Estacion": "E.MAMUEL CHEVROLET MACHALA",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/machala/machala/emamuel-chevrolet-machala-avenida-rocafuerte"
+    },
+    {
+      "Provincia": "machala",
+      "Estacion": "Puntos de carga en Machala",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/machala/machala"
+    },
+    {
+      "Provincia": "riobamba",
+      "Estacion": "Estación MultiPlaza",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "CCS2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/riobamba/riobamba/estacion-multiplaza-avenida-lizarzaburu"
+    },
+    {
+      "Provincia": "riobamba",
+      "Estacion": "LLANTICENTRO P Y R",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "CCS2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/riobamba/riobamba/llanticentro-p-y-r-avenida-9-de-octubre"
+    },
+    {
+      "Provincia": "riobamba",
+      "Estacion": "Puntos de carga en Riobamba",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "CCS2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/riobamba/riobamba"
+    },
+    {
+      "Provincia": "rumiahui",
+      "Estacion": "Byd San Rafael",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/rumiahui/quito/byd-san-rafael-avenida-general-ruminahui"
+    },
+    {
+      "Provincia": "rumiahui",
+      "Estacion": "MegaKywi - Los Chillos",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/rumiahui/sangolqui/megakywi-los-chillos-avenida-general-ruminahui"
+    },
+    {
+      "Provincia": "rumiahui",
+      "Estacion": "Electrolinera EEQ Sangolqui",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "CCS2, CHAdeMO, TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/rumiahui/sangolqui/electrolinera-eeq-sangolqui-avenida-luis-cordero"
+    },
+    {
+      "Provincia": "rumiahui",
+      "Estacion": "Puntos de carga en Quito",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/rumiahui/quito"
+    },
+    {
+      "Provincia": "rumiahui",
+      "Estacion": "Puntos de carga en Sangolquí",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/rumiahui/sangolqui"
+    },
+    {
+      "Provincia": "ibarra",
+      "Estacion": "Pys electrolinera",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "CCS2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/ibarra/ibarra/pys-electrolinera-avenida-mariano-acosta"
+    },
+    {
+      "Provincia": "ibarra",
+      "Estacion": "Plug & Drive Hosteria el Prado - Ibarra",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/ibarra/unknown-city-temporary/plug-drive-hosteria-el-prado-ibarra"
+    },
+    {
+      "Provincia": "ibarra",
+      "Estacion": "La Plaza Shopping Center - Ibarra",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/ibarra/ibarra/la-plaza-shopping-center-ibarra-victoria-castello-chiriboga"
+    },
+    {
+      "Provincia": "ibarra",
+      "Estacion": "Laguna Mall Ibarra",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/ibarra/ibarra/laguna-mall-ibarra-avenida-fray-vacas-galindo"
+    },
+    {
+      "Provincia": "ibarra",
+      "Estacion": "Puntos de carga en Ibarra",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/ibarra/ibarra"
+    },
+    {
+      "Provincia": "ibarra",
+      "Estacion": "Puntos de carga en Unknown city (temporary)",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/ibarra/unknown-city-temporary"
+    },
+    {
+      "Provincia": "samborondon",
+      "Estacion": "Village Plaza, Samborondón",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/samborondon/091650/village-plaza-samborondon-avenida-samborondon"
+    },
+    {
+      "Provincia": "samborondon",
+      "Estacion": "Piazza Batan",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/samborondon/samborondon/piazza-batan-unnamed-road"
+    },
+    {
+      "Provincia": "samborondon",
+      "Estacion": "Puntos de carga en Samborondón",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/samborondon/samborondon"
+    },
+    {
+      "Provincia": "samborondon",
+      "Estacion": "Puntos de carga en 091650",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/samborondon/091650"
+    },
+    {
+      "Provincia": "salinas",
+      "Estacion": "Automotores Continental Salinas",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/salinas/salinas/automotores-continental-salinas-via-a-salinas"
+    },
+    {
+      "Provincia": "salinas",
+      "Estacion": "Supermaxi Salinas",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "CCS2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/salinas/salinas/supermaxi-salinas-av-carlos-espinoza-larrea"
+    },
+    {
+      "Provincia": "salinas",
+      "Estacion": "Puntos de carga en Salinas",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/salinas/salinas"
+    },
+    {
+      "Provincia": "canton-banos",
+      "Estacion": "Casa Verde",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/canton-banos/banos-de-agua-santa/casa-verde-calle-camino-real"
+    },
+    {
+      "Provincia": "canton-banos",
+      "Estacion": "Puntos de carga en Baños de Agua Santa",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/canton-banos/banos-de-agua-santa"
+    },
+    {
+      "Provincia": "canton-banos",
+      "Estacion": "Puntos de carga en Unknown city (temporary)",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/canton-banos/unknown-city-temporary"
+    },
+    {
+      "Provincia": "puerto-quito",
+      "Estacion": "Hotel Restaurante Andy",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/puerto-quito/unknown-city-temporary/hotel-restaurante-andy"
+    },
+    {
+      "Provincia": "puerto-quito",
+      "Estacion": "Puntos de carga en Unknown city (temporary)",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/puerto-quito/unknown-city-temporary"
+    },
+    {
+      "Provincia": "puerto-quito",
+      "Estacion": "Puntos de carga en Puerto Quito",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/puerto-quito/puerto-quito"
+    },
+    {
+      "Provincia": "latacunga",
+      "Estacion": "Kia - Asiauto Latacunga",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/latacunga/unknown-city-temporary/kia-asiauto-latacunga-panamericana-norte-km-1-latacunga-050109"
+    },
+    {
+      "Provincia": "latacunga",
+      "Estacion": "Puntos de carga en Unknown city (temporary)",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/latacunga/unknown-city-temporary"
+    },
+    {
+      "Provincia": "canton-de-atacames",
+      "Estacion": "Casa Blanca Same",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/canton-de-atacames/same/casa-blanca-same-via-sin-nombre"
+    },
+    {
+      "Provincia": "canton-de-atacames",
+      "Estacion": "Puntos de carga en Tonsupa",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/canton-de-atacames/tonsupa"
+    },
+    {
+      "Provincia": "canton-de-atacames",
+      "Estacion": "Puntos de carga en Same",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/canton-de-atacames/same"
+    },
+    {
+      "Provincia": "canton-de-atacames",
+      "Estacion": "Puntos de carga en Atacames",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/canton-de-atacames/atacames"
+    },
+    {
+      "Provincia": "loja",
+      "Estacion": "Kia - Motricentro Loja",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/loja/loja/kia-motricentro-loja-avenida-cuxibamba"
+    },
+    {
+      "Provincia": "loja",
+      "Estacion": "Puntos de carga en Loja",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/loja/loja"
+    },
+    {
+      "Provincia": "canton-de-portoviejo",
+      "Estacion": "Mavesa Portoviejo",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "CCS2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/canton-de-portoviejo/unknown-city-temporary/mavesa-portoviejo"
+    },
+    {
+      "Provincia": "canton-de-portoviejo",
+      "Estacion": "Puntos de carga en Unknown city (temporary)",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "CCS2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/canton-de-portoviejo/unknown-city-temporary"
+    },
+    {
+      "Provincia": "canton-de-portoviejo",
+      "Estacion": "Puntos de carga en Portoviejo",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "CCS2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/canton-de-portoviejo/portoviejo"
+    },
+    {
+      "Provincia": "pedro-moncayo",
+      "Estacion": "Plug and Drive - Tierras Altas - Tabacundo",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/pedro-moncayo/unknown-city-temporary/plug-and-drive-tierras-altas-tabacundo-pacifico-proano"
+    },
+    {
+      "Provincia": "pedro-moncayo",
+      "Estacion": "Puntos de carga en Unknown city (temporary)",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/pedro-moncayo/unknown-city-temporary"
+    },
+    {
+      "Provincia": "quininde",
+      "Estacion": "P&S La Union",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/quininde/la-union/ps-la-union-km-185"
+    },
+    {
+      "Provincia": "quininde",
+      "Estacion": "Puntos de carga en La Unión",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/quininde/la-union"
+    },
+    {
+      "Provincia": "quininde",
+      "Estacion": "Puntos de carga en Unknown city (temporary)",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/quininde/unknown-city-temporary"
+    },
+    {
+      "Provincia": "unknown-region-temporary",
+      "Estacion": "Puntos de carga en Unknown city (temporary)",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/unknown-region-temporary/unknown-city-temporary"
+    },
+    {
+      "Provincia": "santa-rosa",
+      "Estacion": "terminal terrestre binacional de santa rosa, troncal de la costa",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/santa-rosa/santa-rosa/terminal-terrestre-binacional-de-santa-rosa-troncal-de-la-costa-terminal-terrestre-binacional-santa-rosa-troncal-de-la-costa"
+    },
+    {
+      "Provincia": "santa-rosa",
+      "Estacion": "EMOVTT SR EP",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/santa-rosa/santa-rosa/emovtt-sr-ep-troncal-de-la-costa"
+    },
+    {
+      "Provincia": "santa-rosa",
+      "Estacion": "Puntos de carga en Santa Rosa",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/santa-rosa/santa-rosa"
+    },
+    {
+      "Provincia": "puerto-lopez",
+      "Estacion": "Casa Brygga",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/puerto-lopez/puerto-lopez/casa-brygga-null"
+    },
+    {
+      "Provincia": "puerto-lopez",
+      "Estacion": "Salango",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/puerto-lopez/salango/salango-ruta-del-spondylus"
+    },
+    {
+      "Provincia": "puerto-lopez",
+      "Estacion": "Puntos de carga en Puerto López",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/puerto-lopez/puerto-lopez"
+    },
+    {
+      "Provincia": "puerto-lopez",
+      "Estacion": "Puntos de carga en Salango",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/puerto-lopez/salango"
+    },
+    {
+      "Provincia": "otavalo",
+      "Estacion": "Hotel Puerto Lago",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/otavalo/unknown-city-temporary/hotel-puerto-lago-via-sin-nombre"
+    },
+    {
+      "Provincia": "otavalo",
+      "Estacion": "Puntos de carga en Unknown city (temporary)",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/otavalo/unknown-city-temporary"
+    },
+    {
+      "Provincia": "otavalo",
+      "Estacion": "Puntos de carga en San Pablo",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/otavalo/san-pablo"
+    },
+    {
+      "Provincia": "jaramijo",
+      "Estacion": "Mavesa Manta",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "CCS2, GB/T",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/jaramijo/unknown-city-temporary/mavesa-manta"
+    },
+    {
+      "Provincia": "jaramijo",
+      "Estacion": "Puntos de carga en Unknown city (temporary)",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "CCS2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/jaramijo/unknown-city-temporary"
+    },
+    {
+      "Provincia": "esmeraldas",
+      "Estacion": "JAC",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/esmeraldas/los-campos/jac-troncal-del-pacifico-y-av-jaime-hurtado-gonzales"
+    },
+    {
+      "Provincia": "esmeraldas",
+      "Estacion": "Puntos de carga en Los Campos",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/esmeraldas/los-campos"
+    },
+    {
+      "Provincia": "antonio-ante",
+      "Estacion": "Plug and Drive  - Atuntaqui - Hotel Royal",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/antonio-ante/unknown-city-temporary/plug-and-drive-atuntaqui-hotel-royal"
+    },
+    {
+      "Provincia": "antonio-ante",
+      "Estacion": "Puntos de carga en Unknown city (temporary)",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/antonio-ante/unknown-city-temporary"
+    },
+    {
+      "Provincia": "azogues",
+      "Estacion": "Instituto Superior Tecnológico del Austro",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/azogues/unknown-city-temporary/instituto-superior-tecnologico-del-austro-avenida-24-de-mayo"
+    },
+    {
+      "Provincia": "azogues",
+      "Estacion": "Puntos de carga en Unknown city (temporary)",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/azogues/unknown-city-temporary"
+    },
+    {
+      "Provincia": "quijos",
+      "Estacion": "LLANTERA CUYUJA",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/quijos/unknown-city-temporary/llantera-cuyuja-e20"
+    },
+    {
+      "Provincia": "quijos",
+      "Estacion": "Puntos de carga en Unknown city (temporary)",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/quijos/unknown-city-temporary"
+    },
+    {
+      "Provincia": "canton-pelileo",
+      "Estacion": "Puntos de carga en Pelileo",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "CCS2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/canton-pelileo/pelileo"
+    },
+    {
+      "Provincia": "zaruma",
+      "Estacion": "Puntos de carga en Zaruma",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/zaruma/zaruma"
+    },
+    {
+      "Provincia": "pedro-vicente-maldonado",
+      "Estacion": "Puntos de carga en Unknown city (temporary)",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/pedro-vicente-maldonado/unknown-city-temporary"
+    },
+    {
+      "Provincia": "la-concordia",
+      "Estacion": "Puntos de carga en Unknown city (temporary)",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/la-concordia/unknown-city-temporary"
+    },
+    {
+      "Provincia": "el-carmen",
+      "Estacion": "P&S El Carmen",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/el-carmen/el-carmen/ps-el-carmen-av-chone-y-via-colectora"
+    },
+    {
+      "Provincia": "el-carmen",
+      "Estacion": "Puntos de carga en El Carmen",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/el-carmen/el-carmen"
+    },
+    {
+      "Provincia": "playas",
+      "Estacion": "Cargador 7Kw/H Karibao",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "CCS2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/playas/unknown-city-temporary/cargador-7kwh-karibao-karibao"
+    },
+    {
+      "Provincia": "playas",
+      "Estacion": "Puntos de carga en Unknown city (temporary)",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "CCS2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/playas/unknown-city-temporary"
+    },
+    {
+      "Provincia": "metropolitan-district-of-quito",
+      "Estacion": "Puntos de carga en Quito",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/metropolitan-district-of-quito/quito"
+    },
+    {
+      "Provincia": "tena",
+      "Estacion": "Puntos de carga en Unknown city (temporary)",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/tena/unknown-city-temporary"
+    },
+    {
+      "Provincia": "guano",
+      "Estacion": "Puntos de carga en Unknown city (temporary)",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/guano/unknown-city-temporary"
+    },
+    {
+      "Provincia": "saraguro",
+      "Estacion": "Taller",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/saraguro/saraguro/taller-calle-loja"
+    },
+    {
+      "Provincia": "saraguro",
+      "Estacion": "Puntos de carga en Saraguro",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/saraguro/saraguro"
+    },
+    {
+      "Provincia": "sucre",
+      "Estacion": "GC DIESEL",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/sucre/bahia-de-caraquez/gc-diesel-avenida-3-de-noviembre"
+    },
+    {
+      "Provincia": "sucre",
+      "Estacion": "Puntos de carga en Bahía de Caráquez",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/sucre/bahia-de-caraquez"
+    },
+    {
+      "Provincia": "canton-daule",
+      "Estacion": "Puntos de carga en Unknown city (temporary)",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/canton-daule/unknown-city-temporary"
+    },
+    {
+      "Provincia": "la-troncal",
+      "Estacion": "Puntos de carga en La Troncal",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "TYPE 2",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/la-troncal/la-troncal"
+    },
+    {
+      "Provincia": "san-miguel",
+      "Estacion": "Puntos de carga en San Pablo",
+      "Ubicacion": "Desconocido",
+      "TipoCargador": "Desconocido",
+      "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/san-miguel/san-pablo"
+    }
+  ],
+  "differentAddress": [
+    {
+      "em": {
+        "Provincia": "distrito-metropolitano-de-quito",
+        "Estacion": "Byd EVINKA",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/distrito-metropolitano-de-quito/quito/byd-evinka-ruta-viva"
+      },
+      "sb": {
+        "id": "52bb3854-3ca7-4975-b657-11508afe8241",
+        "region": "Costa",
+        "province": "Guayas",
+        "city_or_canton": "Guayaquil",
+        "name": "BYD Américas",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "Lun-Vie 9am-6pm / Sáb 10am-2pm",
+        "cost_type": "Pago",
+        "gps_link": "https://maps.app.goo.gl/h4JYzTDghEkhpUUq6",
+        "lat": -2.1428356,
+        "lng": -79.8843857,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "cuenca",
+        "Estacion": "Centro Comercial Milenium Plaza",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/cuenca/cuenca/centro-comercial-milenium-plaza-cornelio-merchan"
+      },
+      "sb": {
+        "id": "5a2a5439-5ae4-4703-a268-324ce0f2127e",
+        "region": "Sierra",
+        "province": "Azuay",
+        "city_or_canton": "Cuenca",
+        "name": "Centro Comercial Milenium Plaza",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 1 + Tipo 2",
+        "power": "7kW",
+        "schedule": "10am-10pm",
+        "cost_type": "Gratuito*",
+        "gps_link": "https://maps.app.goo.gl/djr57sEAifRfoMht8",
+        "lat": -2.9045589,
+        "lng": -79.0057164,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "cuenca",
+        "Estacion": "Regional Centro Sur",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/cuenca/cuenca/regional-centro-sur-alfredo-pareja"
+      },
+      "sb": {
+        "id": "9bdb3055-af4f-4448-8f07-de1c18b02c88",
+        "region": "Sierra",
+        "province": "Azuay",
+        "city_or_canton": "Cuenca",
+        "name": "Empresa Eléctrica Regional Centro Sur",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "Tarde",
+        "cost_type": "Gratuito*",
+        "gps_link": "https://maps.app.goo.gl/LAHce2fBoKvfGiXe9",
+        "lat": -2.9047011,
+        "lng": -78.9874177,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "cuenca",
+        "Estacion": "BYD Cuenca",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "CCS2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/cuenca/cuenca/byd-cuenca-avenue-espana"
+      },
+      "sb": {
+        "id": "b3cdf531-38ac-4da2-8de8-d611619c35e8",
+        "region": "Sierra",
+        "province": "Azuay",
+        "city_or_canton": "Cuenca",
+        "name": "BYD Cuenca",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "Lun-Vie 9am-6pm / Sáb 10am-2pm",
+        "cost_type": "Pago",
+        "gps_link": "https://maps.app.goo.gl/jGRZWCi2Yxd3RPuW8",
+        "lat": -2.8942,
+        "lng": -78.9969749,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "manta",
+        "Estacion": "Mantahost Hotel",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "Desconocido",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/manta/manta/mantahost-hotel-via-sin-nombre"
+      },
+      "sb": {
+        "id": "83e531b2-ce75-49fb-b1d9-2be276ea9ca8",
+        "region": "Costa",
+        "province": "Santa Elena",
+        "city_or_canton": "Salinas",
+        "name": "Hotel Colón",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "24/7",
+        "cost_type": "Gratuito*",
+        "gps_link": "https://maps.app.goo.gl/FUabaPtKtBG6LKiG6",
+        "lat": -2.2057114,
+        "lng": -80.9643114,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "manta",
+        "Estacion": "Mall del Pacífico Manta",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "CCS2, TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/manta/manta/mall-del-pacifico-manta-avenida-malecon"
+      },
+      "sb": {
+        "id": "285dc302-d34c-4b82-969d-b0745a04b767",
+        "region": "Costa",
+        "province": "Manabí",
+        "city_or_canton": "Manta",
+        "name": "Mall del Pacífico — CONDOR CHARGE",
+        "speed": "🟢 RÁPIDA",
+        "charger_type": "CS2",
+        "power": "90kW",
+        "schedule": "10am-9pm",
+        "cost_type": "Pago",
+        "gps_link": "https://maps.app.goo.gl/f9HhEA8bweKVetAU8",
+        "lat": -0.9428104,
+        "lng": -80.7348508,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "santo-domingo",
+        "Estacion": "BYD - Evinka - PD",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/santo-domingo/unknown-city-temporary/byd-evinka-pd-via-aloag-santo-domingo"
+      },
+      "sb": {
+        "id": "f6300159-85a6-46ff-a82d-e060ab72e4e0",
+        "region": "Costa",
+        "province": "Santo Domingo de los Tsáchilas",
+        "city_or_canton": "Santo Domingo",
+        "name": "BYD Bomboli Shopping — EVINKA CONECT",
+        "speed": "🟢 RÁPIDA",
+        "charger_type": "Tipo 2 + CS2",
+        "power": "7kW / 60kW",
+        "schedule": "Lun-Dom 10am-9pm",
+        "cost_type": "Pago",
+        "gps_link": "https://maps.app.goo.gl/yDGX4RRYnq42dWWA7",
+        "lat": -0.2536396,
+        "lng": -79.2212342,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "santo-domingo",
+        "Estacion": "Carga Rápida Kia (Santo Domingo)",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "CCS1, CCS2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/santo-domingo/santo-domingo/carga-rapida-kia-santo-domingo-avenida-esmeraldas"
+      },
+      "sb": {
+        "id": "6607cddc-1e2d-4d5e-9464-b0cae7c03953",
+        "region": "Costa",
+        "province": "Santo Domingo de los Tsáchilas",
+        "city_or_canton": "Santo Domingo",
+        "name": "KFC Santo Domingo — EVINKA CONECT",
+        "speed": "🟢 RÁPIDA",
+        "charger_type": "Tipo 2 + CS2",
+        "power": "7kW / 60kW",
+        "schedule": "24/7",
+        "cost_type": "Pago",
+        "gps_link": "https://maps.app.goo.gl/jRtjsbneP1PCLcXx8",
+        "lat": -0.2627128,
+        "lng": -79.114653,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "santo-domingo",
+        "Estacion": "Plug & Drive Santo Domingo",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/santo-domingo/unknown-city-temporary/plug-drive-santo-domingo-via-aloag-santo-domingo"
+      },
+      "sb": {
+        "id": "6607cddc-1e2d-4d5e-9464-b0cae7c03953",
+        "region": "Costa",
+        "province": "Santo Domingo de los Tsáchilas",
+        "city_or_canton": "Santo Domingo",
+        "name": "KFC Santo Domingo — EVINKA CONECT",
+        "speed": "🟢 RÁPIDA",
+        "charger_type": "Tipo 2 + CS2",
+        "power": "7kW / 60kW",
+        "schedule": "24/7",
+        "cost_type": "Pago",
+        "gps_link": "https://maps.app.goo.gl/jRtjsbneP1PCLcXx8",
+        "lat": -0.2627128,
+        "lng": -79.114653,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "machala",
+        "Estacion": "DePrati Machala",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/machala/machala/deprati-machala-e583"
+      },
+      "sb": {
+        "id": "2f4ec7eb-11c9-4be3-99b8-4d044f3a5feb",
+        "region": "Costa",
+        "province": "El Oro",
+        "city_or_canton": "Machala",
+        "name": "BYD Machala",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "Lun-Vie 9am-6pm / Sáb 10am-2pm",
+        "cost_type": "Pago",
+        "gps_link": "https://maps.app.goo.gl/nYVuRWzGMaoJ6Hv18",
+        "lat": -3.2847,
+        "lng": -79.9232749,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "machala",
+        "Estacion": "BYD MACHALA",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/machala/machala/byd-machala-avenida-25-de-junio"
+      },
+      "sb": {
+        "id": "2f4ec7eb-11c9-4be3-99b8-4d044f3a5feb",
+        "region": "Costa",
+        "province": "El Oro",
+        "city_or_canton": "Machala",
+        "name": "BYD Machala",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "Lun-Vie 9am-6pm / Sáb 10am-2pm",
+        "cost_type": "Pago",
+        "gps_link": "https://maps.app.goo.gl/nYVuRWzGMaoJ6Hv18",
+        "lat": -3.2847,
+        "lng": -79.9232749,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "machala",
+        "Estacion": "terminal de machala",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "Desconocido",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/machala/machala/terminal-de-machala-terminal-terrestre-de-machala"
+      },
+      "sb": {
+        "id": "d8d2ad0c-137a-495d-8aa6-164f40ffc6b1",
+        "region": "Costa",
+        "province": "El Oro",
+        "city_or_canton": "Machala",
+        "name": "Terminal de Machala",
+        "speed": "🟡 NORMAL",
+        "charger_type": "220V 32A Pata Gallina",
+        "power": "7kW",
+        "schedule": "24/7",
+        "cost_type": "Gratuito*",
+        "gps_link": "https://maps.app.goo.gl/FdyixvVNiJtfCKG68",
+        "lat": -3.2801915,
+        "lng": -79.918518,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "riobamba",
+        "Estacion": "Asiauto Riobamba",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/riobamba/riobamba/asiauto-riobamba-avenida-lizarzaburu"
+      },
+      "sb": {
+        "id": "0830d017-3672-4838-87cc-d3866008ad05",
+        "region": "Sierra",
+        "province": "Chimborazo",
+        "city_or_canton": "Riobamba",
+        "name": "BYD Riobamba",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "Lun-Vie 9am-6pm / Sáb 10am-2pm",
+        "cost_type": "Pago",
+        "gps_link": "https://maps.app.goo.gl/4NBjmt4Nd2K9uSGLA",
+        "lat": -1.6422859,
+        "lng": -78.6787329,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "riobamba",
+        "Estacion": "ASSA RIOBAMBA",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "Desconocido",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/riobamba/riobamba/assa-riobamba-rio-chimbo"
+      },
+      "sb": {
+        "id": "0830d017-3672-4838-87cc-d3866008ad05",
+        "region": "Sierra",
+        "province": "Chimborazo",
+        "city_or_canton": "Riobamba",
+        "name": "BYD Riobamba",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "Lun-Vie 9am-6pm / Sáb 10am-2pm",
+        "cost_type": "Pago",
+        "gps_link": "https://maps.app.goo.gl/4NBjmt4Nd2K9uSGLA",
+        "lat": -1.6422859,
+        "lng": -78.6787329,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "rumiahui",
+        "Estacion": "San Luis Shopping",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "Desconocido",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/rumiahui/quito/san-luis-shopping-avenida-general-ruminahui"
+      },
+      "sb": {
+        "id": "5c691cd2-2d1c-4aab-915f-1caacffca3a6",
+        "region": "Costa",
+        "province": "Esmeraldas",
+        "city_or_canton": "Salima",
+        "name": "Gasolinera PetroRíos San Luis",
+        "speed": "🟡 NORMAL",
+        "charger_type": "220V 32A Pata Gallina",
+        "power": "7kW",
+        "schedule": "24/7",
+        "cost_type": "Gratuito*",
+        "gps_link": "https://maps.app.goo.gl/cfFQ58fbrtWs4LgT7",
+        "lat": null,
+        "lng": null,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "samborondon",
+        "Estacion": "PLAZA LAGOS",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/samborondon/samborondon/plaza-lagos-plaza-lagos"
+      },
+      "sb": {
+        "id": "3441be5d-03be-4384-8860-b924a9012d5b",
+        "region": "Costa",
+        "province": "Guayas",
+        "city_or_canton": "Samborondón",
+        "name": "Plaza Lagos",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "8am-11pm",
+        "cost_type": "Gratuito*",
+        "gps_link": "https://maps.app.goo.gl/ZzqYfXX2Dj2dnfpq8",
+        "lat": -2.1262174,
+        "lng": -79.8641962,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "samborondon",
+        "Estacion": "Márbol Green Plaza",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/samborondon/samborondon/marbol-green-plaza-avenida-samborondon"
+      },
+      "sb": {
+        "id": "cc76bbf6-ea16-48e1-bb33-cc7ad3e8ee6c",
+        "region": "Costa",
+        "province": "Guayas",
+        "city_or_canton": "Samborondón",
+        "name": "Marbol Plaza",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "8am-10pm",
+        "cost_type": "Gratuito*",
+        "gps_link": "https://maps.app.goo.gl/ZzqYfXX2Dj2dnfpq8",
+        "lat": -2.1262174,
+        "lng": -79.8641962,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "salinas",
+        "Estacion": "Hotel Colón Salinas",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/salinas/salinas/hotel-colon-salinas-hotel-colon-salinas"
+      },
+      "sb": {
+        "id": "83e531b2-ce75-49fb-b1d9-2be276ea9ca8",
+        "region": "Costa",
+        "province": "Santa Elena",
+        "city_or_canton": "Salinas",
+        "name": "Hotel Colón",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "24/7",
+        "cost_type": "Gratuito*",
+        "gps_link": "https://maps.app.goo.gl/FUabaPtKtBG6LKiG6",
+        "lat": -2.2057114,
+        "lng": -80.9643114,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "canton-banos",
+        "Estacion": "Sangay Spa Hotel",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "Desconocido",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/canton-banos/banos-de-agua-santa/sangay-spa-hotel-luis-a-martinez"
+      },
+      "sb": {
+        "id": "a2392de5-cc5c-4bd5-9326-450623a4504e",
+        "region": "Sierra",
+        "province": "Tungurahua",
+        "city_or_canton": "Baños",
+        "name": "Hotel Spa Miramelindo",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "24/7",
+        "cost_type": "Gratuito*",
+        "gps_link": "https://maps.app.goo.gl/3RiTcVX5p5pWcc9q9",
+        "lat": -1.40019,
+        "lng": -78.3003427,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "canton-banos",
+        "Estacion": "Hotel Spa Miramelindo",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/canton-banos/unknown-city-temporary/hotel-spa-miramelindo-calle-la-playa"
+      },
+      "sb": {
+        "id": "a2392de5-cc5c-4bd5-9326-450623a4504e",
+        "region": "Sierra",
+        "province": "Tungurahua",
+        "city_or_canton": "Baños",
+        "name": "Hotel Spa Miramelindo",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "24/7",
+        "cost_type": "Gratuito*",
+        "gps_link": "https://maps.app.goo.gl/3RiTcVX5p5pWcc9q9",
+        "lat": -1.40019,
+        "lng": -78.3003427,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "puerto-quito",
+        "Estacion": "Primax Puerto Quito",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/puerto-quito/puerto-quito/primax-puerto-quito-via-a-los-bancos"
+      },
+      "sb": {
+        "id": "51419f12-84f3-42de-89bf-e20577dc6286",
+        "region": "Costa",
+        "province": "Guayas",
+        "city_or_canton": "Guayaquil",
+        "name": "Primax Puerto Azul",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 1 Pared",
+        "power": "7kW",
+        "schedule": "24/7",
+        "cost_type": "Gratuito*",
+        "gps_link": "https://maps.app.goo.gl/6rCv1ZnmQ7NwcUmr8",
+        "lat": -2.187429,
+        "lng": -79.9741114,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "puerto-quito",
+        "Estacion": "The River House - Charging Station",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "GB/T, TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/puerto-quito/unknown-city-temporary/the-river-house-charging-station-river-house-road"
+      },
+      "sb": {
+        "id": "27597453-d0a0-44f2-80bc-21bf08b2144f",
+        "region": "Sierra",
+        "province": "Pichincha",
+        "city_or_canton": "Puerto Quito",
+        "name": "The River House Lodge — EVINKA CONECT",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "24/7",
+        "cost_type": "Pago",
+        "gps_link": "https://maps.app.goo.gl/HkjQ5GER9DoaWz1c9",
+        "lat": 0.1124661,
+        "lng": -79.2321931,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "latacunga",
+        "Estacion": "Pepas Restaurante",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/latacunga/unknown-city-temporary/pepas-restaurante-antonia-vela"
+      },
+      "sb": {
+        "id": "30fadd9a-1ca0-478d-9b66-841b4c0a2b00",
+        "region": "Sierra",
+        "province": "Cotopaxi",
+        "city_or_canton": "Latacunga",
+        "name": "Restaurante Pepas",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "24/7",
+        "cost_type": "Gratuito*",
+        "gps_link": "https://maps.app.goo.gl/534wd5UbkWEZk84E9",
+        "lat": -0.9227482,
+        "lng": -78.6226413,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "latacunga",
+        "Estacion": "Maltearía Plaza",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "Desconocido",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/latacunga/unknown-city-temporary/maltearia-plaza-avenue-benjamin-teran"
+      },
+      "sb": {
+        "id": "3441be5d-03be-4384-8860-b924a9012d5b",
+        "region": "Costa",
+        "province": "Guayas",
+        "city_or_canton": "Samborondón",
+        "name": "Plaza Lagos",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "8am-11pm",
+        "cost_type": "Gratuito*",
+        "gps_link": "https://maps.app.goo.gl/ZzqYfXX2Dj2dnfpq8",
+        "lat": -2.1262174,
+        "lng": -79.8641962,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "canton-de-atacames",
+        "Estacion": "Club del Pacífico",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "Desconocido",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/canton-de-atacames/tonsupa/club-del-pacifico-calle-b"
+      },
+      "sb": {
+        "id": "285dc302-d34c-4b82-969d-b0745a04b767",
+        "region": "Costa",
+        "province": "Manabí",
+        "city_or_canton": "Manta",
+        "name": "Mall del Pacífico — CONDOR CHARGE",
+        "speed": "🟢 RÁPIDA",
+        "charger_type": "CS2",
+        "power": "90kW",
+        "schedule": "10am-9pm",
+        "cost_type": "Pago",
+        "gps_link": "https://maps.app.goo.gl/f9HhEA8bweKVetAU8",
+        "lat": -0.9428104,
+        "lng": -80.7348508,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "canton-de-atacames",
+        "Estacion": "Hotel Club del Sol",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "Desconocido",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/canton-de-atacames/atacames/hotel-club-del-sol-nueva-granada"
+      },
+      "sb": {
+        "id": "b336530f-700b-4c70-b2e7-e14bdb641085",
+        "region": "Costa",
+        "province": "Santo Domingo de los Tsáchilas",
+        "city_or_canton": "Santo Domingo",
+        "name": "Club del Campo Hotel & Convenciones",
+        "speed": "🟡 NORMAL",
+        "charger_type": "220V 32A Pata Gallina",
+        "power": "7kW",
+        "schedule": "Tarde",
+        "cost_type": "Gratuito*",
+        "gps_link": "https://maps.app.goo.gl/JsukMbBhpZDZutfa6",
+        "lat": -0.2339237,
+        "lng": -79.1345977,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "loja",
+        "Estacion": "Estadio Reina del Cisne",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "GB/T",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/loja/loja/estadio-reina-del-cisne-lourdes"
+      },
+      "sb": {
+        "id": "1a27cea2-474d-43fe-8eea-9877a8e0baf8",
+        "region": "Sierra",
+        "province": "Loja",
+        "city_or_canton": "Loja",
+        "name": "Estadio Federativo Reina de El Cisne — Electrolinera",
+        "speed": "🟢 RÁPIDA",
+        "charger_type": "CHAdeMO (necesita adaptador)",
+        "power": "40kW",
+        "schedule": "24/7",
+        "cost_type": "Pago",
+        "gps_link": "https://maps.app.goo.gl/LgcCetriFRAptYRT7",
+        "lat": -4.000992,
+        "lng": -79.1965307,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "canton-de-portoviejo",
+        "Estacion": "Cargador Novedades Karen",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "Desconocido",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/canton-de-portoviejo/portoviejo/cargador-novedades-karen-pedro-gual"
+      },
+      "sb": {
+        "id": "5ac90eba-4c61-4d31-9e8a-c8e05f26afa9",
+        "region": "Costa",
+        "province": "Manabí",
+        "city_or_canton": "Portoviejo",
+        "name": "Local Novedades Karen",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "Tarde",
+        "cost_type": "Gratuito*",
+        "gps_link": "https://goo.gl/maps/Tm6au5KMpAynFFXk9",
+        "lat": -1.057087,
+        "lng": -80.455617,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "quininde",
+        "Estacion": "Lubricadora Brito",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "CCS2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/quininde/unknown-city-temporary/lubricadora-brito-e20"
+      },
+      "sb": {
+        "id": "bf7fb2d0-7bc9-4ee1-8659-144928a7a23b",
+        "region": "Costa",
+        "province": "Esmeraldas",
+        "city_or_canton": "La Unión",
+        "name": "Lubricentro Brito",
+        "speed": "🟡 NORMAL",
+        "charger_type": "220V 32A Pata Gallina",
+        "power": "7kW",
+        "schedule": "24/7",
+        "cost_type": "Gratuito*",
+        "gps_link": "https://maps.app.goo.gl/F2TgyEFGJw1hRH716",
+        "lat": null,
+        "lng": null,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "unknown-region-temporary",
+        "Estacion": "Hotel Santo Domingo",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/unknown-region-temporary/unknown-city-temporary/hotel-santo-domingo-estacionamiento-2-hotel-santo-domingo"
+      },
+      "sb": {
+        "id": "6607cddc-1e2d-4d5e-9464-b0cae7c03953",
+        "region": "Costa",
+        "province": "Santo Domingo de los Tsáchilas",
+        "city_or_canton": "Santo Domingo",
+        "name": "KFC Santo Domingo — EVINKA CONECT",
+        "speed": "🟢 RÁPIDA",
+        "charger_type": "Tipo 2 + CS2",
+        "power": "7kW / 60kW",
+        "schedule": "24/7",
+        "cost_type": "Pago",
+        "gps_link": "https://maps.app.goo.gl/jRtjsbneP1PCLcXx8",
+        "lat": -0.2627128,
+        "lng": -79.114653,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "unknown-region-temporary",
+        "Estacion": "Samari Spa Resort",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/unknown-region-temporary/unknown-city-temporary/samari-spa-resort-av-de-las-amazonas-km-1-via-al-puyo"
+      },
+      "sb": {
+        "id": "3fa82c95-512a-405e-b027-c8824fd1888d",
+        "region": "Sierra",
+        "province": "Tungurahua",
+        "city_or_canton": "Baños",
+        "name": "Samarí Spa Resort",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "24/7",
+        "cost_type": "Gratuito*",
+        "gps_link": "https://maps.app.goo.gl/eEqEhDuHmsqdGzCr6",
+        "lat": -1.3953649,
+        "lng": -78.4106707,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "otavalo",
+        "Estacion": "Hosteria Cabañas del Lago",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/otavalo/san-pablo/hosteria-cabanas-del-lago-calle-lago"
+      },
+      "sb": {
+        "id": "426bac89-e9f3-414f-a9ad-8efaa6a9d236",
+        "region": "Sierra",
+        "province": "Imbabura",
+        "city_or_canton": "Otavalo",
+        "name": "Hostería Cabañas del Lago",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "24/7",
+        "cost_type": "Gratuito*",
+        "gps_link": "https://maps.app.goo.gl/iR1Ch5KUzzu5n9tz7",
+        "lat": 0.2104164,
+        "lng": -78.2108468,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "canton-pelileo",
+        "Estacion": "Gasolinera Panamericana",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "CCS2, CHAdeMO",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/canton-pelileo/pelileo/gasolinera-panamericana-av-confraternidad"
+      },
+      "sb": {
+        "id": "f3626d32-4628-4db3-97c3-471a5178bd8f",
+        "region": "Sierra",
+        "province": "Tungurahua",
+        "city_or_canton": "Pelileo",
+        "name": "Gasolinera PRIMAX Panamericana — Electrolinera",
+        "speed": "🟢 RÁPIDA",
+        "charger_type": "CS1 + CS2 + CHAdeMO + Mennekes",
+        "power": "50kW",
+        "schedule": "24/7",
+        "cost_type": "Pago",
+        "gps_link": "https://maps.app.goo.gl/TxtHtmJr1eAE1btV8",
+        "lat": -1.3263946,
+        "lng": -78.5442206,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "zaruma",
+        "Estacion": "Hotel Romeria",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "Desconocido",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/zaruma/zaruma/hotel-romeria-calle-bolivar"
+      },
+      "sb": {
+        "id": "83e531b2-ce75-49fb-b1d9-2be276ea9ca8",
+        "region": "Costa",
+        "province": "Santa Elena",
+        "city_or_canton": "Salinas",
+        "name": "Hotel Colón",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "24/7",
+        "cost_type": "Gratuito*",
+        "gps_link": "https://maps.app.goo.gl/FUabaPtKtBG6LKiG6",
+        "lat": -2.2057114,
+        "lng": -80.9643114,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "pedro-vicente-maldonado",
+        "Estacion": "Hosteria Balcon Alcala",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/pedro-vicente-maldonado/unknown-city-temporary/hosteria-balcon-alcala"
+      },
+      "sb": {
+        "id": "9746d099-22b2-40d5-a730-4473c2474ca0",
+        "region": "Sierra",
+        "province": "Pichincha",
+        "city_or_canton": "Pedro Vicente Maldonado",
+        "name": "Hotel Balcón Alcalá",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "24/7",
+        "cost_type": "Gratuito*",
+        "gps_link": "https://maps.app.goo.gl/SGs3sQJCvmrD12C19",
+        "lat": 0.0985133,
+        "lng": -79.1180121,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "la-concordia",
+        "Estacion": "Gasolinera Ultra NRG",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/la-concordia/unknown-city-temporary/gasolinera-ultra-nrg-e20"
+      },
+      "sb": {
+        "id": "a4259c21-7e5a-422d-ad40-d7a6d2ba91e3",
+        "region": "Costa",
+        "province": "Santo Domingo de los Tsáchilas",
+        "city_or_canton": "La Concordia",
+        "name": "Ultra NRG Gasolinera Multiservicios",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "24/7",
+        "cost_type": "Consultar",
+        "gps_link": "https://maps.app.goo.gl/utE8PqRRsRtekjDk8",
+        "lat": -0.0148146,
+        "lng": -79.3826533,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "metropolitan-district-of-quito",
+        "Estacion": "Gasolinera Puma",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "Desconocido",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/metropolitan-district-of-quito/quito/gasolinera-puma-gasolinera-puma"
+      },
+      "sb": {
+        "id": "f2a693cb-bf66-4711-8656-440488552596",
+        "region": "Sierra",
+        "province": "Chimborazo",
+        "city_or_canton": "Cajabamba",
+        "name": "Gasolinera Primax",
+        "speed": "🔴 LENTO",
+        "charger_type": "110V 16A",
+        "power": "1.5kW",
+        "schedule": "24/7",
+        "cost_type": "Gratuito*",
+        "gps_link": "https://maps.app.goo.gl/trnWEiyHAnTHKNrQA",
+        "lat": -1.7258022,
+        "lng": -78.7635487,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "tena",
+        "Estacion": "Hamadryade Lodge",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/tena/unknown-city-temporary/hamadryade-lodge-via-sin-nombre"
+      },
+      "sb": {
+        "id": "aadf828a-f705-492c-9935-119678cf69fb",
+        "region": "Amazonía",
+        "province": "Napo",
+        "city_or_canton": "Tena",
+        "name": "Hamadryade Lodge Hotel",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "24/7",
+        "cost_type": "Gratuito*",
+        "gps_link": "https://maps.app.goo.gl/4hZXQidowSkQpncJA",
+        "lat": -1.0349355,
+        "lng": -77.7287603,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "guano",
+        "Estacion": "Hostería La Andaluza",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/guano/unknown-city-temporary/hosteria-la-andaluza-km-16-comunidad-chuquipogio-via-a-quito-riobamba"
+      },
+      "sb": {
+        "id": "08cb80f7-ce09-4280-b123-9c2c943f39a3",
+        "region": "Sierra",
+        "province": "Chimborazo",
+        "city_or_canton": "Guano",
+        "name": "Hostería Andaluza",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "24/7",
+        "cost_type": "Gratuito*",
+        "gps_link": "https://maps.app.goo.gl/2QURzJfjjmJpywZT8",
+        "lat": -1.5383734,
+        "lng": -78.7352718,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "canton-daule",
+        "Estacion": "Parque de la paz",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/canton-daule/unknown-city-temporary/parque-de-la-paz-"
+      },
+      "sb": {
+        "id": "eee3205c-fc5f-4cfd-ab17-90946cdbc0c5",
+        "region": "Costa",
+        "province": "Guayas",
+        "city_or_canton": "Daule",
+        "name": "Parque La Paz Aurora",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "3.5kW",
+        "schedule": "24/7",
+        "cost_type": "Gratuito*",
+        "gps_link": "https://maps.app.goo.gl/S8JCDE5z7poBjfSe8",
+        "lat": -2.0508396,
+        "lng": -79.9044505,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "la-troncal",
+        "Estacion": "Punto De Carga La Troncal",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/la-troncal/la-troncal/punto-de-carga-la-troncal-avenida-25-de-agosto"
+      },
+      "sb": {
+        "id": "dc58dd1b-6d3e-4e15-9ed3-3f706615f382",
+        "region": "Costa",
+        "province": "Guayas",
+        "city_or_canton": "Durán",
+        "name": "Punto Carga Comunidad BYD — Panorama",
+        "speed": "⚫ PRIVADO",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "6am-11pm — Agendar",
+        "cost_type": "Solo miembros BYD",
+        "gps_link": "RESERVADO - SOLO MIEMBROS BYD",
+        "lat": null,
+        "lng": null,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "san-miguel",
+        "Estacion": "Estacion de Servicio los Arrayanes",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "Desconocido",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/san-miguel/san-pablo/estacion-de-servicio-los-arrayanes-via-guaranda-babahoyo"
+      },
+      "sb": {
+        "id": "95daed10-3c5d-42e9-924d-469b980b8e65",
+        "region": "Sierra",
+        "province": "Bolívar",
+        "city_or_canton": "San Miguel",
+        "name": "Estación de Servicio Los Arrayanes",
+        "speed": "🟡 NORMAL",
+        "charger_type": "220V 16A Tipo Chino",
+        "power": "3.5kW",
+        "schedule": "24/7",
+        "cost_type": "Gratuito*",
+        "gps_link": "https://maps.app.goo.gl/uhWUeLKxuYiM1nZC9",
+        "lat": -1.8050354,
+        "lng": -79.0909551,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    }
+  ],
+  "differentType": [
+    {
+      "em": {
+        "Provincia": "distrito-metropolitano-de-quito",
+        "Estacion": "Byd EVINKA",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/distrito-metropolitano-de-quito/quito/byd-evinka-ruta-viva"
+      },
+      "sb": {
+        "id": "52bb3854-3ca7-4975-b657-11508afe8241",
+        "region": "Costa",
+        "province": "Guayas",
+        "city_or_canton": "Guayaquil",
+        "name": "BYD Américas",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "Lun-Vie 9am-6pm / Sáb 10am-2pm",
+        "cost_type": "Pago",
+        "gps_link": "https://maps.app.goo.gl/h4JYzTDghEkhpUUq6",
+        "lat": -2.1428356,
+        "lng": -79.8843857,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "cuenca",
+        "Estacion": "Centro Comercial Milenium Plaza",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/cuenca/cuenca/centro-comercial-milenium-plaza-cornelio-merchan"
+      },
+      "sb": {
+        "id": "5a2a5439-5ae4-4703-a268-324ce0f2127e",
+        "region": "Sierra",
+        "province": "Azuay",
+        "city_or_canton": "Cuenca",
+        "name": "Centro Comercial Milenium Plaza",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 1 + Tipo 2",
+        "power": "7kW",
+        "schedule": "10am-10pm",
+        "cost_type": "Gratuito*",
+        "gps_link": "https://maps.app.goo.gl/djr57sEAifRfoMht8",
+        "lat": -2.9045589,
+        "lng": -79.0057164,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "cuenca",
+        "Estacion": "Regional Centro Sur",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/cuenca/cuenca/regional-centro-sur-alfredo-pareja"
+      },
+      "sb": {
+        "id": "9bdb3055-af4f-4448-8f07-de1c18b02c88",
+        "region": "Sierra",
+        "province": "Azuay",
+        "city_or_canton": "Cuenca",
+        "name": "Empresa Eléctrica Regional Centro Sur",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "Tarde",
+        "cost_type": "Gratuito*",
+        "gps_link": "https://maps.app.goo.gl/LAHce2fBoKvfGiXe9",
+        "lat": -2.9047011,
+        "lng": -78.9874177,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "cuenca",
+        "Estacion": "BYD Cuenca",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "CCS2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/cuenca/cuenca/byd-cuenca-avenue-espana"
+      },
+      "sb": {
+        "id": "b3cdf531-38ac-4da2-8de8-d611619c35e8",
+        "region": "Sierra",
+        "province": "Azuay",
+        "city_or_canton": "Cuenca",
+        "name": "BYD Cuenca",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "Lun-Vie 9am-6pm / Sáb 10am-2pm",
+        "cost_type": "Pago",
+        "gps_link": "https://maps.app.goo.gl/jGRZWCi2Yxd3RPuW8",
+        "lat": -2.8942,
+        "lng": -78.9969749,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "santo-domingo",
+        "Estacion": "BYD - Evinka - PD",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/santo-domingo/unknown-city-temporary/byd-evinka-pd-via-aloag-santo-domingo"
+      },
+      "sb": {
+        "id": "f6300159-85a6-46ff-a82d-e060ab72e4e0",
+        "region": "Costa",
+        "province": "Santo Domingo de los Tsáchilas",
+        "city_or_canton": "Santo Domingo",
+        "name": "BYD Bomboli Shopping — EVINKA CONECT",
+        "speed": "🟢 RÁPIDA",
+        "charger_type": "Tipo 2 + CS2",
+        "power": "7kW / 60kW",
+        "schedule": "Lun-Dom 10am-9pm",
+        "cost_type": "Pago",
+        "gps_link": "https://maps.app.goo.gl/yDGX4RRYnq42dWWA7",
+        "lat": -0.2536396,
+        "lng": -79.2212342,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "santo-domingo",
+        "Estacion": "Plug & Drive Santo Domingo",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/santo-domingo/unknown-city-temporary/plug-drive-santo-domingo-via-aloag-santo-domingo"
+      },
+      "sb": {
+        "id": "6607cddc-1e2d-4d5e-9464-b0cae7c03953",
+        "region": "Costa",
+        "province": "Santo Domingo de los Tsáchilas",
+        "city_or_canton": "Santo Domingo",
+        "name": "KFC Santo Domingo — EVINKA CONECT",
+        "speed": "🟢 RÁPIDA",
+        "charger_type": "Tipo 2 + CS2",
+        "power": "7kW / 60kW",
+        "schedule": "24/7",
+        "cost_type": "Pago",
+        "gps_link": "https://maps.app.goo.gl/jRtjsbneP1PCLcXx8",
+        "lat": -0.2627128,
+        "lng": -79.114653,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "machala",
+        "Estacion": "DePrati Machala",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/machala/machala/deprati-machala-e583"
+      },
+      "sb": {
+        "id": "2f4ec7eb-11c9-4be3-99b8-4d044f3a5feb",
+        "region": "Costa",
+        "province": "El Oro",
+        "city_or_canton": "Machala",
+        "name": "BYD Machala",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "Lun-Vie 9am-6pm / Sáb 10am-2pm",
+        "cost_type": "Pago",
+        "gps_link": "https://maps.app.goo.gl/nYVuRWzGMaoJ6Hv18",
+        "lat": -3.2847,
+        "lng": -79.9232749,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "machala",
+        "Estacion": "BYD MACHALA",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/machala/machala/byd-machala-avenida-25-de-junio"
+      },
+      "sb": {
+        "id": "2f4ec7eb-11c9-4be3-99b8-4d044f3a5feb",
+        "region": "Costa",
+        "province": "El Oro",
+        "city_or_canton": "Machala",
+        "name": "BYD Machala",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "Lun-Vie 9am-6pm / Sáb 10am-2pm",
+        "cost_type": "Pago",
+        "gps_link": "https://maps.app.goo.gl/nYVuRWzGMaoJ6Hv18",
+        "lat": -3.2847,
+        "lng": -79.9232749,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "riobamba",
+        "Estacion": "Asiauto Riobamba",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/riobamba/riobamba/asiauto-riobamba-avenida-lizarzaburu"
+      },
+      "sb": {
+        "id": "0830d017-3672-4838-87cc-d3866008ad05",
+        "region": "Sierra",
+        "province": "Chimborazo",
+        "city_or_canton": "Riobamba",
+        "name": "BYD Riobamba",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "Lun-Vie 9am-6pm / Sáb 10am-2pm",
+        "cost_type": "Pago",
+        "gps_link": "https://maps.app.goo.gl/4NBjmt4Nd2K9uSGLA",
+        "lat": -1.6422859,
+        "lng": -78.6787329,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "samborondon",
+        "Estacion": "PLAZA LAGOS",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/samborondon/samborondon/plaza-lagos-plaza-lagos"
+      },
+      "sb": {
+        "id": "3441be5d-03be-4384-8860-b924a9012d5b",
+        "region": "Costa",
+        "province": "Guayas",
+        "city_or_canton": "Samborondón",
+        "name": "Plaza Lagos",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "8am-11pm",
+        "cost_type": "Gratuito*",
+        "gps_link": "https://maps.app.goo.gl/ZzqYfXX2Dj2dnfpq8",
+        "lat": -2.1262174,
+        "lng": -79.8641962,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "samborondon",
+        "Estacion": "Márbol Green Plaza",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/samborondon/samborondon/marbol-green-plaza-avenida-samborondon"
+      },
+      "sb": {
+        "id": "cc76bbf6-ea16-48e1-bb33-cc7ad3e8ee6c",
+        "region": "Costa",
+        "province": "Guayas",
+        "city_or_canton": "Samborondón",
+        "name": "Marbol Plaza",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "8am-10pm",
+        "cost_type": "Gratuito*",
+        "gps_link": "https://maps.app.goo.gl/ZzqYfXX2Dj2dnfpq8",
+        "lat": -2.1262174,
+        "lng": -79.8641962,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "salinas",
+        "Estacion": "Hotel Colón Salinas",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/salinas/salinas/hotel-colon-salinas-hotel-colon-salinas"
+      },
+      "sb": {
+        "id": "83e531b2-ce75-49fb-b1d9-2be276ea9ca8",
+        "region": "Costa",
+        "province": "Santa Elena",
+        "city_or_canton": "Salinas",
+        "name": "Hotel Colón",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "24/7",
+        "cost_type": "Gratuito*",
+        "gps_link": "https://maps.app.goo.gl/FUabaPtKtBG6LKiG6",
+        "lat": -2.2057114,
+        "lng": -80.9643114,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "canton-banos",
+        "Estacion": "Hotel Spa Miramelindo",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/canton-banos/unknown-city-temporary/hotel-spa-miramelindo-calle-la-playa"
+      },
+      "sb": {
+        "id": "a2392de5-cc5c-4bd5-9326-450623a4504e",
+        "region": "Sierra",
+        "province": "Tungurahua",
+        "city_or_canton": "Baños",
+        "name": "Hotel Spa Miramelindo",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "24/7",
+        "cost_type": "Gratuito*",
+        "gps_link": "https://maps.app.goo.gl/3RiTcVX5p5pWcc9q9",
+        "lat": -1.40019,
+        "lng": -78.3003427,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "puerto-quito",
+        "Estacion": "Primax Puerto Quito",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/puerto-quito/puerto-quito/primax-puerto-quito-via-a-los-bancos"
+      },
+      "sb": {
+        "id": "51419f12-84f3-42de-89bf-e20577dc6286",
+        "region": "Costa",
+        "province": "Guayas",
+        "city_or_canton": "Guayaquil",
+        "name": "Primax Puerto Azul",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 1 Pared",
+        "power": "7kW",
+        "schedule": "24/7",
+        "cost_type": "Gratuito*",
+        "gps_link": "https://maps.app.goo.gl/6rCv1ZnmQ7NwcUmr8",
+        "lat": -2.187429,
+        "lng": -79.9741114,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "puerto-quito",
+        "Estacion": "The River House - Charging Station",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "GB/T, TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/puerto-quito/unknown-city-temporary/the-river-house-charging-station-river-house-road"
+      },
+      "sb": {
+        "id": "27597453-d0a0-44f2-80bc-21bf08b2144f",
+        "region": "Sierra",
+        "province": "Pichincha",
+        "city_or_canton": "Puerto Quito",
+        "name": "The River House Lodge — EVINKA CONECT",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "24/7",
+        "cost_type": "Pago",
+        "gps_link": "https://maps.app.goo.gl/HkjQ5GER9DoaWz1c9",
+        "lat": 0.1124661,
+        "lng": -79.2321931,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "latacunga",
+        "Estacion": "Pepas Restaurante",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/latacunga/unknown-city-temporary/pepas-restaurante-antonia-vela"
+      },
+      "sb": {
+        "id": "30fadd9a-1ca0-478d-9b66-841b4c0a2b00",
+        "region": "Sierra",
+        "province": "Cotopaxi",
+        "city_or_canton": "Latacunga",
+        "name": "Restaurante Pepas",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "24/7",
+        "cost_type": "Gratuito*",
+        "gps_link": "https://maps.app.goo.gl/534wd5UbkWEZk84E9",
+        "lat": -0.9227482,
+        "lng": -78.6226413,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "loja",
+        "Estacion": "Estadio Reina del Cisne",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "GB/T",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/loja/loja/estadio-reina-del-cisne-lourdes"
+      },
+      "sb": {
+        "id": "1a27cea2-474d-43fe-8eea-9877a8e0baf8",
+        "region": "Sierra",
+        "province": "Loja",
+        "city_or_canton": "Loja",
+        "name": "Estadio Federativo Reina de El Cisne — Electrolinera",
+        "speed": "🟢 RÁPIDA",
+        "charger_type": "CHAdeMO (necesita adaptador)",
+        "power": "40kW",
+        "schedule": "24/7",
+        "cost_type": "Pago",
+        "gps_link": "https://maps.app.goo.gl/LgcCetriFRAptYRT7",
+        "lat": -4.000992,
+        "lng": -79.1965307,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "quininde",
+        "Estacion": "Lubricadora Brito",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "CCS2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/quininde/unknown-city-temporary/lubricadora-brito-e20"
+      },
+      "sb": {
+        "id": "bf7fb2d0-7bc9-4ee1-8659-144928a7a23b",
+        "region": "Costa",
+        "province": "Esmeraldas",
+        "city_or_canton": "La Unión",
+        "name": "Lubricentro Brito",
+        "speed": "🟡 NORMAL",
+        "charger_type": "220V 32A Pata Gallina",
+        "power": "7kW",
+        "schedule": "24/7",
+        "cost_type": "Gratuito*",
+        "gps_link": "https://maps.app.goo.gl/F2TgyEFGJw1hRH716",
+        "lat": null,
+        "lng": null,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "unknown-region-temporary",
+        "Estacion": "Hotel Santo Domingo",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/unknown-region-temporary/unknown-city-temporary/hotel-santo-domingo-estacionamiento-2-hotel-santo-domingo"
+      },
+      "sb": {
+        "id": "6607cddc-1e2d-4d5e-9464-b0cae7c03953",
+        "region": "Costa",
+        "province": "Santo Domingo de los Tsáchilas",
+        "city_or_canton": "Santo Domingo",
+        "name": "KFC Santo Domingo — EVINKA CONECT",
+        "speed": "🟢 RÁPIDA",
+        "charger_type": "Tipo 2 + CS2",
+        "power": "7kW / 60kW",
+        "schedule": "24/7",
+        "cost_type": "Pago",
+        "gps_link": "https://maps.app.goo.gl/jRtjsbneP1PCLcXx8",
+        "lat": -0.2627128,
+        "lng": -79.114653,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "unknown-region-temporary",
+        "Estacion": "Samari Spa Resort",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/unknown-region-temporary/unknown-city-temporary/samari-spa-resort-av-de-las-amazonas-km-1-via-al-puyo"
+      },
+      "sb": {
+        "id": "3fa82c95-512a-405e-b027-c8824fd1888d",
+        "region": "Sierra",
+        "province": "Tungurahua",
+        "city_or_canton": "Baños",
+        "name": "Samarí Spa Resort",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "24/7",
+        "cost_type": "Gratuito*",
+        "gps_link": "https://maps.app.goo.gl/eEqEhDuHmsqdGzCr6",
+        "lat": -1.3953649,
+        "lng": -78.4106707,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "otavalo",
+        "Estacion": "Hosteria Cabañas del Lago",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/otavalo/san-pablo/hosteria-cabanas-del-lago-calle-lago"
+      },
+      "sb": {
+        "id": "426bac89-e9f3-414f-a9ad-8efaa6a9d236",
+        "region": "Sierra",
+        "province": "Imbabura",
+        "city_or_canton": "Otavalo",
+        "name": "Hostería Cabañas del Lago",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "24/7",
+        "cost_type": "Gratuito*",
+        "gps_link": "https://maps.app.goo.gl/iR1Ch5KUzzu5n9tz7",
+        "lat": 0.2104164,
+        "lng": -78.2108468,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "pedro-vicente-maldonado",
+        "Estacion": "Hosteria Balcon Alcala",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/pedro-vicente-maldonado/unknown-city-temporary/hosteria-balcon-alcala"
+      },
+      "sb": {
+        "id": "9746d099-22b2-40d5-a730-4473c2474ca0",
+        "region": "Sierra",
+        "province": "Pichincha",
+        "city_or_canton": "Pedro Vicente Maldonado",
+        "name": "Hotel Balcón Alcalá",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "24/7",
+        "cost_type": "Gratuito*",
+        "gps_link": "https://maps.app.goo.gl/SGs3sQJCvmrD12C19",
+        "lat": 0.0985133,
+        "lng": -79.1180121,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "la-concordia",
+        "Estacion": "Gasolinera Ultra NRG",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/la-concordia/unknown-city-temporary/gasolinera-ultra-nrg-e20"
+      },
+      "sb": {
+        "id": "a4259c21-7e5a-422d-ad40-d7a6d2ba91e3",
+        "region": "Costa",
+        "province": "Santo Domingo de los Tsáchilas",
+        "city_or_canton": "La Concordia",
+        "name": "Ultra NRG Gasolinera Multiservicios",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "24/7",
+        "cost_type": "Consultar",
+        "gps_link": "https://maps.app.goo.gl/utE8PqRRsRtekjDk8",
+        "lat": -0.0148146,
+        "lng": -79.3826533,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "tena",
+        "Estacion": "Hamadryade Lodge",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/tena/unknown-city-temporary/hamadryade-lodge-via-sin-nombre"
+      },
+      "sb": {
+        "id": "aadf828a-f705-492c-9935-119678cf69fb",
+        "region": "Amazonía",
+        "province": "Napo",
+        "city_or_canton": "Tena",
+        "name": "Hamadryade Lodge Hotel",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "24/7",
+        "cost_type": "Gratuito*",
+        "gps_link": "https://maps.app.goo.gl/4hZXQidowSkQpncJA",
+        "lat": -1.0349355,
+        "lng": -77.7287603,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "guano",
+        "Estacion": "Hostería La Andaluza",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/guano/unknown-city-temporary/hosteria-la-andaluza-km-16-comunidad-chuquipogio-via-a-quito-riobamba"
+      },
+      "sb": {
+        "id": "08cb80f7-ce09-4280-b123-9c2c943f39a3",
+        "region": "Sierra",
+        "province": "Chimborazo",
+        "city_or_canton": "Guano",
+        "name": "Hostería Andaluza",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "24/7",
+        "cost_type": "Gratuito*",
+        "gps_link": "https://maps.app.goo.gl/2QURzJfjjmJpywZT8",
+        "lat": -1.5383734,
+        "lng": -78.7352718,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "canton-daule",
+        "Estacion": "Parque de la paz",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/canton-daule/unknown-city-temporary/parque-de-la-paz-"
+      },
+      "sb": {
+        "id": "eee3205c-fc5f-4cfd-ab17-90946cdbc0c5",
+        "region": "Costa",
+        "province": "Guayas",
+        "city_or_canton": "Daule",
+        "name": "Parque La Paz Aurora",
+        "speed": "🟡 NORMAL",
+        "charger_type": "Tipo 2 Pared",
+        "power": "3.5kW",
+        "schedule": "24/7",
+        "cost_type": "Gratuito*",
+        "gps_link": "https://maps.app.goo.gl/S8JCDE5z7poBjfSe8",
+        "lat": -2.0508396,
+        "lng": -79.9044505,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    },
+    {
+      "em": {
+        "Provincia": "la-troncal",
+        "Estacion": "Punto De Carga La Troncal",
+        "Ubicacion": "Desconocido",
+        "TipoCargador": "TYPE 2",
+        "URL": "https://www.electromaps.com/es/puntos-carga/ecuador/la-troncal/la-troncal/punto-de-carga-la-troncal-avenida-25-de-agosto"
+      },
+      "sb": {
+        "id": "dc58dd1b-6d3e-4e15-9ed3-3f706615f382",
+        "region": "Costa",
+        "province": "Guayas",
+        "city_or_canton": "Durán",
+        "name": "Punto Carga Comunidad BYD — Panorama",
+        "speed": "⚫ PRIVADO",
+        "charger_type": "Tipo 2 Pared",
+        "power": "7kW",
+        "schedule": "6am-11pm — Agendar",
+        "cost_type": "Solo miembros BYD",
+        "gps_link": "RESERVADO - SOLO MIEMBROS BYD",
+        "lat": null,
+        "lng": null,
+        "created_at": "2026-05-31T00:38:43.281051+00:00",
+        "updated_at": "2026-05-31T00:38:43.281051+00:00",
+        "charge_type_v": null
+      }
+    }
+  ]
+}

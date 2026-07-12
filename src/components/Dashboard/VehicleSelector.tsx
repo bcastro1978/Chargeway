@@ -2,7 +2,7 @@
 
 import React, { useMemo } from 'react';
 import { Car, ChevronDown } from 'lucide-react';
-import vehiclesData from '../../lib/vehicles.json';
+import { useTripStore } from '@/lib/store/useTripStore';
 
 export interface Vehicle {
   id: string;
@@ -29,8 +29,6 @@ interface VehicleSelectorProps {
   onOpenProfile: () => void;
 }
 
-import { useTripStore } from '@/lib/store/useTripStore';
-
 export const VehicleSelector: React.FC<VehicleSelectorProps> = ({ 
   selectedId, 
   onSelect,
@@ -40,20 +38,24 @@ export const VehicleSelector: React.FC<VehicleSelectorProps> = ({
   onOpenProfile
 }) => {
   const storeSelectedVehicle = useTripStore((state) => state.selectedVehicle);
+  const vehiclesData = useTripStore((state) => state.globalVehicles);
+  const isVehiclesLoading = useTripStore((state) => state.isVehiclesLoading);
   const selectedVehiclePhoto = storeSelectedVehicle?.photoUrl;
   
   const selectedVehicle = vehiclesData.find(v => v.id === selectedId) || vehiclesData[0];
   
   // Extract unique brands
   const brands = useMemo(() => {
+    if (!vehiclesData.length) return [];
     const uniqueBrands = Array.from(new Set(vehiclesData.map(v => v.brand)));
     return uniqueBrands.sort((a, b) => a.localeCompare(b));
-  }, []);
+  }, [vehiclesData]);
 
   // Extract models for current brand
   const modelsForBrand = useMemo(() => {
+    if (!selectedVehicle) return [];
     return vehiclesData.filter(v => v.brand === selectedVehicle.brand);
-  }, [selectedVehicle.brand]);
+  }, [selectedVehicle?.brand, vehiclesData]);
 
   const handleBrandChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newBrand = e.target.value;
@@ -70,6 +72,14 @@ export const VehicleSelector: React.FC<VehicleSelectorProps> = ({
       onSelect(vehicle as Vehicle);
     }
   };
+
+  if (isVehiclesLoading || !selectedVehicle) {
+    return (
+      <div className="glass-card animate-fade-in" style={{ padding: 'var(--spacing-md)', display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '180px' }}>
+        <p className="text-white/50 text-sm">Cargando vehículos...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="glass-card animate-fade-in" style={{ padding: 'var(--spacing-md)' }}>

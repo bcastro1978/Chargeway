@@ -4,12 +4,13 @@ import { Waypoint } from '@/components/Dashboard/RouteSearch';
 import { TripPlan, generateTripPlan } from '@/lib/route-orchestrator';
 import { Vehicle } from '@/components/Dashboard/VehicleSelector';
 import { geocodePlace } from '@/lib/services/mapbox';
-import vehicles from '@/lib/vehicles.json';
 import { supabase } from '@/lib/supabase';
 import { ConsentChoices, TERMS_VERSION, PRIVACY_VERSION } from '@/components/Dashboard/ConsentModal';
 
 interface TripState {
-  selectedVehicle: Vehicle;
+  globalVehicles: Vehicle[];
+  isVehiclesLoading: boolean;
+  selectedVehicle: Vehicle | null;
   soc: number;
   routePoints: Waypoint[];
   tripPlan: TripPlan | null;
@@ -33,6 +34,7 @@ interface TripState {
   loginWithGoogle: () => Promise<void>;
   logout: () => Promise<void>;
   checkSession: () => Promise<void>;
+  fetchGlobalVehicles: () => Promise<void>;
   saveTripToDatabase: () => Promise<void>;
   favoriteLocations: Waypoint[];
   currentDistance: number;
@@ -48,7 +50,9 @@ interface TripState {
 export const useTripStore = create<TripState>()(
   persist(
     (set, get) => ({
-  selectedVehicle: null as any,
+  globalVehicles: [],
+  isVehiclesLoading: true,
+  selectedVehicle: null,
   soc: 0.65,
   routePoints: [
     { id: 'origin', name: '', lat: 0, lng: 0 },
@@ -138,6 +142,59 @@ export const useTripStore = create<TripState>()(
     if (error) console.error('Error logging in:', error.message);
   },
 
+  fetchGlobalVehicles: async () => {
+    set({ isVehiclesLoading: true });
+    try {
+      const { data, error } = await supabase
+        .from('vehicle_models')
+        .select(`
+          id, name, usable_battery_kwh, drag_coefficient, frontal_area_m2, 
+          weight_kg, peak_charging_kw, wltp_range_km, charger_type, slug, 
+          commercial_range_km, commercial_standard, certificado_wltp,
+          vehicle_brands(name, logo_url)
+        `)
+        .eq('is_active', true)
+        .order('name');
+        
+      if (error) throw error;
+      
+      const mappedVehicles: Vehicle[] = (data || []).map(row => ({
+        id: row.slug || row.id,
+        model: row.name,
+        brand: (row.vehicle_brands as any)?.name || 'Unknown',
+        photoUrl: (row.vehicle_brands as any)?.logo_url || undefined,
+        specs: {
+          usable_battery_kwh: row.usable_battery_kwh,
+          wltp_range_km: row.wltp_range_km,
+          drag_coefficient: row.drag_coefficient,
+          frontal_area_m2: row.frontal_area_m2,
+          weight_kg: row.weight_kg,
+          peak_charging_kw: row.peak_charging_kw,
+          charger_type: row.charger_type,
+          commercial_range_km: row.commercial_range_km,
+          commercial_standard: row.commercial_standard,
+          certificado_wltp: row.certificado_wltp
+        }
+      }));
+      
+      // Sort primarily by brand, then by model
+      mappedVehicles.sort((a, b) => {
+        if (a.brand !== b.brand) return a.brand.localeCompare(b.brand);
+        return a.model.localeCompare(b.model);
+      });
+
+      set({ globalVehicles: mappedVehicles, isVehiclesLoading: false });
+      
+      const { selectedVehicle } = get();
+      if (!selectedVehicle && mappedVehicles.length > 0) {
+        set({ selectedVehicle: mappedVehicles[0] });
+      }
+    } catch (error) {
+      console.error('Error fetching global vehicles:', error);
+      set({ isVehiclesLoading: false });
+    }
+  },
+
   logout: async () => {
     const { error } = await supabase.auth.signOut();
     if (!error) {
@@ -152,21 +209,6 @@ export const useTripStore = create<TripState>()(
     try {
       /*
       if (process.env.NODE_ENV === 'development') {
-        set({
-          user: {
-            id: 'dev-mock-id',
-            email: 'dev@chargeway.ec',
-            full_name: 'Desarrollador Local',
-            avatar_url: ''
-          },
-          selectedVehicle: vehicles[0] as Vehicle,
-          needsConsent: false,
-          isLoadingUser: false
-        });
-        return;
-      }
-      */
-
       const { data: { session } } = await supabase.auth.getSession();
       if (session?.user) {
         const { data: profile } = await supabase
@@ -213,33 +255,38 @@ export const useTripStore = create<TripState>()(
               }
             } as Vehicle;
           } else {
-            // Fallback to query the user's last trip or default to first vehicle
             const { data: lastTrip } = await supabase
               .from('trips')
               .select('vehicle_model, start_soc')
               .eq('user_id', session.user.id)
               .order('created_at', { ascending: false })
               .limit(1)
-              .single();
+              .maybeSingle();
 
             if (lastTrip && lastTrip.vehicle_model) {
+              const { globalVehicles, fetchGlobalVehicles } = get();
+              let vehicles = globalVehicles;
+              if (vehicles.length === 0) {
+                await fetchGlobalVehicles();
+                vehicles = get().globalVehicles;
+              }
               const foundVehicle = vehicles.find(v => `${v.brand} ${v.model}` === lastTrip.vehicle_model);
               if (foundVehicle) {
                 loadedState.selectedVehicle = foundVehicle as Vehicle;
-              } else {
-                loadedState.selectedVehicle = vehicles[0] as Vehicle;
+              } else if (vehicles.length > 0) {
+                loadedState.selectedVehicle = vehicles[0];
               }
               if (lastTrip.start_soc !== null && lastTrip.start_soc !== undefined) {
                 loadedState.soc = Number(lastTrip.start_soc);
               }
             } else {
-              loadedState.selectedVehicle = vehicles[0] as Vehicle;
+              const vehicles = get().globalVehicles;
+              if (vehicles.length > 0) loadedState.selectedVehicle = vehicles[0];
             }
           }
           
           set(loadedState);
 
-          // Check if user has accepted current version of terms/privacy
           const { data: existingConsent } = await supabase
             .from('consent_records')
             .select('id, terms_version, privacy_version, accepted_terms, accepted_privacy, accepted_statistical_use')
@@ -257,11 +304,10 @@ export const useTripStore = create<TripState>()(
 
           set({ consentRecord: existingConsent, needsConsent: !hasValidConsent });
           
-          // Load favorites
           await get().fetchFavorites();
         } else {
-          // New user – no profile yet, must accept consent before continuing
           const meta = session.user.user_metadata;
+          const vehicles = get().globalVehicles;
           set({
             user: {
               id: session.user.id,
@@ -269,16 +315,21 @@ export const useTripStore = create<TripState>()(
               full_name: meta?.full_name || meta?.name || '',
               avatar_url: meta?.avatar_url || meta?.picture || ''
             },
-            selectedVehicle: vehicles[0] as Vehicle,
+            selectedVehicle: vehicles.length > 0 ? vehicles[0] : null,
             needsConsent: true,
           });
         }
       } else {
-        set({ user: null, selectedVehicle: vehicles[0] as Vehicle });
+        const { globalVehicles, fetchGlobalVehicles } = get();
+        let vehicles = globalVehicles;
+        if (vehicles.length === 0) {
+          await fetchGlobalVehicles();
+          vehicles = get().globalVehicles;
+        }
+        set({ user: null, selectedVehicle: vehicles.length > 0 ? vehicles[0] : null });
       }
     } catch (err) {
       console.error('Error checking session:', err);
-      set({ selectedVehicle: vehicles[0] as Vehicle });
     } finally {
       set({ isLoadingUser: false });
     }

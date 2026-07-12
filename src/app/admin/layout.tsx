@@ -16,7 +16,8 @@ import {
 
 const NAV = [
   { href: '/admin', label: 'Resumen', icon: LayoutDashboard, exact: true },
-  { href: '/admin/fabricantes', label: 'Fabricantes EV', icon: Car },
+  { href: '/admin/vehiculos', label: 'Vehículos', icon: Car },
+  { href: '/admin/fabricantes', label: 'Fabricantes EV', icon: Activity },
   { href: '/admin/operadores', label: 'Operadores de Carga', icon: Zap },
 ];
 
