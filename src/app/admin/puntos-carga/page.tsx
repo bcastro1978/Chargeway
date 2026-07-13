@@ -25,6 +25,7 @@ interface ChargingStation {
 
 export default function PuntosCargaAdmin() {
   const [stations, setStations] = useState<ChargingStation[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [speedFilter, setSpeedFilter] = useState('all');
