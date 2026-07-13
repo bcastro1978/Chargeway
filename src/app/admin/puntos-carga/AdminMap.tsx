@@ -76,7 +76,7 @@ export const AdminMap: React.FC<AdminMapProps> = ({ stations, onStationClick }) 
   }, [stations, onStationClick]);
 
   return (
-    <div className="w-full h-full min-h-[400px] rounded-xl overflow-hidden border border-white/10 relative">
+    <div className="w-full h-[400px] rounded-xl overflow-hidden border border-white/10 relative">
       <div ref={mapContainer} className="absolute inset-0" />
     </div>
   );
