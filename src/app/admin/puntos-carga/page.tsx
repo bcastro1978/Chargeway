@@ -97,75 +97,59 @@ export default function PuntosCargaAdmin() {
   });
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="flex flex-col h-full space-y-6">
+      {/* Top Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[#0a0a0f] border border-white/5 rounded-2xl p-6">
         <div>
-          <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-            <MapPin className="text-emerald-500" />
+          <h1 className="text-2xl font-bold text-white flex items-center gap-3">
+            <div className="p-2 bg-emerald-500/10 rounded-lg">
+              <MapPin className="text-emerald-500" size={24} />
+            </div>
             Administración de Puntos de Carga
           </h1>
-          <p className="text-neutral-400 text-sm mt-1">
-            Gestiona las ubicaciones, conectores y detalles de estaciones de carga.
+          <p className="text-neutral-400 text-sm mt-2 max-w-2xl">
+            Gestiona el inventario completo de la red de carga. Actualiza ubicaciones, conectores, potencias y estados operativos en tiempo real.
           </p>
         </div>
         
         <button 
           onClick={() => openModal()}
-          className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-medium transition-colors"
+          className="flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-medium transition-colors shadow-[0_0_15px_rgba(16,185,129,0.2)] whitespace-nowrap"
         >
           <Plus size={18} />
-          Nueva Estación
+          Registrar Nueva Estación
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500" size={18} />
-          <input
-            type="text"
-            placeholder="Buscar por nombre, provincia..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 bg-[#0a0a0f] border border-white/5 rounded-xl text-white placeholder-neutral-500 focus:outline-none focus:border-emerald-500/50 transition-colors"
-          />
-        </div>
-        
-        <select 
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-          className="w-full px-4 py-3 bg-[#0a0a0f] border border-white/5 rounded-xl text-white focus:outline-none focus:border-emerald-500/50 transition-colors"
-        >
-          <option value="all">Todos los estados</option>
-          <option value="active">Activos</option>
-          <option value="inactive">Inactivos</option>
-        </select>
-        
-        <select 
-          value={speedFilter}
-          onChange={(e) => setSpeedFilter(e.target.value)}
-          className="w-full px-4 py-3 bg-[#0a0a0f] border border-white/5 rounded-xl text-white focus:outline-none focus:border-emerald-500/50 transition-colors"
-        >
-          <option value="all">Todas las velocidades</option>
-          <option value="rápida">Rápida</option>
-          <option value="lenta">Normal / Lenta</option>
-        </select>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column: Map */}
-        <div className="lg:col-span-1 flex flex-col gap-4">
-          <div className="bg-[#0a0a0f] border border-white/5 rounded-2xl p-4">
-            <h3 className="text-white font-medium mb-2">Puntos de Carga (Total: {filteredStations.length})</h3>
-            <div className="text-3xl font-bold text-emerald-400">{filteredStations.filter(s => s.lat && s.lng && s.lat !== 0).length}</div>
-            <div className="text-sm text-neutral-500 mt-1">
-              estaciones georreferenciadas en el mapa
-            </div>
-            <div className="text-sm text-neutral-500 mt-1 border-t border-white/5 pt-2">
-              {filteredStations.filter(s => s.is_active !== false).length} activos en total
+      <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+        {/* Left Column: Stats & Map */}
+        <div className="xl:col-span-1 flex flex-col gap-6">
+          <div className="bg-[#0a0a0f] border border-white/5 rounded-2xl p-6">
+            <h3 className="text-white font-medium mb-4 flex items-center justify-between">
+              Resumen de Red
+              <span className="px-2.5 py-1 bg-white/5 rounded-full text-xs text-neutral-400">Total: {filteredStations.length}</span>
+            </h3>
+            
+            <div className="space-y-4">
+              <div>
+                <div className="text-4xl font-bold text-emerald-400">{filteredStations.filter(s => s.lat && s.lng && s.lat !== 0).length}</div>
+                <div className="text-sm text-neutral-500 mt-1">Estaciones georreferenciadas</div>
+              </div>
+              
+              <div className="pt-4 border-t border-white/5">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-neutral-400">Puntos Activos</span>
+                  <span className="text-sm font-medium text-emerald-400">{filteredStations.filter(s => s.is_active !== false).length}</span>
+                </div>
+                <div className="flex items-center justify-between mt-2">
+                  <span className="text-sm text-neutral-400">Puntos Inactivos</span>
+                  <span className="text-sm font-medium text-red-400">{filteredStations.filter(s => s.is_active === false).length}</span>
+                </div>
+              </div>
             </div>
           </div>
           
-          <div className="flex-1 min-h-[400px]">
+          <div className="flex-1 min-h-[500px] xl:h-auto bg-[#0a0a0f] border border-white/5 rounded-2xl overflow-hidden p-2">
             <AdminMap 
               stations={filteredStations} 
               onStationClick={(station) => openModal(station)}
@@ -173,8 +157,42 @@ export default function PuntosCargaAdmin() {
           </div>
         </div>
 
-        {/* Right Column: Table */}
-        <div className="lg:col-span-2">
+        {/* Right Column: Filters & Table */}
+        <div className="xl:col-span-3 flex flex-col gap-6">
+          <div className="bg-[#0a0a0f] border border-white/5 rounded-2xl p-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500" size={18} />
+                <input
+                  type="text"
+                  placeholder="Buscar estación, ciudad o provincia..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2.5 bg-[#101014] border border-white/5 rounded-xl text-white placeholder-neutral-500 focus:outline-none focus:border-emerald-500/50 transition-colors text-sm"
+                />
+              </div>
+              
+              <select 
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="w-full px-4 py-2.5 bg-[#101014] border border-white/5 rounded-xl text-white focus:outline-none focus:border-emerald-500/50 transition-colors text-sm"
+              >
+                <option value="all">Cualquier Estado Operativo</option>
+                <option value="active">Solo Activos</option>
+                <option value="inactive">Solo Inactivos</option>
+              </select>
+              
+              <select 
+                value={speedFilter}
+                onChange={(e) => setSpeedFilter(e.target.value)}
+                className="w-full px-4 py-2.5 bg-[#101014] border border-white/5 rounded-xl text-white focus:outline-none focus:border-emerald-500/50 transition-colors text-sm"
+              >
+                <option value="all">Cualquier Velocidad</option>
+                <option value="rápida">Carga Rápida</option>
+                <option value="lenta">Carga Normal / Lenta</option>
+              </select>
+            </div>
+          </div>
 
       {isLoading ? (
         <div className="flex justify-center py-20">
