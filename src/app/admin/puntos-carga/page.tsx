@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { MapPin, Plus, Search, Edit2, CheckCircle2, XCircle, X } from 'lucide-react';
-import * as Dialog from '@radix-ui/react-dialog';
 
 interface ChargingStation {
   id: string;
@@ -184,17 +183,16 @@ export default function PuntosCargaAdmin() {
         </div>
       )}
 
-      <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <Dialog.Portal>
-          <Dialog.Overlay className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50" />
-          <Dialog.Content className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[95vw] max-w-2xl max-h-[90vh] overflow-y-auto bg-[#101014] border border-white/10 rounded-2xl shadow-2xl z-50 p-6">
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-[#101014] border border-white/10 rounded-2xl shadow-2xl z-50 p-6 relative">
             <div className="flex items-center justify-between mb-6">
-              <Dialog.Title className="text-xl font-bold text-white">
+              <h2 className="text-xl font-bold text-white">
                 {editingStation?.id ? 'Editar Estación' : 'Nueva Estación'}
-              </Dialog.Title>
-              <Dialog.Close className="text-neutral-400 hover:text-white">
+              </h2>
+              <button onClick={() => setIsModalOpen(false)} className="text-neutral-400 hover:text-white">
                 <X size={24} />
-              </Dialog.Close>
+              </button>
             </div>
 
             <form onSubmit={handleSaveStation} className="space-y-4">
@@ -336,9 +334,9 @@ export default function PuntosCargaAdmin() {
                 </button>
               </div>
             </form>
-          </Dialog.Content>
-        </Dialog.Portal>
-      </Dialog.Root>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

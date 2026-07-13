@@ -252,6 +252,11 @@ export const useTripStore = create<TripState>()(
                 charger_type: dbModel.charger_type,
               }
             } as Vehicle;
+            
+            const { globalVehicles, fetchGlobalVehicles } = get();
+            if (globalVehicles.length === 0) {
+              await fetchGlobalVehicles();
+            }
           } else {
             const { data: lastTrip } = await supabase
               .from('trips')
@@ -268,17 +273,19 @@ export const useTripStore = create<TripState>()(
                 await fetchGlobalVehicles();
                 vehicles = get().globalVehicles;
               }
-              const foundVehicle = vehicles.find(v => `${v.brand} ${v.model}` === lastTrip.vehicle_model);
-              if (foundVehicle) {
-                loadedState.selectedVehicle = foundVehicle as Vehicle;
-              } else if (vehicles.length > 0) {
-                loadedState.selectedVehicle = vehicles[0];
-              }
+              const lastModel = vehicles.find(v => v.model === lastTrip.vehicle_model);
+              if (lastModel) loadedState.selectedVehicle = lastModel;
+              
               if (lastTrip.start_soc !== null && lastTrip.start_soc !== undefined) {
                 loadedState.soc = Number(lastTrip.start_soc);
               }
             } else {
-              const vehicles = get().globalVehicles;
+              const { globalVehicles, fetchGlobalVehicles } = get();
+              let vehicles = globalVehicles;
+              if (vehicles.length === 0) {
+                await fetchGlobalVehicles();
+                vehicles = get().globalVehicles;
+              }
               if (vehicles.length > 0) loadedState.selectedVehicle = vehicles[0];
             }
           }
