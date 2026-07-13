@@ -21,7 +21,7 @@ export const AdminMap: React.FC<AdminMapProps> = ({ stations, onStationClick }) 
   const markersRef = useRef<mapboxgl.Marker[]>([]);
 
   useEffect(() => {
-    if (!mapContainer.current) return;
+    if (map.current || !mapContainer.current) return;
 
     mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || '';
     
@@ -41,7 +41,12 @@ export const AdminMap: React.FC<AdminMapProps> = ({ stations, onStationClick }) 
 
     return () => {
       resizeObserver.disconnect();
-      map.current?.remove();
+      setTimeout(() => {
+        if (map.current) {
+          map.current.remove();
+          map.current = null;
+        }
+      }, 0);
     };
   }, []);
 

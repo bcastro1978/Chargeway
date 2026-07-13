@@ -15,7 +15,7 @@ export const MapPicker: React.FC<MapPickerProps> = ({ lat, lng, onChange }) => {
   const marker = useRef<mapboxgl.Marker | null>(null);
 
   useEffect(() => {
-    if (!mapContainer.current) return;
+    if (map.current || !mapContainer.current) return;
 
     mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || '';
     
@@ -60,7 +60,12 @@ export const MapPicker: React.FC<MapPickerProps> = ({ lat, lng, onChange }) => {
 
     return () => {
       resizeObserver.disconnect();
-      map.current?.remove();
+      setTimeout(() => {
+        if (map.current) {
+          map.current.remove();
+          map.current = null;
+        }
+      }, 0);
     };
   }, []);
 
