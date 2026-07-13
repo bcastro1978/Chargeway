@@ -154,10 +154,13 @@ export default function PuntosCargaAdmin() {
         {/* Left Column: Map */}
         <div className="lg:col-span-1 flex flex-col gap-4">
           <div className="bg-[#0a0a0f] border border-white/5 rounded-2xl p-4">
-            <h3 className="text-white font-medium mb-2">Total de puntos de carga</h3>
-            <div className="text-3xl font-bold text-emerald-400">{filteredStations.length}</div>
+            <h3 className="text-white font-medium mb-2">Puntos de Carga (Total: {filteredStations.length})</h3>
+            <div className="text-3xl font-bold text-emerald-400">{filteredStations.filter(s => s.lat && s.lng && s.lat !== 0).length}</div>
             <div className="text-sm text-neutral-500 mt-1">
-              {filteredStations.filter(s => s.is_active !== false).length} activos
+              estaciones georreferenciadas en el mapa
+            </div>
+            <div className="text-sm text-neutral-500 mt-1 border-t border-white/5 pt-2">
+              {filteredStations.filter(s => s.is_active !== false).length} activos en total
             </div>
           </div>
           
