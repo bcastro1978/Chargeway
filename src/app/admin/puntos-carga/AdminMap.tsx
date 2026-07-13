@@ -41,12 +41,7 @@ export const AdminMap: React.FC<AdminMapProps> = ({ stations, onStationClick }) 
 
     return () => {
       resizeObserver.disconnect();
-      setTimeout(() => {
-        if (map.current) {
-          map.current.remove();
-          map.current = null;
-        }
-      }, 0);
+      map.current?.remove();
     };
   }, []);
 
