@@ -35,7 +35,13 @@ export const AdminMap: React.FC<AdminMapProps> = ({ stations, onStationClick }) 
 
     map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
+    const resizeObserver = new ResizeObserver(() => {
+      map.current?.resize();
+    });
+    resizeObserver.observe(mapContainer.current);
+
     return () => {
+      resizeObserver.disconnect();
       map.current?.remove();
     };
   }, []);

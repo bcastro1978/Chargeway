@@ -25,8 +25,9 @@ interface ChargingStation {
 
 export default function PuntosCargaAdmin() {
   const [stations, setStations] = useState<ChargingStation[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [speedFilter, setSpeedFilter] = useState('all');
   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingStation, setEditingStation] = useState<Partial<ChargingStation> | null>(null);
@@ -78,11 +79,21 @@ export default function PuntosCargaAdmin() {
     loadData();
   };
 
-  const filteredStations = stations.filter(s => 
-    s.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    s.province?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    s.city_or_canton?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredStations = stations.filter(s => {
+    const matchesSearch = s.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      s.province?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      s.city_or_canton?.toLowerCase().includes(searchTerm.toLowerCase());
+      
+    const matchesStatus = statusFilter === 'all' 
+      ? true 
+      : statusFilter === 'active' ? s.is_active !== false : s.is_active === false;
+      
+    const matchesSpeed = speedFilter === 'all'
+      ? true
+      : s.speed?.toLowerCase().includes(speedFilter.toLowerCase());
+      
+    return matchesSearch && matchesStatus && matchesSpeed;
+  });
 
   return (
     <div className="space-y-6">
@@ -106,23 +117,60 @@ export default function PuntosCargaAdmin() {
         </button>
       </div>
 
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500" size={18} />
-        <input
-          type="text"
-          placeholder="Buscar por nombre, provincia o cantón..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full pl-10 pr-4 py-3 bg-[#0a0a0f] border border-white/5 rounded-xl text-white placeholder-neutral-500 focus:outline-none focus:border-emerald-500/50 transition-colors"
-        />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500" size={18} />
+          <input
+            type="text"
+            placeholder="Buscar por nombre, provincia..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-10 pr-4 py-3 bg-[#0a0a0f] border border-white/5 rounded-xl text-white placeholder-neutral-500 focus:outline-none focus:border-emerald-500/50 transition-colors"
+          />
+        </div>
+        
+        <select 
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          className="w-full px-4 py-3 bg-[#0a0a0f] border border-white/5 rounded-xl text-white focus:outline-none focus:border-emerald-500/50 transition-colors"
+        >
+          <option value="all">Todos los estados</option>
+          <option value="active">Activos</option>
+          <option value="inactive">Inactivos</option>
+        </select>
+        
+        <select 
+          value={speedFilter}
+          onChange={(e) => setSpeedFilter(e.target.value)}
+          className="w-full px-4 py-3 bg-[#0a0a0f] border border-white/5 rounded-xl text-white focus:outline-none focus:border-emerald-500/50 transition-colors"
+        >
+          <option value="all">Todas las velocidades</option>
+          <option value="rápida">Rápida</option>
+          <option value="lenta">Normal / Lenta</option>
+        </select>
       </div>
 
-      <div className="mb-6">
-        <AdminMap 
-          stations={stations} 
-          onStationClick={(station) => openModal(station)}
-        />
-      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left Column: Map */}
+        <div className="lg:col-span-1 flex flex-col gap-4">
+          <div className="bg-[#0a0a0f] border border-white/5 rounded-2xl p-4">
+            <h3 className="text-white font-medium mb-2">Total de puntos de carga</h3>
+            <div className="text-3xl font-bold text-emerald-400">{filteredStations.length}</div>
+            <div className="text-sm text-neutral-500 mt-1">
+              {filteredStations.filter(s => s.is_active !== false).length} activos
+            </div>
+          </div>
+          
+          <div className="flex-1 min-h-[400px]">
+            <AdminMap 
+              stations={filteredStations} 
+              onStationClick={(station) => openModal(station)}
+            />
+          </div>
+        </div>
+
+        {/* Right Column: Table */}
+        <div className="lg:col-span-2">
 
       {isLoading ? (
         <div className="flex justify-center py-20">
@@ -191,6 +239,7 @@ export default function PuntosCargaAdmin() {
           </div>
         </div>
       )}
+      </div>
 
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">

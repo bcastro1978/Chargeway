@@ -34,6 +34,11 @@ export const MapPicker: React.FC<MapPickerProps> = ({ lat, lng, onChange }) => {
 
     map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
+    const resizeObserver = new ResizeObserver(() => {
+      map.current?.resize();
+    });
+    resizeObserver.observe(mapContainer.current);
+
     if (lat && lng) {
       marker.current = new mapboxgl.Marker({ color: '#10b981' })
         .setLngLat([initLng, initLat])
@@ -55,6 +60,7 @@ export const MapPicker: React.FC<MapPickerProps> = ({ lat, lng, onChange }) => {
     });
 
     return () => {
+      resizeObserver.disconnect();
       map.current?.remove();
     };
   }, []);
