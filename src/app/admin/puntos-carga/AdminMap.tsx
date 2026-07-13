@@ -76,11 +76,8 @@ export const AdminMap: React.FC<AdminMapProps> = ({ stations, onStationClick }) 
   }, [stations, onStationClick]);
 
   return (
-    <div className="w-full h-80 rounded-xl overflow-hidden border border-white/10 relative">
+    <div className="w-full h-full min-h-[400px] rounded-xl overflow-hidden border border-white/10 relative">
       <div ref={mapContainer} className="absolute inset-0" />
-      <div className="absolute top-4 left-4 bg-black/80 px-4 py-2 rounded-lg text-xs text-white pointer-events-none border border-white/10">
-        Total de estaciones mapeadas: {stations.filter(s => s.lat && s.lng).length}
-      </div>
     </div>
   );
 };
