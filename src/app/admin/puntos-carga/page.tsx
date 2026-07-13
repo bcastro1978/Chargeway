@@ -242,6 +242,7 @@ export default function PuntosCargaAdmin() {
           </div>
         </div>
       )}
+        </div>
       </div>
 
       {isModalOpen && (
