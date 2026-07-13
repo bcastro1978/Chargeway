@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import 'mapbox-gl/dist/mapbox-gl.css';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,6 +30,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+      <head>
+        <link href="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css" rel="stylesheet" />
+      </head>
       <body>{children}</body>
     </html>
   );
