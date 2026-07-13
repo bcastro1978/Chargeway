@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { MapPin, Plus, Search, Edit2, CheckCircle2, XCircle, X } from 'lucide-react';
+import { MapPicker } from './MapPicker';
+import { AdminMap } from './AdminMap';
 
 interface ChargingStation {
   id: string;
@@ -112,6 +114,13 @@ export default function PuntosCargaAdmin() {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="w-full pl-10 pr-4 py-3 bg-[#0a0a0f] border border-white/5 rounded-xl text-white placeholder-neutral-500 focus:outline-none focus:border-emerald-500/50 transition-colors"
+        />
+      </div>
+
+      <div className="mb-6">
+        <AdminMap 
+          stations={stations} 
+          onStationClick={(station) => openModal(station)}
         />
       </div>
 
@@ -316,6 +325,15 @@ export default function PuntosCargaAdmin() {
                     className="w-full px-3 py-2 bg-black/50 border border-white/10 rounded-lg text-white"
                   />
                 </div>
+              </div>
+
+              <div className="mt-4">
+                <label className="block text-xs font-medium text-neutral-400 mb-1.5">Ubicación en Mapa</label>
+                <MapPicker 
+                  lat={editingStation?.lat || 0} 
+                  lng={editingStation?.lng || 0} 
+                  onChange={(lat, lng) => setEditingStation({...editingStation, lat, lng})} 
+                />
               </div>
 
               <div className="flex justify-end gap-3 mt-8">
