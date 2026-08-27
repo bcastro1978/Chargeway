@@ -135,6 +135,17 @@ export default function Home() {
       });
 
       setIsNavigating(false);
+      setIsSimulating(false);
+    } else {
+      setIsNavigating(true);
+      setIsSimulating(false); // Default to Real GPS navigation
+      saveTripToDatabase();
+    }
+  };
+
+  const handleStartSimulation = () => {
+    if (isNavigating && isSimulating) {
+      handleToggleNavigation();
     } else {
       setIsNavigating(true);
       setIsSimulating(true);
@@ -488,35 +499,39 @@ export default function Home() {
                     : 'bg-emerald-600 hover:bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.4)]'
                 }`}
               >
-                <span>{isNavigating ? 'Detener Viaje' : (currentDistance > 0 ? '▶ Continuar Viaje' : 'Iniciar Viaje')}</span>
+                <span>
+                  {isNavigating
+                    ? (isSimulating ? 'Detener Simulación' : 'Detener Viaje')
+                    : (currentDistance > 0 ? '▶ Continuar Viaje' : 'Iniciar Viaje Real (GPS)')}
+                </span>
               </button>
-              {isNavigating && (
-                <>
-                  <button
-                    onClick={() => setIsSimulating(!isSimulating)}
-                    className="w-full py-2.5 rounded-xl font-semibold text-sm bg-neutral-800 hover:bg-neutral-700 text-white transition-colors flex items-center justify-center gap-2"
-                  >
-                    <span>{isSimulating ? 'Pausar Simulacion' : 'Simular Viaje'}</span>
-                  </button>
-                  <button
-                    onClick={() => {
-                      const validPoints = routePoints.filter(p => p.lat !== 0 && p.lng !== 0);
-                      if (validPoints.length < 2) return;
-                      const origin = validPoints[0];
-                      const destination = validPoints[validPoints.length - 1];
-                      const waypoints = validPoints.slice(1, validPoints.length - 1);
-                      let url = `https://www.google.com/maps/dir/?api=1&origin=${origin.lat},${origin.lng}&destination=${destination.lat},${destination.lng}`;
-                      if (waypoints.length > 0) {
-                        url += `&waypoints=${waypoints.map(w => `${w.lat},${w.lng}`).join('|')}`;
-                      }
-                      window.open(url, '_blank');
-                    }}
-                    className="w-full py-2.5 rounded-xl font-semibold text-sm bg-blue-600 hover:bg-blue-500 text-white transition-colors flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(37,99,235,0.4)]"
-                  >
-                    <span>🗺️ Abrir en Google Maps</span>
-                  </button>
-                </>
+
+              {!isSimulating && (
+                <button
+                  onClick={handleStartSimulation}
+                  className="w-full py-2.5 rounded-xl font-semibold text-sm bg-neutral-800 hover:bg-neutral-700 text-white transition-colors flex items-center justify-center gap-2 border border-neutral-700"
+                >
+                  <span>⚡ Simular Viaje</span>
+                </button>
               )}
+
+              <button
+                onClick={() => {
+                  const validPoints = routePoints.filter(p => p.lat !== 0 && p.lng !== 0);
+                  if (validPoints.length < 2) return;
+                  const origin = validPoints[0];
+                  const destination = validPoints[validPoints.length - 1];
+                  const waypoints = validPoints.slice(1, validPoints.length - 1);
+                  let url = `https://www.google.com/maps/dir/?api=1&origin=${origin.lat},${origin.lng}&destination=${destination.lat},${destination.lng}`;
+                  if (waypoints.length > 0) {
+                    url += `&waypoints=${waypoints.map(w => `${w.lat},${w.lng}`).join('|')}`;
+                  }
+                  window.open(url, '_blank');
+                }}
+                className="w-full py-2.5 rounded-xl font-semibold text-sm bg-blue-600 hover:bg-blue-500 text-white transition-colors flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(37,99,235,0.4)]"
+              >
+                <span>🗺️ Abrir en Google Maps</span>
+              </button>
             </div>
           ) : (
             <div className="bg-neutral-900/50 border border-neutral-800 p-4 rounded-2xl text-center">
