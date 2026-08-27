@@ -45,11 +45,23 @@ interface TripState {
   saveConsent: (choices: ConsentChoices) => Promise<void>;
   mapSelectionIndex: number | null;
   setMapSelectionIndex: (idx: number | null) => void;
+  currentSpeedKmH: number;
+  simulatedSpeedKmH: number;
+  dynamicArrivalSoc: number | null;
+  dynamicArrivalRangeKm: number | null;
+  setRealtimeSpeed: (speed: number) => void;
+  setSimulatedSpeedKmH: (speed: number) => void;
+  setDynamicArrival: (soc: number | null, rangeKm: number | null) => void;
+  saveCompletedTripToDatabase: (summaryData: any) => Promise<void>;
+  theme: 'dark' | 'light';
+  toggleTheme: () => void;
 }
 
 export const useTripStore = create<TripState>()(
   persist(
     (set, get) => ({
+      theme: 'dark',
+      toggleTheme: () => set(state => ({ theme: state.theme === 'dark' ? 'light' : 'dark' })),
   globalVehicles: [],
   isVehiclesLoading: true,
   selectedVehicle: null,
@@ -71,6 +83,11 @@ export const useTripStore = create<TripState>()(
   consentRecord: null,
   filterCompatibleChargers: true,
   mapSelectionIndex: null,
+  currentSpeedKmH: 0,
+  simulatedSpeedKmH: 70,
+  navigationStartTime: null,
+  navigationStartSoc: null,
+  speedSamples: [],
 
   setMapSelectionIndex: (idx) => set({ mapSelectionIndex: idx }),
   setCurrentDistance: (val) => set({ currentDistance: val }),
@@ -79,8 +96,22 @@ export const useTripStore = create<TripState>()(
   setFilterCompatibleChargers: (val) => set({ filterCompatibleChargers: val }),
   setRoutePoints: (points) => set({ routePoints: points }),
   setMapFlyTo: (coords) => set({ mapFlyTo: coords }),
-  setIsNavigating: (val) => set({ isNavigating: val }),
+  setIsNavigating: (val) => set((state) => ({ 
+    isNavigating: val, 
+    navigationStartTime: val ? Date.now() : state.navigationStartTime,
+    navigationStartSoc: val ? state.soc : state.navigationStartSoc,
+    speedSamples: val && state.currentDistance === 0 ? [] : state.speedSamples
+  })),
   setIsSimulating: (val) => set({ isSimulating: val }),
+  setRealtimeSpeed: (speed) => set((state) => ({ 
+    currentSpeedKmH: speed,
+    speedSamples: state.isNavigating && !state.isSimulating ? [...state.speedSamples, speed] : state.speedSamples
+  })),
+  setSimulatedSpeedKmH: (speed) => set({ simulatedSpeedKmH: speed }),
+  setDynamicArrival: (soc, rangeKm) => set({ dynamicArrivalSoc: soc, dynamicArrivalRangeKm: rangeKm }),
+  recordSpeedSample: (speed) => set((state) => ({
+    speedSamples: [...state.speedSamples, speed]
+  })),
 
   planRoute: async () => {
     const { routePoints, selectedVehicle, soc } = get();
@@ -206,6 +237,10 @@ export const useTripStore = create<TripState>()(
 
   checkSession: async () => {
     set({ isLoadingUser: true });
+    const safetyTimeout = setTimeout(() => {
+      set({ isLoadingUser: false });
+    }, 2500);
+
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (session?.user) {
@@ -336,6 +371,7 @@ export const useTripStore = create<TripState>()(
     } catch (err) {
       console.error('Error checking session:', err);
     } finally {
+      clearTimeout(safetyTimeout);
       set({ isLoadingUser: false });
     }
   },
@@ -375,6 +411,50 @@ export const useTripStore = create<TripState>()(
         last_soc: soc
       }
     });
+  },
+
+  saveCompletedTripToDatabase: async (summaryData: any) => {
+    const { user, routePoints, selectedVehicle } = get();
+    if (!user) return;
+
+    const origin = summaryData.originName || routePoints[0]?.name || 'Origen';
+    const destination = summaryData.destinationName || routePoints[routePoints.length - 1]?.name || 'Destino';
+    const vehicleModel = summaryData.vehicleModel || (selectedVehicle ? `${selectedVehicle.brand} ${selectedVehicle.model}` : 'Vehículo EV');
+
+    const waypointsWithTelemetry = [
+      ...(routePoints || []),
+      {
+        _telemetry: {
+          avg_speed_kmh: summaryData.avgSpeedKmh,
+          consumed_kwh: summaryData.consumedKwh,
+          consumed_soc_pct: summaryData.consumedSocPct,
+          remaining_soc_pct: summaryData.remainingSocPct,
+          actual_distance_km: summaryData.actualDistanceKm,
+          actual_duration_min: summaryData.actualDurationMin,
+          completed_at: new Date().toISOString()
+        }
+      }
+    ];
+
+    const tripData = {
+      user_id: user.id,
+      origin_name: origin,
+      destination_name: destination,
+      vehicle_model: vehicleModel,
+      start_soc: (summaryData.startSocPct || 80) / 100,
+      arrival_soc: (summaryData.remainingSocPct || 50) / 100,
+      distance_km: summaryData.actualDistanceKm,
+      duration_min: summaryData.actualDurationMin,
+      consumption_kwh: summaryData.consumedKwh,
+      waypoints: waypointsWithTelemetry
+    };
+
+    const { error } = await supabase.from('trips').insert([tripData]);
+    if (error) {
+      console.error('Error saving completed trip telemetry to Supabase:', error.message);
+    } else {
+      console.log('✅ Completed trip telemetry successfully stored in Supabase!');
+    }
   },
 
   saveConsent: async (choices: ConsentChoices) => {

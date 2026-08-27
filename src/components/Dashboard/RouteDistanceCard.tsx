@@ -3,6 +3,7 @@
 import React from 'react';
 import { AdvisorFeedback } from '@/lib/agents/RouteAdvisorAgent';
 import { Bot, MapPin, Clock, Zap, HelpCircle } from 'lucide-react';
+import { useTripStore } from '@/lib/store/useTripStore';
 
 interface RouteDistanceCardProps {
   distanceKm: number;

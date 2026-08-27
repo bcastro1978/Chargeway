@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import Map, { Marker, NavigationControl } from 'react-map-gl';
+import Map, { Marker, NavigationControl } from 'react-map-gl/mapbox';
 
 interface ChargingStation {
   id: string;

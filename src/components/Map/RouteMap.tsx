@@ -8,6 +8,8 @@ import { Charger } from '@/lib/services/charging';
 import { ChargerInfoPanel } from './ChargerInfoPanel';
 import { Waypoint } from '../Dashboard/RouteSearch';
 import { useTripStore } from '@/lib/store/useTripStore';
+import { RealtimeTripHUD } from '../Dashboard/RealtimeTripHUD';
+import { useRealtimeSpeed } from '@/hooks/useRealtimeSpeed';
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || '';
 
@@ -41,6 +43,9 @@ export const RouteMap: React.FC<RouteMapProps> = ({
   const isNavigating = useTripStore(state => state.isNavigating);
   const isSimulating = useTripStore(state => state.isSimulating);
   const tripPlan = useTripStore(state => state.tripPlan);
+
+  // Activate GPS real-time speed measurement hook
+  useRealtimeSpeed(isNavigating, isSimulating);
 
   useEffect(() => {
     if (!mapContainer.current || map.current) return;
@@ -307,12 +312,25 @@ export const RouteMap: React.FC<RouteMapProps> = ({
         if (gpsWatchId.current) navigator.geolocation.clearWatch(gpsWatchId.current);
         const geom = JSON.parse(tripPlan.route.geometry);
         const coords = (geom.coordinates as number[][]).map(c => [c[0], c[1]]);
-        let step = 0;
+        const fullLine = turf.lineString(coords);
+        const totalDistKm = tripPlan.route.distance / 1000;
+
+        // Start simulation from exact current distance along the route
+        let simDistKm = useTripStore.getState().currentDistance || 0;
+
         simTimerId.current = setInterval(() => {
-          if (step < coords.length) {
-            updateGpsMarker(coords[step][0], coords[step][1]);
-            step++;
-          } else {
+          const currentSpeed = useTripStore.getState().simulatedSpeedKmH || 70;
+          (useTripStore.getState() as any).recordSpeedSample(currentSpeed);
+          // Distance in km covered per second: speed_kmh / 3600
+          const stepKm = Math.max(0.005, currentSpeed / 3600);
+          simDistKm = Math.min(totalDistKm, simDistKm + stepKm);
+
+          const targetPoint = turf.along(fullLine, simDistKm, { units: 'kilometers' });
+          const [lng, lat] = targetPoint.geometry.coordinates;
+
+          updateGpsMarker(lng, lat);
+
+          if (simDistKm >= totalDistKm) {
             clearInterval(simTimerId.current!);
             useTripStore.setState({ isNavigating: false, isSimulating: false });
           }
@@ -328,11 +346,25 @@ export const RouteMap: React.FC<RouteMapProps> = ({
     } else {
       if (gpsWatchId.current) navigator.geolocation.clearWatch(gpsWatchId.current);
       if (simTimerId.current) clearInterval(simTimerId.current);
-      if (gpsMarkerRef.current) {
-        gpsMarkerRef.current.remove();
-        gpsMarkerRef.current = null;
+      
+      const currentDist = useTripStore.getState().currentDistance;
+      if (currentDist > 0 && tripPlan?.route?.geometry) {
+        // Keep vehicle marker positioned at exact current distance while paused
+        try {
+          const geom = JSON.parse(tripPlan.route.geometry);
+          const coords = (geom.coordinates as number[][]).map(c => [c[0], c[1]]);
+          const fullLine = turf.lineString(coords);
+          const pt = turf.along(fullLine, Math.min(tripPlan.route.distance / 1000, currentDist), { units: 'kilometers' });
+          const [lng, lat] = pt.geometry.coordinates;
+          updateGpsMarker(lng, lat);
+        } catch (_) {}
+      } else {
+        if (gpsMarkerRef.current) {
+          gpsMarkerRef.current.remove();
+          gpsMarkerRef.current = null;
+        }
+        lastUserPosition.current = null;
       }
-      lastUserPosition.current = null;
     }
 
     return () => {
@@ -389,6 +421,7 @@ export const RouteMap: React.FC<RouteMapProps> = ({
       </button>
 
       <ChargerInfoPanel charger={selectedCharger} onClose={() => setSelectedCharger(null)} onNavigateToCharger={onNavigateToCharger} />
+      <RealtimeTripHUD />
     </>
   );
 };

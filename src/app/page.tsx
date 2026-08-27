@@ -11,9 +11,12 @@ import { AuthButton } from '@/components/Dashboard/AuthButton';
 import { ConsentModal, ExpandableDoc, TERMS_TEXT, PRIVACY_TEXT } from '@/components/Dashboard/ConsentModal';
 import { PwaInstallButton } from '@/components/Dashboard/PwaInstallButton';
 import { ProfileModal } from '@/components/Profile/ProfileModal';
+import { TripSummaryModal, TripSummaryData } from '@/components/Dashboard/TripSummaryModal';
+import { ThemeToggle } from '@/components/Dashboard/ThemeToggle';
 import { Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { fetchAllEcuadorChargers, Charger } from '@/lib/services/charging';
 import { useTripStore } from '@/lib/store/useTripStore';
+import { calculateSpeedConsumptionRate } from '@/lib/realtime-energy';
 import { useWakeLock } from '@/hooks/useWakeLock';
 
 const EV_FACTS = [
@@ -74,10 +77,70 @@ export default function Home() {
 
   useWakeLock(isNavigating);
 
+  const currentSpeedKmH = useTripStore(state => state.currentSpeedKmH);
   const [allChargers, setAllChargers] = useState<Charger[]>([]);
   const [hoveredSegment, setHoveredSegment] = useState<number | null>(null);
   const [currentFactIndex, setCurrentFactIndex] = useState(0);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [summaryData, setSummaryData] = useState<TripSummaryData | null>(null);
+
+  const handleToggleNavigation = () => {
+    if (isNavigating) {
+      const activeTripPlan = tripPlan || useTripStore.getState().tripPlan;
+      const validPoints = routePoints.filter(p => p.lat !== 0 && p.lng !== 0);
+      const origin = validPoints[0]?.name || routePoints[0]?.name || 'Origen';
+      const destination = validPoints[validPoints.length - 1]?.name || routePoints[routePoints.length - 1]?.name || 'Destino';
+      const vehicleModel = selectedVehicle ? `${selectedVehicle.brand} ${selectedVehicle.model}` : 'Vehículo EV';
+      const totalPlannedDistKm = activeTripPlan ? (activeTripPlan.route.distance / 1000) : 15;
+
+      // 1. Actual Distance driven up to stopping
+      const actualDistanceKm = currentDistance > 0 ? currentDistance : totalPlannedDistKm;
+
+      // 2. Speed samples recorded during navigation
+      const samples: number[] = (useTripStore.getState() as any).speedSamples || [];
+      const actualDurationMin = samples.length > 0
+        ? Math.max(1, Math.round(samples.length / 60))
+        : Math.max(1, Math.round((Date.now() - ((useTripStore.getState() as any).navigationStartTime || Date.now())) / 60000));
+
+      // 3. True Average Speed (km/h) across all recorded speed samples during the trip
+      const avgSpeedKmh = samples.length > 0
+        ? Math.round((samples.reduce((a, b) => a + b, 0) / samples.length) * 10) / 10
+        : (simulatedSpeedKmH || 70);
+
+      // 4. Actual Consumed Energy (kWh) up to stopping
+      const usableKwh = selectedVehicle?.specs?.usable_battery_kwh || 38.8;
+      const baseWhKm = totalPlannedDistKm > 0 && activeTripPlan ? (activeTripPlan.totalConsumptionWh / totalPlannedDistKm) : 160;
+      const defaultSpecs = { drag_coefficient: 0.31, frontal_area_m2: 2.15, weight_kg: 1200 };
+      const liveWhKm = calculateSpeedConsumptionRate(selectedVehicle?.specs || defaultSpecs, avgSpeedKmh, 2800);
+      const effectiveWhKm = liveWhKm || baseWhKm;
+      const consumedKwh = Math.max(0.1, Math.round((actualDistanceKm * effectiveWhKm / 1000) * 10) / 10);
+
+      // 5. Actual Consumed SOC % & Remaining SOC % up to stopping
+      const initialSocFrac = (useTripStore.getState() as any).navigationStartSoc || soc;
+      const startSocPct = Math.round(initialSocFrac * 100);
+      const consumedSocPct = Math.min(100, Math.max(0, Math.round((consumedKwh / usableKwh) * 100)));
+      const remainingSocPct = Math.max(0, startSocPct - consumedSocPct);
+
+      setSummaryData({
+        originName: origin,
+        destinationName: destination,
+        vehicleModel,
+        actualDistanceKm,
+        actualDurationMin,
+        avgSpeedKmh,
+        consumedKwh,
+        consumedSocPct,
+        remainingSocPct,
+        startSocPct
+      });
+
+      setIsNavigating(false);
+    } else {
+      setIsNavigating(true);
+      setIsSimulating(true);
+      saveTripToDatabase();
+    }
+  };
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -418,22 +481,14 @@ export default function Home() {
           ) : tripPlan ? (
             <div className="bg-neutral-900/50 backdrop-blur-md border border-neutral-800 p-4 rounded-2xl flex flex-col gap-3">
               <button
-                onClick={() => {
-                  const nextNav = !isNavigating;
-                  setIsNavigating(nextNav);
-                  if (!nextNav) {
-                    setIsSimulating(false);
-                  } else {
-                    saveTripToDatabase();
-                  }
-                }}
+                onClick={handleToggleNavigation}
                 className={`w-full py-3 rounded-xl font-semibold text-white transition-all flex items-center justify-center gap-2 ${
                   isNavigating
                     ? 'bg-rose-600 hover:bg-rose-500 shadow-[0_0_15px_rgba(225,29,72,0.4)]'
                     : 'bg-emerald-600 hover:bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.4)]'
                 }`}
               >
-                <span>{isNavigating ? 'Detener Viaje' : 'Iniciar Viaje'}</span>
+                <span>{isNavigating ? 'Detener Viaje' : (currentDistance > 0 ? '▶ Continuar Viaje' : 'Iniciar Viaje')}</span>
               </button>
               {isNavigating && (
                 <>
@@ -555,12 +610,6 @@ export default function Home() {
 
             {/* Map */}
             <div className="h-[500px] overflow-hidden rounded-2xl border border-neutral-800 relative bg-neutral-900 shadow-2xl">
-              {isNavigating && (
-                <div className="absolute top-4 left-4 z-10 bg-neutral-950/80 backdrop-blur-md p-4 rounded-xl border border-emerald-500/50 flex flex-col gap-1 text-white pointer-events-none">
-                  <span className="text-xs text-emerald-400 uppercase font-bold tracking-wider">Modo Navegacion</span>
-                  <span className="text-lg font-bold">{isSimulating ? 'Simulando viaje...' : 'Siguiendo ubicacion...'}</span>
-                </div>
-              )}
               {tripPlan && routeChargerIds.size > 0 && (
                 <div className="absolute bottom-4 left-4 z-10 bg-neutral-950/80 backdrop-blur-md px-3 py-2 rounded-lg border border-neutral-700/50 flex items-center gap-4 text-[11px] text-neutral-300 pointer-events-none">
                   <div className="flex items-center gap-1.5">
@@ -743,6 +792,21 @@ export default function Home() {
           Contacto: <a href="mailto:chargewayec@gmail.com" className="text-emerald-500 hover:underline">chargewayec@gmail.com</a>
         </p>
       </footer>
+
+      {summaryData && (
+        <TripSummaryModal
+          summaryData={summaryData}
+          onClose={() => {
+            setSummaryData(null);
+            useTripStore.getState().setCurrentDistance(0);
+          }}
+          onContinueTrip={() => {
+            setSummaryData(null);
+            setIsNavigating(true);
+            setIsSimulating(true);
+          }}
+        />
+      )}
     </main>
   );
 }

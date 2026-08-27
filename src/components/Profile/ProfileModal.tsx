@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { X, Car, MapPin } from 'lucide-react';
+import { X, Car, MapPin, History } from 'lucide-react';
 import GarageManager from './GarageManager';
 import FavoriteLocationsManager from './FavoriteLocationsManager';
+import TripHistoryManager from './TripHistoryManager';
 
 export const ProfileModal = ({ userId, onClose }: { userId: string, onClose: () => void }) => {
-  const [activeTab, setActiveTab] = useState<'garage' | 'locations'>('garage');
+  const [activeTab, setActiveTab] = useState<'garage' | 'locations' | 'history'>('garage');
 
   return (
     <div 
@@ -19,7 +20,7 @@ export const ProfileModal = ({ userId, onClose }: { userId: string, onClose: () 
         <div className="flex items-center justify-between p-6 border-b border-neutral-800/50 bg-black/40">
           <div>
             <h2 className="text-2xl font-bold text-white tracking-tight">Mi Perfil</h2>
-            <p className="text-sm text-neutral-400 mt-1">Administra tus vehículos y destinos frecuentes</p>
+            <p className="text-sm text-neutral-400 mt-1">Administra tus vehículos, historial de consumos y destinos frecuentes</p>
           </div>
           <button 
             onClick={onClose}
@@ -30,12 +31,12 @@ export const ProfileModal = ({ userId, onClose }: { userId: string, onClose: () 
         </div>
 
         {/* Tabs */}
-        <div className="flex px-6 pt-4 gap-6 border-b border-neutral-800/50 bg-black/20">
+        <div className="flex px-6 pt-4 gap-6 border-b border-neutral-800/50 bg-black/20 overflow-x-auto">
           <button
             onClick={() => setActiveTab('garage')}
-            className={`pb-4 text-sm font-bold tracking-wide transition-all border-b-2 flex items-center gap-2 ${
+            className={`pb-4 text-sm font-bold tracking-wide transition-all border-b-2 flex items-center gap-2 shrink-0 ${
               activeTab === 'garage' 
-                ? 'border-primary text-primary' 
+                ? 'border-emerald-500 text-emerald-400' 
                 : 'border-transparent text-neutral-500 hover:text-neutral-300'
             }`}
           >
@@ -43,10 +44,21 @@ export const ProfileModal = ({ userId, onClose }: { userId: string, onClose: () 
             MI GARAJE
           </button>
           <button
+            onClick={() => setActiveTab('history')}
+            className={`pb-4 text-sm font-bold tracking-wide transition-all border-b-2 flex items-center gap-2 shrink-0 ${
+              activeTab === 'history' 
+                ? 'border-emerald-500 text-emerald-400' 
+                : 'border-transparent text-neutral-500 hover:text-neutral-300'
+            }`}
+          >
+            <History size={18} />
+            HISTORIAL DE VIAJES
+          </button>
+          <button
             onClick={() => setActiveTab('locations')}
-            className={`pb-4 text-sm font-bold tracking-wide transition-all border-b-2 flex items-center gap-2 ${
+            className={`pb-4 text-sm font-bold tracking-wide transition-all border-b-2 flex items-center gap-2 shrink-0 ${
               activeTab === 'locations' 
-                ? 'border-primary text-primary' 
+                ? 'border-emerald-500 text-emerald-400' 
                 : 'border-transparent text-neutral-500 hover:text-neutral-300'
             }`}
           >
@@ -57,11 +69,9 @@ export const ProfileModal = ({ userId, onClose }: { userId: string, onClose: () 
 
         {/* Content */}
         <div className="flex-1 overflow-y-auto p-6 bg-neutral-950/50">
-          {activeTab === 'garage' ? (
-            <GarageManager userId={userId} />
-          ) : (
-            <FavoriteLocationsManager userId={userId} />
-          )}
+          {activeTab === 'garage' && <GarageManager userId={userId} />}
+          {activeTab === 'history' && <TripHistoryManager userId={userId} />}
+          {activeTab === 'locations' && <FavoriteLocationsManager userId={userId} />}
         </div>
       </div>
     </div>

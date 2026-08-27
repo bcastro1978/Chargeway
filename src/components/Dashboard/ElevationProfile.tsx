@@ -179,9 +179,9 @@ export const ElevationProfile: React.FC<ElevationProfileProps> = ({
                 r={14}
                 shape={(props: any) => {
                   const { cx, cy } = props;
-                  return (
-                    <g transform={`translate(${cx - 14}, ${cy - 14})`}>
-                      {selectedVehiclePhoto ? (
+                  if (selectedVehiclePhoto) {
+                    return (
+                      <g transform={`translate(${cx - 14}, ${cy - 14})`}>
                         <foreignObject width="28" height="28">
                           <img 
                             src={selectedVehiclePhoto} 
@@ -191,19 +191,32 @@ export const ElevationProfile: React.FC<ElevationProfileProps> = ({
                               height: '28px', 
                               borderRadius: '50%', 
                               objectFit: 'cover', 
-                              border: '1.5px solid var(--color-primary)', 
-                              boxShadow: '0 0 8px rgba(63, 255, 139, 0.6)' 
+                              border: '2px solid #10b981', 
+                              boxShadow: '0 0 10px rgba(16, 185, 129, 0.7)' 
                             }} 
                           />
                         </foreignObject>
-                      ) : (
-                        <svg viewBox="0 0 24 24" fill="none" stroke="#3fff8b" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: '28px', height: '28px' }}>
-                          <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/>
-                          <circle cx="7" cy="17" r="2"/>
-                          <path d="M9 17h6"/>
-                          <circle cx="17" cy="17" r="2"/>
-                        </svg>
-                      )}
+                      </g>
+                    );
+                  }
+
+                  // Fallback: Location Pin pointing directly to the curve point (cx, cy)
+                  return (
+                    <g transform={`translate(${cx - 12}, ${cy - 24})`}>
+                      <svg 
+                        viewBox="0 0 24 24" 
+                        width="24" 
+                        height="24" 
+                        fill="#10b981" 
+                        stroke="#ffffff" 
+                        strokeWidth="1.5" 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        style={{ filter: 'drop-shadow(0 0 8px rgba(16, 185, 129, 0.8))' }}
+                      >
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                        <circle cx="12" cy="10" r="3" fill="#ffffff" />
+                      </svg>
                     </g>
                   );
                 }}

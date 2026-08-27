@@ -1,24 +1,24 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ChevronDown, Leaf } from 'lucide-react';
+import { ChevronDown, Leaf, HelpCircle } from 'lucide-react';
 
 const faqData = [
   {
-    question: '¿Me quedaré sin batería en medio del camino?',
-    answer: 'Es el miedo más común, ¡pero no te preocupes! ChargeWay calcula tu ruta de forma inteligente, sugiriendo paradas exactas en estaciones de carga para que siempre tengas energía de sobra.'
+    question: '¿Me quedaré sin batería en medio del camino en carretera?',
+    answer: 'ChargeWay calcula tu ruta considerando la topografía andina y el consumo en pendientes, sugiriendo paradas exactas en puntos de recarga con un margen de seguridad garantizado.'
   },
   {
-    question: '¿El mantenimiento de un eléctrico es muy caro?',
-    answer: 'Todo lo contrario. Al no tener motor a combustión, te olvidas de los cambios de aceite, bujías y filtros. El mantenimiento de un VE es hasta un 60% más económico a largo plazo.'
+    question: '¿El mantenimiento de un vehículo eléctrico es muy costoso?',
+    answer: 'Todo lo contrario. Al carecer de motor de combustión interna, caja de cambios compleja y fluidos de aceite, el costo de mantenimiento preventivo es hasta un 60% inferior respecto a un vehículo a gasolina.'
   },
   {
-    question: '¿Las montañas y subidas agotan la batería rápido?',
-    answer: 'Sí consumen energía al subir, pero los autos eléctricos tienen "frenado regenerativo". Al bajar, el auto actúa como un generador y recarga la batería, haciendo que la ruta sea súper eficiente.'
+    question: '¿Las pendientes y la altitud afectan drásticamente la batería?',
+    answer: 'En ascensos el consumo es mayor, pero en los descensos el sistema de frenado regenerativo devuelve hasta un 15% de la energía gastada a la batería, optimizando el rendimiento general.'
   },
   {
-    question: '¿Tarda demasiado en cargar la batería?',
-    answer: 'No tanto como crees. Con un cargador rápido en la ruta, puedes pasar del 20% al 80% en unos 30-40 minutos. Es el tiempo perfecto para estirar las piernas y tomar un café antes de seguir.'
+    question: '¿Cómo funciona la reserva de parqueaderos para anfitriones?',
+    answer: 'Los anfitriones cuentan con 5 reservas mensuales libres de comisión. A partir de la 6ª reserva, ChargeWay aplica una comisión del 20% mediante saldo prepagado sin mensualidades obligatorias.'
   }
 ];
 
@@ -26,43 +26,41 @@ export const EducationSection = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section className="py-24 bg-[#F9FAFB] text-[#1F2937]">
+    <section className="py-16 bg-[#081610] rounded-3xl border border-[#1A3028] text-white my-6">
       <div className="container mx-auto px-4 max-w-4xl">
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center justify-center p-3 bg-[#DCFCE7] rounded-full mb-6">
-            <Leaf className="w-8 h-8 text-[#10B981]" />
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#00FF87]/10 border border-[#00FF87]/30 text-[#00FF87] rounded-full text-xs font-semibold uppercase tracking-wider mb-4">
+            <HelpCircle size={14} />
+            <span>Mitos y Preguntas Frecuentes</span>
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-[#111827]">Mitos y Verdades</h2>
-          <p className="text-lg text-[#4B5563]">
-            Es totalmente normal tener dudas antes de cambiar tu forma de moverte. Aquí te aclaramos las más comunes.
+          <h2 className="text-3xl sm:text-4xl font-extrabold mb-4 text-white">Todo lo que necesitas saber</h2>
+          <p className="text-sm text-neutral-400 max-w-xl mx-auto">
+            Aclaramos las dudas más comunes sobre la movilidad eléctrica y el ecosistema ChargeWay en Ecuador.
           </p>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-3.5">
           {faqData.map((faq, index) => (
             <div 
               key={index} 
-              className={`border border-[#E5E7EB] rounded-[2rem] overflow-hidden transition-all duration-300 ${openIndex === index ? 'bg-white shadow-md' : 'bg-white/50 hover:bg-white'}`}
+              className={`border rounded-2xl overflow-hidden transition-all duration-300 ${openIndex === index ? 'border-[#00FF87]/40 bg-[#0D1A14]' : 'border-[#1A3028] bg-[#05110C] hover:border-neutral-700'}`}
             >
               <button
-                className="w-full text-left px-8 py-6 flex items-center justify-between focus:outline-none"
                 onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                className="w-full p-5 text-left font-bold text-base text-white flex items-center justify-between gap-4"
               >
-                <span className="font-semibold text-lg text-[#111827]">{faq.question}</span>
-                <div className={`p-2 rounded-full transition-colors ${openIndex === index ? 'bg-[#ECFDF5]' : 'bg-[#F3F4F6]'}`}>
-                  <ChevronDown 
-                    className={`w-5 h-5 text-[#059669] transition-transform duration-300 ${openIndex === index ? 'rotate-180' : ''}`} 
-                  />
-                </div>
+                <span>{faq.question}</span>
+                <ChevronDown 
+                  size={18} 
+                  className={`text-[#00FF87] transition-transform duration-300 shrink-0 ${openIndex === index ? 'rotate-180' : ''}`}
+                />
               </button>
-              
-              <div 
-                className={`px-8 overflow-hidden transition-all duration-300 ease-in-out ${openIndex === index ? 'max-h-48 pb-6 opacity-100' : 'max-h-0 opacity-0'}`}
-              >
-                <p className="text-[#4B5563] leading-relaxed">
+
+              {openIndex === index && (
+                <div className="px-5 pb-5 pt-1 text-sm text-neutral-300 leading-relaxed border-t border-[#1A3028]/60">
                   {faq.answer}
-                </p>
-              </div>
+                </div>
+              )}
             </div>
           ))}
         </div>
