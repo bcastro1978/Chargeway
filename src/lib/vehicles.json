@@ -986,6 +986,23 @@
     }
   },
   {
+    "id": "neta-aya",
+    "brand": "Neta",
+    "model": "AYA (40.7 kWh)",
+    "specs": {
+      "usable_battery_kwh": 40.7,
+      "drag_coefficient": 0.31,
+      "frontal_area_m2": 2.25,
+      "weight_kg": 1180,
+      "peak_charging_kw": 50,
+      "wltp_range_km": 335,
+      "charger_type": "GB/T",
+      "commercial_range_km": 401,
+      "commercial_standard": "NEDC",
+      "certificado_wltp": "no"
+    }
+  },
+  {
     "id": "neta-v",
     "brand": "Neta",
     "model": "V",

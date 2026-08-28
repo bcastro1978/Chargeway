@@ -65,6 +65,18 @@ export const ECUADOR_EV_MODELS: EVModelItem[] = [
     imageUrl: 'https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=600&q=80',
     warranty: '8 Años / 160,000 km',
   },
+  {
+    id: 'neta-aya',
+    brand: 'Neta Auto (Amba)',
+    name: 'NETA AYA',
+    priceUsd: 21990,
+    rangeKm: 401,
+    batteryKwh: 40.7,
+    connectorType: 'GB/T',
+    segment: 'City EV',
+    imageUrl: 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=600&q=80',
+    warranty: '8 Años / 150,000 km',
+  },
 ];
 
 export const EVCatalogEcuador: React.FC = () => {
