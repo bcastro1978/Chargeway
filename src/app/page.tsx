@@ -138,17 +138,7 @@ export default function Home() {
       setIsSimulating(false);
     } else {
       setIsNavigating(true);
-      setIsSimulating(false); // Default to Real GPS navigation
-      saveTripToDatabase();
-    }
-  };
-
-  const handleStartSimulation = () => {
-    if (isNavigating && isSimulating) {
-      handleToggleNavigation();
-    } else {
-      setIsNavigating(true);
-      setIsSimulating(true);
+      setIsSimulating(false);
       saveTripToDatabase();
     }
   };
@@ -500,20 +490,9 @@ export default function Home() {
                 }`}
               >
                 <span>
-                  {isNavigating
-                    ? (isSimulating ? 'Detener Simulación' : 'Detener Viaje')
-                    : (currentDistance > 0 ? '▶ Continuar Viaje' : 'Iniciar Viaje Real (GPS)')}
+                  {isNavigating ? 'Detener Viaje' : (currentDistance > 0 ? '▶ Continuar Viaje' : 'Iniciar Viaje')}
                 </span>
               </button>
-
-              {!isSimulating && (
-                <button
-                  onClick={handleStartSimulation}
-                  className="w-full py-2.5 rounded-xl font-semibold text-sm bg-neutral-800 hover:bg-neutral-700 text-white transition-colors flex items-center justify-center gap-2 border border-neutral-700"
-                >
-                  <span>⚡ Simular Viaje</span>
-                </button>
-              )}
 
               <button
                 onClick={() => {

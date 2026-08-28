@@ -196,25 +196,6 @@ export const RealtimeTripHUD: React.FC = () => {
             [{destinationName}]
           </span>
         </div>
-
-        {/* Interactive Simulation Speed Slider (Only in simulation mode) */}
-        {isSimulating && (
-          <div className="w-full bg-neutral-900/90 border border-neutral-800 p-1.5 rounded-lg mt-2 space-y-0.5">
-            <div className="flex items-center justify-between text-[8px] text-neutral-400">
-              <span>Simular:</span>
-              <span className="font-bold text-emerald-400">{simulatedSpeedKmH} km/h</span>
-            </div>
-            <input
-              type="range"
-              min="0"
-              max="160"
-              step="5"
-              value={simulatedSpeedKmH}
-              onChange={(e) => setSimulatedSpeedKmH(Number(e.target.value))}
-              className="w-full h-1 bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-emerald-500"
-            />
-          </div>
-        )}
       </div>
     </div>
   );
