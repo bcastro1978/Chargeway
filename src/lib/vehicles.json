@@ -996,7 +996,7 @@
       "weight_kg": 1180,
       "peak_charging_kw": 50,
       "wltp_range_km": 335,
-      "charger_type": "GB/T",
+      "charger_type": "CCS2",
       "commercial_range_km": 401,
       "commercial_standard": "NEDC",
       "certificado_wltp": "no"

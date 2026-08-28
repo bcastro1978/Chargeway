@@ -72,7 +72,7 @@ export const ECUADOR_EV_MODELS: EVModelItem[] = [
     priceUsd: 21990,
     rangeKm: 401,
     batteryKwh: 40.7,
-    connectorType: 'GB/T',
+    connectorType: 'CCS2',
     segment: 'City EV',
     imageUrl: 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=600&q=80',
     warranty: '8 Años / 150,000 km',
