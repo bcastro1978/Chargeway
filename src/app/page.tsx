@@ -94,7 +94,8 @@ export default function Home() {
       const totalPlannedDistKm = activeTripPlan ? (activeTripPlan.route.distance / 1000) : 15;
 
       // 1. Actual Distance driven up to stopping
-      const actualDistanceKm = currentDistance > 0 ? currentDistance : totalPlannedDistKm;
+      const totalDrivenKm = ((useTripStore.getState() as any).accumulatedDistanceKm || 0) + currentDistance;
+      const actualDistanceKm = totalDrivenKm > 0 ? Math.round(totalDrivenKm * 10) / 10 : totalPlannedDistKm;
 
       // 2. Speed samples recorded during navigation
       const samples: number[] = (useTripStore.getState() as any).speedSamples || [];
@@ -793,11 +794,12 @@ export default function Home() {
           onClose={() => {
             setSummaryData(null);
             useTripStore.getState().setCurrentDistance(0);
+            useTripStore.setState({ accumulatedDistanceKm: 0 } as any);
           }}
           onContinueTrip={() => {
             setSummaryData(null);
             setIsNavigating(true);
-            setIsSimulating(true);
+            setIsSimulating(false);
           }}
         />
       )}

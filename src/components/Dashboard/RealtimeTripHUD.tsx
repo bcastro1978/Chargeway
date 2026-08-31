@@ -16,6 +16,7 @@ export const RealtimeTripHUD: React.FC = () => {
   const setSimulatedSpeedKmH = useTripStore(state => state.setSimulatedSpeedKmH);
   const setDynamicArrivalInStore = useTripStore(state => state.setDynamicArrival);
   const routePoints = useTripStore(state => state.routePoints);
+  const isRerouting = useTripStore(state => state.isRerouting);
 
   const [estimation, setEstimation] = useState<DynamicArrivalEstimation | null>(null);
   const [hudArrivalSoc, setHudArrivalSoc] = useState<number | null>(null);
@@ -196,6 +197,15 @@ export const RealtimeTripHUD: React.FC = () => {
             [{destinationName}]
           </span>
         </div>
+
+        {/* 5. Automatic Rerouting Status Banner */}
+        {isRerouting && (
+          <div className="w-full bg-emerald-950/90 border border-emerald-400/60 rounded-lg py-1 px-1.5 mt-1.5 flex items-center justify-center gap-1.5 animate-pulse">
+            <span className="text-[8.5px] font-extrabold text-emerald-300 uppercase tracking-wider">
+              🔄 Recalculando ruta...
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );

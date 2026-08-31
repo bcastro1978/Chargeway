@@ -43,6 +43,8 @@ export const RouteMap: React.FC<RouteMapProps> = ({
   const isNavigating = useTripStore(state => state.isNavigating);
   const isSimulating = useTripStore(state => state.isSimulating);
   const tripPlan = useTripStore(state => state.tripPlan);
+  const offRouteCountRef = useRef<number>(0);
+  const lastRerouteTimeRef = useRef<number>(0);
 
   // Activate GPS real-time speed measurement hook
   useRealtimeSpeed(isNavigating, isSimulating);
@@ -287,6 +289,29 @@ export const RouteMap: React.FC<RouteMapProps> = ({
           // Distance from start to current point (in km)
           const distanceToPoint = snapped.properties.location || 0;
           setCurrentDistance(distanceToPoint);
+
+          // Physical distance in meters between current GPS location and closest point on the route
+          const deviationKm = turf.distance(currentPoint, snapped, { units: 'kilometers' });
+          const deviationMeters = deviationKm * 1000;
+          const totalDistKm = tripPlan.route.distance / 1000;
+          const remainingDistKm = Math.max(0, totalDistKm - distanceToPoint);
+
+          // Automatic rerouting: trigger when user deviates > 60 meters from route (2 consecutive readings)
+          if (isNavigating && remainingDistKm > 0.08) {
+            if (deviationMeters > 60) {
+              offRouteCountRef.current += 1;
+              if (offRouteCountRef.current >= 2) {
+                const now = Date.now();
+                if (!useTripStore.getState().isRerouting && (now - lastRerouteTimeRef.current > 7000)) {
+                  lastRerouteTimeRef.current = now;
+                  offRouteCountRef.current = 0;
+                  useTripStore.getState().recalculateRoute({ lat, lng });
+                }
+              }
+            } else {
+              offRouteCountRef.current = 0;
+            }
+          }
           
           const startPoint = turf.point(decodedCoords[0]);
           const endPoint = turf.point(decodedCoords[decodedCoords.length - 1]);

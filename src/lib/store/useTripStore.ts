@@ -38,6 +38,8 @@ interface TripState {
   saveTripToDatabase: () => Promise<void>;
   favoriteLocations: Waypoint[];
   currentDistance: number;
+  accumulatedDistanceKm: number;
+  isRerouting: boolean;
   setCurrentDistance: (val: number) => void;
   fetchFavorites: () => Promise<void>;
   addFavorite: (wp: Waypoint, originalAddress?: string) => Promise<void>;
@@ -53,6 +55,7 @@ interface TripState {
   setSimulatedSpeedKmH: (speed: number) => void;
   setDynamicArrival: (soc: number | null, rangeKm: number | null) => void;
   saveCompletedTripToDatabase: (summaryData: any) => Promise<void>;
+  recalculateRoute: (currentPos: { lat: number; lng: number }) => Promise<void>;
   theme: 'dark' | 'light';
   toggleTheme: () => void;
 }
@@ -77,6 +80,8 @@ export const useTripStore = create<TripState>()(
   mapFlyTo: null,
   favoriteLocations: [],
   currentDistance: 0,
+  accumulatedDistanceKm: 0,
+  isRerouting: false,
   user: null,
   isLoadingUser: false,
   needsConsent: false,
@@ -98,9 +103,10 @@ export const useTripStore = create<TripState>()(
   setMapFlyTo: (coords) => set({ mapFlyTo: coords }),
   setIsNavigating: (val) => set((state) => ({ 
     isNavigating: val, 
-    navigationStartTime: val ? Date.now() : state.navigationStartTime,
-    navigationStartSoc: val ? state.soc : state.navigationStartSoc,
-    speedSamples: val && state.currentDistance === 0 ? [] : state.speedSamples
+    navigationStartTime: val ? (state.navigationStartTime || Date.now()) : state.navigationStartTime,
+    navigationStartSoc: val ? (state.navigationStartSoc ?? state.soc) : state.navigationStartSoc,
+    speedSamples: val && state.currentDistance === 0 && (state.accumulatedDistanceKm || 0) === 0 ? [] : state.speedSamples,
+    accumulatedDistanceKm: val && state.currentDistance === 0 && (state.accumulatedDistanceKm || 0) === 0 ? 0 : state.accumulatedDistanceKm
   })),
   setIsSimulating: (val) => set({ isSimulating: val }),
   setRealtimeSpeed: (speed) => set((state) => ({ 
@@ -114,6 +120,9 @@ export const useTripStore = create<TripState>()(
   })),
 
   planRoute: async () => {
+    // If currently navigating, do not overwrite the live navigation route with auto-plan
+    if (get().isNavigating) return;
+
     const { routePoints, selectedVehicle, soc } = get();
 
     // Need at least 2 named points
@@ -159,6 +168,56 @@ export const useTripStore = create<TripState>()(
       set({ tripPlan: null });
     } finally {
       set({ isLoadingPlan: false });
+    }
+  },
+
+  recalculateRoute: async (currentPos: { lat: number; lng: number }) => {
+    const { routePoints, selectedVehicle, soc, currentDistance, accumulatedDistanceKm, isNavigating, isRerouting } = get();
+    if (!isNavigating || !selectedVehicle || isRerouting) return;
+
+    const validPoints = routePoints.filter(p => p.lat !== 0 && p.lng !== 0);
+    if (validPoints.length < 2) return;
+
+    const dest = validPoints[validPoints.length - 1];
+
+    // Filter ahead intermediate waypoints (> 300m away from current location)
+    const intermediateStops = validPoints.slice(1, validPoints.length - 1).filter(wp => {
+      const dLat = ((wp.lat - currentPos.lat) * Math.PI) / 180;
+      const dLng = ((wp.lng - currentPos.lng) * Math.PI) / 180;
+      const a =
+        Math.sin(dLat / 2) ** 2 +
+        Math.cos((currentPos.lat * Math.PI) / 180) * Math.cos((wp.lat * Math.PI) / 180) * Math.sin(dLng / 2) ** 2;
+      const dKm = 6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return dKm > 0.3;
+    });
+
+    const coords = [
+      { lat: currentPos.lat, lng: currentPos.lng },
+      ...intermediateStops.map(wp => ({ lat: wp.lat, lng: wp.lng })),
+      { lat: dest.lat, lng: dest.lng }
+    ];
+
+    try {
+      set({ isRerouting: true });
+      const currentSocEstimate = get().dynamicArrivalSoc !== null 
+        ? Math.max(0.05, (get().dynamicArrivalSoc || 50) / 100)
+        : soc;
+
+      const plan = await generateTripPlan(coords, selectedVehicle.specs, currentSocEstimate);
+      if (plan && plan.route?.geometry) {
+        set((state) => ({
+          accumulatedDistanceKm: (state.accumulatedDistanceKm || 0) + state.currentDistance,
+          currentDistance: 0,
+          tripPlan: plan,
+          isRerouting: false
+        }));
+        console.log('🔄 Ruta recalculada exitosamente por desvío');
+      } else {
+        set({ isRerouting: false });
+      }
+    } catch (err) {
+      console.warn('Error recalculating route on deviation:', err);
+      set({ isRerouting: false });
     }
   },
 
