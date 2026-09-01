@@ -301,99 +301,95 @@ export const HeatmapDeficitMap: React.FC = () => {
       features: heatPoints
     };
 
-    if (map.current.getSource('demand-heatmap-source')) {
-      (map.current.getSource('demand-heatmap-source') as mapboxgl.GeoJSONSource).setData(heatmapGeoJson);
-    } else {
-      map.current.addSource('demand-heatmap-source', {
-        type: 'geojson',
-        data: heatmapGeoJson
-      });
+    const updateLayers = () => {
+      if (!map.current || !map.current.isStyleLoaded()) return;
 
-      map.current.addLayer({
-        id: 'demand-heatmap-layer',
-        type: 'heatmap',
-        source: 'demand-heatmap-source',
-        maxzoom: 13,
-        paint: {
-          'heatmap-weight': ['interpolate', ['linear'], ['get', 'weight'], 0, 0, 1, 1],
-          'heatmap-intensity': ['interpolate', ['linear'], ['zoom'], 0, 1, 9, 3],
-          'heatmap-color': [
-            'interpolate',
-            ['linear'],
-            ['heatmap-density'],
-            0, 'rgba(6, 182, 212, 0)',
-            0.15, 'rgba(6, 182, 212, 0.4)',
-            0.35, 'rgba(16, 185, 129, 0.7)',
-            0.6, 'rgba(245, 158, 11, 0.85)',
-            0.85, 'rgba(239, 68, 68, 0.95)',
-            1.0, '#ffffff'
-          ],
-          'heatmap-radius': ['interpolate', ['linear'], ['zoom'], 0, 3, 9, 22],
-          'heatmap-opacity': 0.85
+      try {
+        // --- Heatmap Source & Layer ---
+        const existingHeatSource = map.current.getSource('demand-heatmap-source') as mapboxgl.GeoJSONSource;
+        if (existingHeatSource) {
+          existingHeatSource.setData(heatmapGeoJson);
+        } else {
+          map.current.addSource('demand-heatmap-source', {
+            type: 'geojson',
+            data: heatmapGeoJson
+          });
+
+          map.current.addLayer({
+            id: 'demand-heatmap-layer',
+            type: 'heatmap',
+            source: 'demand-heatmap-source',
+            maxzoom: 18,
+            paint: {
+              'heatmap-weight': ['interpolate', ['linear'], ['get', 'weight'], 0, 0, 1, 1],
+              'heatmap-intensity': ['interpolate', ['linear'], ['zoom'], 0, 1.2, 9, 3.5],
+              'heatmap-color': [
+                'interpolate',
+                ['linear'],
+                ['heatmap-density'],
+                0, 'rgba(6, 182, 212, 0)',
+                0.15, 'rgba(6, 182, 212, 0.5)',
+                0.35, 'rgba(16, 185, 129, 0.75)',
+                0.6, 'rgba(245, 158, 11, 0.9)',
+                0.85, 'rgba(239, 68, 68, 0.98)',
+                1.0, '#ffffff'
+              ],
+              'heatmap-radius': ['interpolate', ['linear'], ['zoom'], 0, 4, 9, 26, 14, 34],
+              'heatmap-opacity': 0.88
+            }
+          });
         }
-      });
-    }
 
-    if (map.current.getLayer('demand-heatmap-layer')) {
-      map.current.setLayoutProperty(
-        'demand-heatmap-layer',
-        'visibility',
-        showHeatmap ? 'visible' : 'none'
-      );
-    }
+        if (map.current.getLayer('demand-heatmap-layer')) {
+          map.current.setLayoutProperty(
+            'demand-heatmap-layer',
+            'visibility',
+            showHeatmap ? 'visible' : 'none'
+          );
+        }
 
-    // Corridors Lines
-    const corridorFeatures: any[] = analyzedCorridors.map(c => ({
-      type: 'Feature',
-      properties: {
-        id: c.id,
-        name: c.name,
-        severity: c.severity,
-        trips: c.tripsCount,
-        color: c.severity === 'Crítico' ? '#ef4444' : c.severity === 'Moderado' ? '#f59e0b' : '#10b981',
-        width: Math.min(8, Math.max(3, c.tripsCount * 0.4))
-      },
-      geometry: {
-        type: 'LineString',
-        coordinates: c.coordinates
+        // --- Corridors Source & Layer ---
+        const existingCorridorsSource = map.current.getSource('corridors-source') as mapboxgl.GeoJSONSource;
+        if (existingCorridorsSource) {
+          existingCorridorsSource.setData(corridorsGeoJson);
+        } else {
+          map.current.addSource('corridors-source', {
+            type: 'geojson',
+            data: corridorsGeoJson
+          });
+
+          map.current.addLayer({
+            id: 'corridors-layer',
+            type: 'line',
+            source: 'corridors-source',
+            layout: {
+              'line-join': 'round',
+              'line-cap': 'round'
+            },
+            paint: {
+              'line-color': ['get', 'color'],
+              'line-width': ['get', 'width'],
+              'line-opacity': 0.85
+            }
+          });
+        }
+
+        if (map.current.getLayer('corridors-layer')) {
+          map.current.setLayoutProperty(
+            'corridors-layer',
+            'visibility',
+            showCorridors ? 'visible' : 'none'
+          );
+        }
+      } catch (err) {
+        console.warn('Mapbox layer update notice:', err);
       }
-    }));
-
-    const corridorsGeoJson: any = {
-      type: 'FeatureCollection',
-      features: corridorFeatures
     };
 
-    if (map.current.getSource('corridors-source')) {
-      (map.current.getSource('corridors-source') as mapboxgl.GeoJSONSource).setData(corridorsGeoJson);
+    if (map.current.isStyleLoaded()) {
+      updateLayers();
     } else {
-      map.current.addSource('corridors-source', {
-        type: 'geojson',
-        data: corridorsGeoJson
-      });
-
-      map.current.addLayer({
-        id: 'corridors-layer',
-        type: 'line',
-        source: 'corridors-source',
-        layout: {
-          'line-join': 'round',
-          'line-cap': 'round'
-        },
-        paint: {
-          'line-color': ['get', 'color'],
-          'line-width': ['get', 'width'],
-          'line-opacity': 0.75
-        }
-      });
-    }
-
-    if (map.current.getLayer('corridors-layer')) {
-      map.current.setLayoutProperty(
-        'corridors-layer',
-        'visibility',
-        showCorridors ? 'visible' : 'none'
-      );
+      map.current.once('style.load', updateLayers);
     }
   }, [isMapLoaded, filteredTrips, analyzedCorridors, showHeatmap, showCorridors]);
 
