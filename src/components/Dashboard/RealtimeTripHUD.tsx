@@ -59,6 +59,8 @@ export const RealtimeTripHUD: React.FC = () => {
     const isShortTripArrival = totalDistKm < 5.0 && currentDistance >= (totalDistKm * 0.5);
     const shouldUpdateCheckpoint = distDrivenSinceCheckpoint >= 5.0 || isShortTripArrival || hudArrivalSoc === null;
 
+    const effectiveStartSoc = (useTripStore.getState() as any).navigationStartSoc ?? currentSoc;
+
     if (shouldUpdateCheckpoint) {
       // Calculate average speed for this 5 km segment
       const samples = speedSamplesRef.current;
@@ -68,7 +70,7 @@ export const RealtimeTripHUD: React.FC = () => {
 
       const est = calculateDynamicArrival(
         selectedVehicle.specs,
-        currentSoc,
+        effectiveStartSoc,
         totalDistKm,
         currentDistance,
         avgSpeed,
@@ -86,7 +88,7 @@ export const RealtimeTripHUD: React.FC = () => {
       // Base estimation for instant consumption readout
       const est = calculateDynamicArrival(
         selectedVehicle.specs,
-        currentSoc,
+        effectiveStartSoc,
         totalDistKm,
         currentDistance,
         evalSpeed,
@@ -111,7 +113,7 @@ export const RealtimeTripHUD: React.FC = () => {
   
   // Use 5 km checkpoint updated SOC (or initial plan arrivalSoc if under 5 km)
   const activeArrivalSoc = hudArrivalSoc !== null ? hudArrivalSoc : tripPlan.arrivalSoc;
-  const arrivalSocPct = Math.round(activeArrivalSoc * 100);
+  const arrivalSocPct = Math.min(100, Math.max(0, Math.round(activeArrivalSoc > 1.0 ? activeArrivalSoc : activeArrivalSoc * 100)));
 
   // Current real-time autonomy remaining at this exact moment (km)
   const currentEnergyKwh = currentSoc * selectedVehicle.specs.usable_battery_kwh;

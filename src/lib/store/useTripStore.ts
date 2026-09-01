@@ -199,9 +199,16 @@ export const useTripStore = create<TripState>()(
 
     try {
       set({ isRerouting: true });
-      const currentSocEstimate = get().dynamicArrivalSoc !== null 
-        ? Math.max(0.05, (get().dynamicArrivalSoc || 50) / 100)
-        : soc;
+
+      // Calculate realistic remaining battery at the current vehicle position
+      const startSoc = get().navigationStartSoc ?? soc;
+      const totalDrivenKm = (accumulatedDistanceKm || 0) + currentDistance;
+      const batteryCapacity = selectedVehicle.specs.usable_battery_kwh;
+      const baseWhKm = get().tripPlan?.totalConsumptionWh && get().tripPlan?.route?.distance
+        ? get().tripPlan!.totalConsumptionWh / (get().tripPlan!.route.distance / 1000)
+        : (batteryCapacity * 1000) / ((selectedVehicle.specs as any).wltp_range_km || 400);
+      const consumedSoc = (totalDrivenKm * baseWhKm) / 1000 / batteryCapacity;
+      const currentSocEstimate = Math.max(0.05, Math.min(1.0, startSoc - consumedSoc));
 
       const plan = await generateTripPlan(coords, selectedVehicle.specs, currentSocEstimate);
       if (plan && plan.route?.geometry) {
@@ -209,6 +216,7 @@ export const useTripStore = create<TripState>()(
           accumulatedDistanceKm: (state.accumulatedDistanceKm || 0) + state.currentDistance,
           currentDistance: 0,
           tripPlan: plan,
+          dynamicArrivalSoc: plan.arrivalSoc,
           isRerouting: false
         }));
         console.log('🔄 Ruta recalculada exitosamente por desvío');

@@ -65,27 +65,33 @@ export function calculateDynamicArrival(
   realtimeSpeedKmH: number,
   basePlannedRateWhKm: number = 160
 ): DynamicArrivalEstimation {
+  // Ensure startSoc is normalized to a fraction (0.05 to 1.0)
+  const normalizedStartSoc = startSoc > 1.0 ? startSoc / 100 : Math.max(0.05, startSoc);
+
   // Reference baseline rate at average route speed (~65 km/h)
   const baselineRateAt65 = calculateSpeedConsumptionRate(specs, 65);
   
-  // Calculate live Wh/km rate under current speed
-  const activeSpeedKmH = realtimeSpeedKmH > 5 ? realtimeSpeedKmH : 65;
+  // Calculate live Wh/km rate under current speed (clamped between 20 and 130 km/h to avoid low-speed aux skew)
+  const activeSpeedKmH = Math.min(130, Math.max(20, realtimeSpeedKmH > 0 ? realtimeSpeedKmH : 65));
   const liveSpeedRate = calculateSpeedConsumptionRate(specs, activeSpeedKmH);
 
-  // Speed multiplier relative to reference driving speed
-  const speedEfficiencyRatio = realtimeSpeedKmH > 5 ? (liveSpeedRate / baselineRateAt65) : 1.0;
+  // Speed multiplier relative to reference driving speed (bounded between 0.85 and 1.35)
+  const rawRatio = liveSpeedRate / baselineRateAt65;
+  const speedEfficiencyRatio = Math.min(1.35, Math.max(0.85, rawRatio));
 
-  // Effective consumption rate per km
+  // Effective consumption rate per km for remaining distance
   const liveWhKm = basePlannedRateWhKm * speedEfficiencyRatio;
 
-  // Total projected energy for the entire trip (driven + remaining)
-  const totalTripEnergyWh = liveWhKm * Math.max(totalDistanceKm, 0.1);
-  const totalTripEnergyKwh = totalTripEnergyWh / 1000;
+  // Total projected energy: driven distance at planned rate + remaining distance at live speed rate
+  const remainingDistKm = Math.max(0, totalDistanceKm - currentDistanceKm);
+  const remainingEnergyKwh = (remainingDistKm * liveWhKm) / 1000;
+  const consumedEnergyKwh = (currentDistanceKm * basePlannedRateWhKm) / 1000;
+  const totalTripEnergyKwh = consumedEnergyKwh + remainingEnergyKwh;
 
-  const startEnergyKwh = startSoc * specs.usable_battery_kwh;
+  const startEnergyKwh = normalizedStartSoc * specs.usable_battery_kwh;
   const arrivalEnergyKwh = Math.max(0, startEnergyKwh - totalTripEnergyKwh);
 
-  const estimatedArrivalSoc = arrivalEnergyKwh / specs.usable_battery_kwh;
+  const estimatedArrivalSoc = Math.min(1.0, Math.max(0, arrivalEnergyKwh / specs.usable_battery_kwh));
 
   // Autonomy at arrival (km) using standard reference consumption
   const estimatedArrivalRangeKm = Math.round((arrivalEnergyKwh * 1000) / Math.max(basePlannedRateWhKm, 100));
