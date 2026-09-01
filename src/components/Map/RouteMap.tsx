@@ -22,10 +22,11 @@ interface RouteMapProps {
   onMapClick?: (lng: number, lat: number) => void;
   onNavigateToCharger?: (charger: Charger) => void;
   flyTo?: { lat: number; lng: number } | null;
+  onArrival?: () => void;
 }
 
 export const RouteMap: React.FC<RouteMapProps> = ({ 
-  geometry, chargers, routeChargerIds, locations, onChargerClick, onMapClick, onNavigateToCharger, flyTo
+  geometry, chargers, routeChargerIds, locations, onChargerClick, onMapClick, onNavigateToCharger, flyTo, onArrival
 }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
@@ -315,6 +316,12 @@ export const RouteMap: React.FC<RouteMapProps> = ({
           
           const startPoint = turf.point(decodedCoords[0]);
           const endPoint = turf.point(decodedCoords[decodedCoords.length - 1]);
+
+          // Automatic arrival detection: vehicle within 50 meters of destination
+          const distToEndKm = turf.distance(currentPoint, endPoint, { units: 'kilometers' });
+          if (isNavigating && (remainingDistKm <= 0.05 || distToEndKm <= 0.05) && distanceToPoint > 0.1) {
+            onArrival?.();
+          }
           
           let completedGeom: any = { type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: [] } };
           let remainingGeom: any = { type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: decodedCoords } };

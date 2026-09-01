@@ -84,59 +84,63 @@ export default function Home() {
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [summaryData, setSummaryData] = useState<TripSummaryData | null>(null);
 
+  const handleFinishTrip = () => {
+    const activeTripPlan = tripPlan || useTripStore.getState().tripPlan;
+    const validPoints = routePoints.filter(p => p.lat !== 0 && p.lng !== 0);
+    const origin = validPoints[0]?.name || routePoints[0]?.name || 'Origen';
+    const destination = validPoints[validPoints.length - 1]?.name || routePoints[routePoints.length - 1]?.name || 'Destino';
+    const vehicleModel = selectedVehicle ? `${selectedVehicle.brand} ${selectedVehicle.model}` : 'Vehículo EV';
+    const totalPlannedDistKm = activeTripPlan ? (activeTripPlan.route.distance / 1000) : 15;
+
+    // 1. Actual Distance driven up to stopping
+    const totalDrivenKm = ((useTripStore.getState() as any).accumulatedDistanceKm || 0) + currentDistance;
+    const actualDistanceKm = totalDrivenKm > 0 ? Math.round(totalDrivenKm * 10) / 10 : totalPlannedDistKm;
+
+    // 2. Speed samples recorded during navigation
+    const samples: number[] = (useTripStore.getState() as any).speedSamples || [];
+    const actualDurationMin = samples.length > 0
+      ? Math.max(1, Math.round(samples.length / 60))
+      : Math.max(1, Math.round((Date.now() - ((useTripStore.getState() as any).navigationStartTime || Date.now())) / 60000));
+
+    // 3. True Average Speed (km/h) across all recorded speed samples during the trip
+    const avgSpeedKmh = samples.length > 0
+      ? Math.round((samples.reduce((a, b) => a + b, 0) / samples.length) * 10) / 10
+      : (simulatedSpeedKmH || 70);
+
+    // 4. Actual Consumed Energy (kWh) up to stopping
+    const usableKwh = selectedVehicle?.specs?.usable_battery_kwh || 38.8;
+    const baseWhKm = totalPlannedDistKm > 0 && activeTripPlan ? (activeTripPlan.totalConsumptionWh / totalPlannedDistKm) : 160;
+    const defaultSpecs = { drag_coefficient: 0.31, frontal_area_m2: 2.15, weight_kg: 1200 };
+    const liveWhKm = calculateSpeedConsumptionRate(selectedVehicle?.specs || defaultSpecs, avgSpeedKmh, 2800);
+    const effectiveWhKm = liveWhKm || baseWhKm;
+    const consumedKwh = Math.max(0.1, Math.round((actualDistanceKm * effectiveWhKm / 1000) * 10) / 10);
+
+    // 5. Actual Consumed SOC % & Remaining SOC % up to stopping
+    const initialSocFrac = (useTripStore.getState() as any).navigationStartSoc || soc;
+    const startSocPct = Math.round(initialSocFrac * 100);
+    const consumedSocPct = Math.min(100, Math.max(0, Math.round((consumedKwh / usableKwh) * 100)));
+    const remainingSocPct = Math.max(0, startSocPct - consumedSocPct);
+
+    setSummaryData({
+      originName: origin,
+      destinationName: destination,
+      vehicleModel,
+      actualDistanceKm,
+      actualDurationMin,
+      avgSpeedKmh,
+      consumedKwh,
+      consumedSocPct,
+      remainingSocPct,
+      startSocPct
+    });
+
+    setIsNavigating(false);
+    setIsSimulating(false);
+  };
+
   const handleToggleNavigation = () => {
     if (isNavigating) {
-      const activeTripPlan = tripPlan || useTripStore.getState().tripPlan;
-      const validPoints = routePoints.filter(p => p.lat !== 0 && p.lng !== 0);
-      const origin = validPoints[0]?.name || routePoints[0]?.name || 'Origen';
-      const destination = validPoints[validPoints.length - 1]?.name || routePoints[routePoints.length - 1]?.name || 'Destino';
-      const vehicleModel = selectedVehicle ? `${selectedVehicle.brand} ${selectedVehicle.model}` : 'Vehículo EV';
-      const totalPlannedDistKm = activeTripPlan ? (activeTripPlan.route.distance / 1000) : 15;
-
-      // 1. Actual Distance driven up to stopping
-      const totalDrivenKm = ((useTripStore.getState() as any).accumulatedDistanceKm || 0) + currentDistance;
-      const actualDistanceKm = totalDrivenKm > 0 ? Math.round(totalDrivenKm * 10) / 10 : totalPlannedDistKm;
-
-      // 2. Speed samples recorded during navigation
-      const samples: number[] = (useTripStore.getState() as any).speedSamples || [];
-      const actualDurationMin = samples.length > 0
-        ? Math.max(1, Math.round(samples.length / 60))
-        : Math.max(1, Math.round((Date.now() - ((useTripStore.getState() as any).navigationStartTime || Date.now())) / 60000));
-
-      // 3. True Average Speed (km/h) across all recorded speed samples during the trip
-      const avgSpeedKmh = samples.length > 0
-        ? Math.round((samples.reduce((a, b) => a + b, 0) / samples.length) * 10) / 10
-        : (simulatedSpeedKmH || 70);
-
-      // 4. Actual Consumed Energy (kWh) up to stopping
-      const usableKwh = selectedVehicle?.specs?.usable_battery_kwh || 38.8;
-      const baseWhKm = totalPlannedDistKm > 0 && activeTripPlan ? (activeTripPlan.totalConsumptionWh / totalPlannedDistKm) : 160;
-      const defaultSpecs = { drag_coefficient: 0.31, frontal_area_m2: 2.15, weight_kg: 1200 };
-      const liveWhKm = calculateSpeedConsumptionRate(selectedVehicle?.specs || defaultSpecs, avgSpeedKmh, 2800);
-      const effectiveWhKm = liveWhKm || baseWhKm;
-      const consumedKwh = Math.max(0.1, Math.round((actualDistanceKm * effectiveWhKm / 1000) * 10) / 10);
-
-      // 5. Actual Consumed SOC % & Remaining SOC % up to stopping
-      const initialSocFrac = (useTripStore.getState() as any).navigationStartSoc || soc;
-      const startSocPct = Math.round(initialSocFrac * 100);
-      const consumedSocPct = Math.min(100, Math.max(0, Math.round((consumedKwh / usableKwh) * 100)));
-      const remainingSocPct = Math.max(0, startSocPct - consumedSocPct);
-
-      setSummaryData({
-        originName: origin,
-        destinationName: destination,
-        vehicleModel,
-        actualDistanceKm,
-        actualDurationMin,
-        avgSpeedKmh,
-        consumedKwh,
-        consumedSocPct,
-        remainingSocPct,
-        startSocPct
-      });
-
-      setIsNavigating(false);
-      setIsSimulating(false);
+      handleFinishTrip();
     } else {
       setIsNavigating(true);
       setIsSimulating(false);
@@ -625,6 +629,7 @@ export default function Home() {
                 onMapClick={handleMapClick}
                 onNavigateToCharger={handleNavigateToCharger}
                 flyTo={mapFlyTo}
+                onArrival={handleFinishTrip}
               />
             </div>
 
