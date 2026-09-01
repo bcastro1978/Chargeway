@@ -35,11 +35,16 @@ export const RealtimeTripHUD: React.FC = () => {
       return;
     }
 
-    // Set initial HUD arrival battery percentage to match initial static plan (e.g. 20%)
-    setHudArrivalSoc(tripPlan.arrivalSoc);
+    // Set initial HUD arrival battery percentage to match plan, clamped to currentSoc
+    const hasChargingStops = Boolean(tripPlan.chargers && tripPlan.chargers.length > 0);
+    const initialArrivalSoc = hasChargingStops 
+      ? tripPlan.arrivalSoc 
+      : Math.min(currentSoc, tripPlan.arrivalSoc);
+
+    setHudArrivalSoc(initialArrivalSoc);
     lastCheckpointKmRef.current = currentDistance;
     speedSamplesRef.current = [];
-  }, [isNavigating, tripPlan, selectedVehicle]);
+  }, [isNavigating, tripPlan, selectedVehicle, currentSoc]);
 
   // 2. Telemetry collection and 5 km Checkpoint Update Logic
   useEffect(() => {
@@ -113,7 +118,11 @@ export const RealtimeTripHUD: React.FC = () => {
   
   // Use 5 km checkpoint updated SOC (or initial plan arrivalSoc if under 5 km)
   const activeArrivalSoc = hudArrivalSoc !== null ? hudArrivalSoc : tripPlan.arrivalSoc;
-  const arrivalSocPct = Math.min(100, Math.max(0, Math.round(activeArrivalSoc > 1.0 ? activeArrivalSoc : activeArrivalSoc * 100)));
+  const currentSocPct = Math.round(currentSoc * 100);
+  const rawArrivalSocPct = Math.round(activeArrivalSoc > 1.0 ? activeArrivalSoc : activeArrivalSoc * 100);
+  const hasChargingStops = Boolean(tripPlan.chargers && tripPlan.chargers.length > 0);
+  // Physical law: without charging stops, arrival percentage cannot exceed current battery
+  const arrivalSocPct = Math.min(100, Math.max(0, hasChargingStops ? rawArrivalSocPct : Math.min(currentSocPct, rawArrivalSocPct)));
 
   // Current real-time autonomy remaining at this exact moment (km)
   const currentEnergyKwh = currentSoc * selectedVehicle.specs.usable_battery_kwh;

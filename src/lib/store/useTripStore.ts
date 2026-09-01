@@ -97,17 +97,21 @@ export const useTripStore = create<TripState>()(
   setMapSelectionIndex: (idx) => set({ mapSelectionIndex: idx }),
   setCurrentDistance: (val) => set({ currentDistance: val }),
   setSelectedVehicle: (vehicle) => set({ selectedVehicle: vehicle }),
-  setSoc: (soc) => set({ soc }),
+  setSoc: (soc) => set({ soc, navigationStartSoc: soc, dynamicArrivalSoc: null }),
   setFilterCompatibleChargers: (val) => set({ filterCompatibleChargers: val }),
   setRoutePoints: (points) => set({ routePoints: points }),
   setMapFlyTo: (coords) => set({ mapFlyTo: coords }),
-  setIsNavigating: (val) => set((state) => ({ 
-    isNavigating: val, 
-    navigationStartTime: val ? (state.navigationStartTime || Date.now()) : state.navigationStartTime,
-    navigationStartSoc: val ? (state.navigationStartSoc ?? state.soc) : state.navigationStartSoc,
-    speedSamples: val && state.currentDistance === 0 && (state.accumulatedDistanceKm || 0) === 0 ? [] : state.speedSamples,
-    accumulatedDistanceKm: val && state.currentDistance === 0 && (state.accumulatedDistanceKm || 0) === 0 ? 0 : state.accumulatedDistanceKm
-  })),
+  setIsNavigating: (val) => set((state) => {
+    const isFreshStart = val && state.currentDistance === 0 && (state.accumulatedDistanceKm || 0) === 0;
+    return { 
+      isNavigating: val, 
+      navigationStartTime: val ? (state.navigationStartTime || Date.now()) : null,
+      navigationStartSoc: val ? (isFreshStart ? state.soc : (state.navigationStartSoc ?? state.soc)) : null,
+      speedSamples: isFreshStart ? [] : state.speedSamples,
+      accumulatedDistanceKm: isFreshStart ? 0 : state.accumulatedDistanceKm,
+      dynamicArrivalSoc: val ? state.dynamicArrivalSoc : null
+    };
+  }),
   setIsSimulating: (val) => set({ isSimulating: val }),
   setRealtimeSpeed: (speed) => set((state) => ({ 
     currentSpeedKmH: speed,
