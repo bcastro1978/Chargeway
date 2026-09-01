@@ -28,6 +28,7 @@ import {
   ChevronRight,
   AlertTriangle
 } from 'lucide-react';
+import { HeatmapDeficitMap } from '@/components/admin/HeatmapDeficitMap';
 
 interface OverviewData {
   kpis: {
@@ -390,7 +391,10 @@ export default function AdminHome() {
 
           </div>
 
-          {/* ── 4. CORREDORES Y RUTAS DE MAYOR TRÁFICO ───────────────────────── */}
+          {/* ── 4. HEATMAP & DEFICIT ANALYSIS MODULE ─────────────────────────── */}
+          <HeatmapDeficitMap />
+
+          {/* ── 5. CORREDORES Y RUTAS DE MAYOR TRÁFICO ───────────────────────── */}
           <div className="bg-[#0f0f13] border border-neutral-800/90 rounded-3xl p-6 shadow-xl">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-neutral-800 pb-5 mb-5">
               <div className="flex items-center gap-3">
