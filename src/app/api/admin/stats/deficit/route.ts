@@ -94,6 +94,17 @@ export async function GET(request: NextRequest) {
 
       const origClean = (t.origin_name || '').split(',')[0].trim().replace(/\s+/g, ' ');
       const destClean = (t.destination_name || '').split(',')[0].trim().replace(/\s+/g, ' ');
+      const fullText = `${t.origin_name || ''} ${t.destination_name || ''}`.toLowerCase();
+
+      // Detect province for trip
+      const provList = ['Pichincha', 'Guayas', 'Azuay', 'Tungurahua', 'Manabí', 'El Oro', 'Imbabura', 'Esmeraldas', 'Chimborazo', 'Loja', 'Santo Domingo', 'Cotopaxi', 'Carchi', 'Bolívar', 'Cañar'];
+      let tripProvince = 'Pichincha';
+      for (const p of provList) {
+        if (fullText.includes(p.toLowerCase())) {
+          tripProvince = p;
+          break;
+        }
+      }
 
       trips.push({
         id: t.id,
@@ -101,6 +112,7 @@ export async function GET(request: NextRequest) {
         destination: destClean || 'Destino',
         brand,
         model,
+        province: tripProvince,
         distanceKm: Math.round(Number(t.distance_km) || 20),
         kwh: Number(Number(t.consumption_kwh || 3.5).toFixed(1)),
         coordinates: sampledCoords,
@@ -109,9 +121,12 @@ export async function GET(request: NextRequest) {
       });
     });
 
+    const provSet = ['Todas', 'Pichincha', 'Guayas', 'Azuay', 'Tungurahua', 'Manabí', 'El Oro', 'Imbabura', 'Esmeraldas', 'Chimborazo', 'Loja', 'Santo Domingo', 'Cotopaxi', 'Carchi'];
+
     return NextResponse.json({
       success: true,
       brands: Array.from(brandsSet).sort(),
+      provinces: provSet,
       connectors: ['CCS2', 'Type 2', 'GB/T', 'CCS1', 'Chademo'],
       chargers,
       trips
