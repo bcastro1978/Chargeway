@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
+import { scheduleReservationExpiration, scheduleCommissionSettlement } from '@/lib/services/cloud-tasks';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://nmddylhyfgeplnxdauia.supabase.co';
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5tZGR5bGh5ZmdlcGxueGRhdWlhIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MDE3MTUyNSwiZXhwIjoyMDk1NzQ3NTI1fQ.Dd6lClvQ2imOMHVYDQECelOajQly5Q4M75vgqrWH7YU';
@@ -148,6 +149,9 @@ export async function POST(req: Request) {
         return NextResponse.json({ success: false, error: resErr.message }, { status: 400 });
       }
 
+      // Programar expiración asíncrona con Cloud Tasks (30 min)
+      scheduleReservationExpiration(reservationId, 30).catch(e => console.warn('Cloud Tasks expiration error:', e));
+
       const hostEmail = body.hostEmail || 'anfitrion@chargeway.ec';
       const driverEmail = reservation.driver_email;
 
@@ -280,6 +284,10 @@ export async function POST(req: Request) {
             </div>
           `,
         });
+      }
+
+      if (status === 'completed') {
+        scheduleCommissionSettlement(reservationId, 2).catch(e => console.warn('Cloud Tasks settlement error:', e));
       }
 
       return NextResponse.json({ success: true, data });

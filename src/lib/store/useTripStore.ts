@@ -51,6 +51,10 @@ interface TripState {
   simulatedSpeedKmH: number;
   dynamicArrivalSoc: number | null;
   dynamicArrivalRangeKm: number | null;
+  navigationStartTime: number | null;
+  navigationStartSoc: number | null;
+  speedSamples: number[];
+  recordSpeedSample: (speed: number) => void;
   setRealtimeSpeed: (speed: number) => void;
   setSimulatedSpeedKmH: (speed: number) => void;
   setDynamicArrival: (soc: number | null, rangeKm: number | null) => void;
@@ -93,6 +97,8 @@ export const useTripStore = create<TripState>()(
   navigationStartTime: null,
   navigationStartSoc: null,
   speedSamples: [],
+  dynamicArrivalSoc: null,
+  dynamicArrivalRangeKm: null,
 
   setMapSelectionIndex: (idx) => set({ mapSelectionIndex: idx }),
   setCurrentDistance: (val) => set({ currentDistance: val }),
@@ -165,7 +171,17 @@ export const useTripStore = create<TripState>()(
 
     const coords = validPoints.map(p => ({ lat: p.lat, lng: p.lng }));
     try {
-      const plan = await generateTripPlan(coords, selectedVehicle.specs, soc);
+      const defaultSpecs = {
+        usable_battery_kwh: 44.5,
+        wltp_range_km: 350,
+        consumption_wh_km: 145,
+        charger_type: 'CCS2',
+        vehicle_mass_kg: 1650,
+        drag_coefficient: 0.29,
+        frontal_area_m2: 2.3,
+      };
+      const specs = selectedVehicle?.specs || (defaultSpecs as any);
+      const plan = await generateTripPlan(coords, specs, soc);
       set({ tripPlan: plan, mapFlyTo: null });
     } catch (error) {
       console.warn('Could not plan trip:', error);
@@ -341,7 +357,7 @@ export const useTripStore = create<TripState>()(
             .maybeSingle();
 
           if (primaryVehicle && primaryVehicle.vehicle_models) {
-            const dbModel = primaryVehicle.vehicle_models;
+            const dbModel = (Array.isArray(primaryVehicle.vehicle_models) ? primaryVehicle.vehicle_models[0] : primaryVehicle.vehicle_models) as any;
             loadedState.selectedVehicle = {
               id: dbModel.slug,
               brand: dbModel.vehicle_brands?.name || 'Genérico',
@@ -458,7 +474,7 @@ export const useTripStore = create<TripState>()(
       user_id: user.id,
       origin_name: origin,
       destination_name: destination,
-      vehicle_model: `${selectedVehicle.brand} ${selectedVehicle.model}`,
+      vehicle_model: selectedVehicle ? `${selectedVehicle.brand} ${selectedVehicle.model}` : 'Vehículo EV',
       start_soc: soc,
       arrival_soc: tripPlan.arrivalSoc,
       distance_km: tripPlan.route.distance / 1000,
@@ -478,7 +494,7 @@ export const useTripStore = create<TripState>()(
     set({
       user: {
         ...user,
-        last_vehicle_id: selectedVehicle.id,
+        last_vehicle_id: selectedVehicle ? selectedVehicle.id : null,
         last_soc: soc
       }
     });

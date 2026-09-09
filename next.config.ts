@@ -13,7 +13,7 @@ const withPWA = require("@ducanh2912/next-pwa").default({
   }
 });
 
-const nextConfig: NextConfig = {
+const nextConfig: any = {
   reactStrictMode: false,
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },

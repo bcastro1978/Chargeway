@@ -255,7 +255,7 @@ export default function GarageManager({ userId }: { userId: string }) {
       
       const chosen = refreshedData.find(v => v.id === id);
       if (chosen && chosen.vehicle_models) {
-        const dbModel = chosen.vehicle_models;
+        const dbModel = (Array.isArray(chosen.vehicle_models) ? chosen.vehicle_models[0] : chosen.vehicle_models) as any;
         const storeVehicle = {
           id: dbModel.slug,
           brand: dbModel.vehicle_brands?.name || 'Genérico',

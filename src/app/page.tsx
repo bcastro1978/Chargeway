@@ -13,7 +13,8 @@ import { PwaInstallButton } from '@/components/Dashboard/PwaInstallButton';
 import { ProfileModal } from '@/components/Profile/ProfileModal';
 import { TripSummaryModal, TripSummaryData } from '@/components/Dashboard/TripSummaryModal';
 import { ThemeToggle } from '@/components/Dashboard/ThemeToggle';
-import { Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { VoiceCopilotModal } from '@/components/Map/VoiceCopilotModal';
+import { Loader2, ChevronLeft, ChevronRight, Sparkles, Mic } from 'lucide-react';
 import { fetchAllEcuadorChargers, Charger } from '@/lib/services/charging';
 import { useTripStore } from '@/lib/store/useTripStore';
 import { calculateSpeedConsumptionRate } from '@/lib/realtime-energy';
@@ -83,6 +84,7 @@ export default function Home() {
   const [currentFactIndex, setCurrentFactIndex] = useState(0);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [summaryData, setSummaryData] = useState<TripSummaryData | null>(null);
+  const [isCopilotOpen, setIsCopilotOpen] = useState(false);
 
   const handleFinishTrip = () => {
     const activeTripPlan = tripPlan || useTripStore.getState().tripPlan;
@@ -103,14 +105,15 @@ export default function Home() {
       : Math.max(1, Math.round((Date.now() - ((useTripStore.getState() as any).navigationStartTime || Date.now())) / 60000));
 
     // 3. True Average Speed (km/h) across all recorded speed samples during the trip
+    const simulatedSpeed = (useTripStore.getState() as any).simulatedSpeedKmH || 70;
     const avgSpeedKmh = samples.length > 0
       ? Math.round((samples.reduce((a, b) => a + b, 0) / samples.length) * 10) / 10
-      : (simulatedSpeedKmH || 70);
+      : simulatedSpeed;
 
     // 4. Actual Consumed Energy (kWh) up to stopping
     const usableKwh = selectedVehicle?.specs?.usable_battery_kwh || 38.8;
     const baseWhKm = totalPlannedDistKm > 0 && activeTripPlan ? (activeTripPlan.totalConsumptionWh / totalPlannedDistKm) : 160;
-    const defaultSpecs = { drag_coefficient: 0.31, frontal_area_m2: 2.15, weight_kg: 1200 };
+    const defaultSpecs: any = { usable_battery_kwh: 38.8, peak_charging_kw: 50, drag_coefficient: 0.31, frontal_area_m2: 2.15, weight_kg: 1200, wltp_range_km: 300 };
     const liveWhKm = calculateSpeedConsumptionRate(selectedVehicle?.specs || defaultSpecs, avgSpeedKmh, 2800);
     const effectiveWhKm = liveWhKm || baseWhKm;
     const consumedKwh = Math.max(0.1, Math.round((actualDistanceKm * effectiveWhKm / 1000) * 10) / 10);
@@ -344,6 +347,74 @@ export default function Home() {
     return ids;
   }, [tripPlan?.route?.geometry, mergedChargers]);
 
+  // Cargadores en ruta ordenados por avance del trayecto y priorizando estaciones de carga rápida (>20kW / DC)
+  const sortedRouteChargers = useMemo(() => {
+    if (!tripPlan?.route?.geometry || routeChargerIds.size === 0) return [];
+
+    let routeCoords: [number, number][] = [];
+    try {
+      const geom = JSON.parse(tripPlan.route.geometry);
+      routeCoords = (geom.coordinates as number[][]).map(c => [c[0], c[1]] as [number, number]);
+    } catch { return []; }
+
+    const haversineKm = (lat1: number, lng1: number, lat2: number, lng2: number) => {
+      const R = 6371, dLat = (lat2 - lat1) * Math.PI / 180, dLng = (lng2 - lng1) * Math.PI / 180;
+      const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
+      return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    };
+
+    const chargersOnRoute = mergedChargers.filter(c => routeChargerIds.has(c.id));
+
+    const withProgress = chargersOnRoute.map(ch => {
+      let closestIdx = 0;
+      let minDist = Infinity;
+      const step = Math.max(1, Math.floor(routeCoords.length / 80));
+      for (let i = 0; i < routeCoords.length; i += step) {
+        const [lng, lat] = routeCoords[i];
+        const d = haversineKm(ch.location.lat, ch.location.lng, lat, lng);
+        if (d < minDist) {
+          minDist = d;
+          closestIdx = i;
+        }
+      }
+      const progressRatio = routeCoords.length > 0 ? closestIdx / routeCoords.length : 0;
+      const pStr = (ch.potencia || '').toLowerCase();
+      const sStr = (ch.velocidad || '').toLowerCase();
+      const isFast = sStr.includes('ráp') || sStr.includes('rap') || pStr.includes('50') || pStr.includes('90') || pStr.includes('60') || pStr.includes('120') || (parseInt(pStr) || 0) >= 22;
+
+      return { charger: ch, progressRatio, isFast };
+    });
+
+    const totalDistKm = tripPlan.route.distance / 1000;
+    const estRange = selectedVehicle ? Math.round(selectedVehicle.specs.wltp_range_km * (soc || 0.8)) : 250;
+
+    // Si la autonomía alcanza para llegar directo con buen margen, el punto ideal está en el destino o al retorno
+    // Si no alcanza, el punto ideal está donde la batería cae al 20% (distancia ~ estRange * 0.75)
+    const isOutboundSafe = totalDistKm <= estRange * 0.85;
+    const targetRatio = isOutboundSafe
+      ? 0.90 // En o muy cerca del destino
+      : Math.min(0.85, Math.max(0.40, (estRange * 0.75) / (totalDistKm || 200)));
+
+    withProgress.sort((a, b) => {
+      // 1. Penalizar fuertemente cargadores a la salida del origen (< 20% de avance) si la ruta es interurbana (> 80 km)
+      const aNearStart = totalDistKm > 80 && a.progressRatio < 0.20;
+      const bNearStart = totalDistKm > 80 && b.progressRatio < 0.20;
+      if (!aNearStart && bNearStart) return -1;
+      if (aNearStart && !bNearStart) return 1;
+
+      // 2. Priorizar cargadores rápidos (>20 kW / DC)
+      if (a.isFast && !b.isFast) return -1;
+      if (!a.isFast && b.isFast) return 1;
+
+      // 3. Ordenar por cercanía al punto óptimo de recarga (destino o punto de batería baja)
+      const distA = Math.abs(a.progressRatio - targetRatio);
+      const distB = Math.abs(b.progressRatio - targetRatio);
+      return distA - distB;
+    });
+
+    return withProgress.map(item => item.charger);
+  }, [tripPlan?.route?.geometry, routeChargerIds, mergedChargers, selectedVehicle, soc]);
+
   const routeDistanceKm = tripPlan ? tripPlan.route.distance / 1000 : 0;
   const routeDurationMin = tripPlan ? tripPlan.route.duration / 60 : 0;
   const totalConsumptionKwh = tripPlan ? tripPlan.totalConsumptionWh / 1000 : 0;
@@ -366,6 +437,16 @@ export default function Home() {
     const safetyMarginKm = Math.round(((usableAtEnd - battery * SAFETY_BUFFER) * 1000) / avgRateWhKm);
     return { arrivalSoc, arrivalRangeKm, safetyMarginKm };
   }, [tripPlan, soc, selectedVehicle, routeDistanceKm]);
+
+  const isRoundTripRoute = routePoints.length >= 3 && (
+    (routePoints[routePoints.length - 1]?.name || '').includes('(Retorno)') ||
+    (Math.abs(routePoints[routePoints.length - 1]?.lat - (routePoints[0]?.lat || 0)) < 0.01 &&
+     Math.abs(routePoints[routePoints.length - 1]?.lng - (routePoints[0]?.lng || 0)) < 0.01)
+  );
+
+  const primaryDestinationPoint = isRoundTripRoute
+    ? routePoints.find((p, idx) => idx > 0 && idx < routePoints.length - 1 && !p.name.includes('(Retorno)')) || routePoints[1]
+    : routePoints[routePoints.length - 1];
 
   if (isLoadingUser) {
     return (
@@ -769,13 +850,13 @@ export default function Home() {
               <div className="p-8 text-center text-neutral-500 bg-neutral-900/30 rounded-2xl border border-neutral-800 border-dashed">
                 Los cargadores en ruta apareceran una vez calculado el trayecto
               </div>
-            ) : mergedChargers.filter(c => routeChargerIds.has(c.id)).length === 0 ? (
+            ) : sortedRouteChargers.length === 0 ? (
               <div className="p-8 text-center text-neutral-400 bg-neutral-900/30 rounded-2xl border border-neutral-800 border-dashed">
                 No se encontraron cargadores muy cercanos (5 km) al trayecto
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {mergedChargers.filter(c => routeChargerIds.has(c.id)).slice(0, 8).map(charger => (
+                {sortedRouteChargers.slice(0, 8).map(charger => (
                   <ChargerCard key={charger.id} charger={charger} onNavigateToCharger={handleNavigateToCharger} />
                 ))}
               </div>
@@ -792,7 +873,6 @@ export default function Home() {
           Contacto: <a href="mailto:chargewayec@gmail.com" className="text-emerald-500 hover:underline">chargewayec@gmail.com</a>
         </p>
       </footer>
-
       {summaryData && (
         <TripSummaryModal
           summaryData={summaryData}
@@ -808,6 +888,55 @@ export default function Home() {
           }}
         />
       )}
+
+      {/* Botón Flotante Copiloto EV Manos Libres */}
+      <button
+        onClick={() => setIsCopilotOpen(prev => !prev)}
+        className="fixed bottom-6 right-6 z-40 flex items-center gap-2.5 px-4 py-3 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-bold rounded-full shadow-2xl shadow-emerald-950/80 hover:scale-105 active:scale-95 transition-all cursor-pointer border border-emerald-300/40"
+        title="Copiloto de Voz Manos Libres (Gemini)"
+      >
+        <span className="relative flex h-3 w-3">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-300 opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-3 w-3 bg-white"></span>
+        </span>
+        <Mic size={18} />
+        <span className="text-xs font-bold tracking-wide uppercase">Copiloto EV</span>
+      </button>
+
+      <VoiceCopilotModal
+        isOpen={isCopilotOpen}
+        onClose={() => setIsCopilotOpen(false)}
+        context={{
+          vehicleModel: selectedVehicle ? `${selectedVehicle.brand} ${selectedVehicle.model}` : undefined,
+          batteryCapacityKwh: selectedVehicle?.specs?.usable_battery_kwh,
+          currentSoC: Math.round((soc || 0.5) * 100),
+          destinationCity: primaryDestinationPoint?.name,
+          estimatedRangeKm: selectedVehicle ? Math.round(selectedVehicle.specs.wltp_range_km * soc) : undefined,
+          wltpRangeKm: selectedVehicle?.specs?.wltp_range_km,
+          activeTrip: tripPlan ? {
+            originName: routePoints[0]?.name || 'Origen',
+            destinationName: primaryDestinationPoint?.name || 'Destino',
+            destinationLat: primaryDestinationPoint?.lat,
+            destinationLng: primaryDestinationPoint?.lng,
+            isRoundTrip: isRoundTripRoute,
+            distanceKm: routeDistanceKm,
+            durationMin: routeDurationMin,
+            consumptionKwh: totalConsumptionKwh,
+            arrivalSoc: liveStats?.arrivalSoc ?? tripPlan.arrivalSoc,
+            arrivalRangeKm: liveStats?.arrivalRangeKm ?? tripPlan.arrivalRangeKm,
+            safetyMarginKm: liveStats?.safetyMarginKm ?? tripPlan.safetyMarginKm,
+            recommendedChargerName: (tripPlan as any).chargingStops?.[0]?.name || sortedRouteChargers?.[0]?.nombre || 'Estación en la ruta',
+          } : undefined,
+          routeChargers: sortedRouteChargers.slice(0, 6).map(c => ({
+            id: c.id,
+            name: c.nombre,
+            power: c.potencia,
+            speed: c.velocidad,
+            lat: c.location.lat,
+            lng: c.location.lng,
+          })),
+        }}
+      />
     </main>
   );
 }

@@ -103,14 +103,15 @@ export default function Home() {
       : Math.max(1, Math.round((Date.now() - ((useTripStore.getState() as any).navigationStartTime || Date.now())) / 60000));
 
     // 3. True Average Speed (km/h) across all recorded speed samples during the trip
+    const simulatedSpeed = (useTripStore.getState() as any).simulatedSpeedKmH || 70;
     const avgSpeedKmh = samples.length > 0
       ? Math.round((samples.reduce((a, b) => a + b, 0) / samples.length) * 10) / 10
-      : (simulatedSpeedKmH || 70);
+      : simulatedSpeed;
 
     // 4. Actual Consumed Energy (kWh) up to stopping
     const usableKwh = selectedVehicle?.specs?.usable_battery_kwh || 38.8;
     const baseWhKm = totalPlannedDistKm > 0 && activeTripPlan ? (activeTripPlan.totalConsumptionWh / totalPlannedDistKm) : 160;
-    const defaultSpecs = { drag_coefficient: 0.31, frontal_area_m2: 2.15, weight_kg: 1200 };
+    const defaultSpecs: any = { usable_battery_kwh: 38.8, peak_charging_kw: 50, drag_coefficient: 0.31, frontal_area_m2: 2.15, weight_kg: 1200, wltp_range_km: 300 };
     const liveWhKm = calculateSpeedConsumptionRate(selectedVehicle?.specs || defaultSpecs, avgSpeedKmh, 2800);
     const effectiveWhKm = liveWhKm || baseWhKm;
     const consumedKwh = Math.max(0.1, Math.round((actualDistanceKm * effectiveWhKm / 1000) * 10) / 10);
