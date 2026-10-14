@@ -16,6 +16,8 @@ export interface AdvisorFeedback {
   weatherWarning: string | null;
   overallStatus: 'Seguro' | 'Precaución' | 'Crítico';
   segmentTips: SegmentTip[];
+  geminiSummary?: string;
+  geminiChargingAdvice?: string;
 }
 
 /**
@@ -50,11 +52,9 @@ export async function RouteAdvisorAgent(
 
   // Categorize terrain based on total ascent and elevation range
   if (totalAscent > 600 || elevRange > 500) {
-    status = 'Precaución';
     advice = `⛰️ Pendientes fuertes (+${Math.round(totalAscent)} m). Sube constante y regenera en bajadas.`;
     speedLimit = 80;
   } else if (totalAscent > 200 || elevRange > 150) {
-    status = 'Seguro';
     advice = `🏔️ Terreno irregular (+${Math.round(totalAscent)} m). Evita acelerar brusco y usa regeneración.`;
     speedLimit = 90;
   } else if (totalAscent > 50) {
@@ -66,16 +66,26 @@ export async function RouteAdvisorAgent(
   if (weatherCondition === 'Viento en contra') {
     warning = "Viento de frente. Autonomía reducida un 15%.";
     speedLimit = Math.min(speedLimit, 75);
-    status = status === 'Seguro' ? 'Precaución' : 'Crítico';
   } else if (weatherCondition === 'Lluvia') {
     warning = "Lluvia detectada. Mayor fricción en asfalto.";
     speedLimit = Math.min(speedLimit, 80);
   }
 
-  // Analizar SoC final y autonomía
-  if (plan.arrivalSoc < 0.15) {
+  // Analizar viabilidad real de batería para determinar el Estado General:
+  // - Seguro: SoC de llegada >= 20% y margen de seguridad >= 20 km (batería suficiente y sin riesgo)
+  // - Precaución: SoC de llegada entre 12% y 20%, o margen ajustado (< 20 km)
+  // - Crítico: SoC de llegada < 12% o margen negativo (parada obligatoria)
+  const arrSocPct = plan.arrivalSoc <= 1.0 ? plan.arrivalSoc * 100 : plan.arrivalSoc;
+  const safetyMargin = plan.safetyMarginKm ?? 0;
+
+  if (arrSocPct < 12 || safetyMargin < 0) {
     status = 'Crítico';
-    advice += " ¡Batería baja al llegar! Clima/calefacción OFF y máximo " + speedLimit + " km/h.";
+    advice += ` ¡Batería crítica (${Math.round(arrSocPct)}%)! Carga necesaria en ruta.`;
+  } else if (arrSocPct < 20 || safetyMargin < 20 || (weatherCondition === 'Viento en contra' && arrSocPct < 30)) {
+    status = 'Precaución';
+    advice += ` Reserva ajustada (${Math.round(arrSocPct)}%). Conduce moderado y en modo ECO.`;
+  } else {
+    status = 'Seguro';
   }
 
   // ----------------------------------------------------
@@ -164,7 +174,7 @@ export async function RouteAdvisorAgent(
         if (slopePct > 3.5) {
           title = "Descenso Fuerte";
           speed = Math.min(80, speedLimit);
-          segAdvice = `Usa One-Pedal o freno regenerativo. Recuperarás hasta 12% de batería.`;
+          segAdvice = `Usa One-Pedal o freno regenerativo. Recuperarás entre 4% y 6% de batería.`;
           regen = 'Máximo';
         } else {
           title = "Bajada Leve";

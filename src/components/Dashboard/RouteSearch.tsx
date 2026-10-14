@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { Plus, MapPin, Loader2, GripVertical, ArrowUpDown, X, Trash2, Star } from 'lucide-react';
-import { fetchSuggestions, SearchSuggestion } from '../../lib/services/mapbox';
+import { Plus, MapPin, Loader2, GripVertical, ArrowUpDown, X, Star, Navigation, RotateCcw, Trash2 } from 'lucide-react';
+import { fetchSuggestions, resolveGooglePlaceCoords, SearchSuggestion } from '../../lib/services/mapbox';
 import { useTripStore } from '@/lib/store/useTripStore';
 
 export interface Waypoint {
@@ -28,7 +28,8 @@ interface SearchInputProps {
   hasCoords: boolean;
   location?: Waypoint;
   placeholder: string;
-  isLast?: boolean;
+  isOrigin?: boolean;
+  isDestination?: boolean;
   onSelect: (loc: Waypoint) => void;
   onSelectFromMap?: () => void;
   onTextChange?: (text: string) => void;
@@ -40,6 +41,8 @@ const SearchInput: React.FC<SearchInputProps> = ({
   hasCoords,
   location,
   placeholder,
+  isOrigin,
+  isDestination,
   onSelect,
   onSelectFromMap,
   onTextChange,
@@ -101,17 +104,9 @@ const SearchInput: React.FC<SearchInputProps> = ({
   const debounceTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pendingAutoSelect = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const latestSuggestions = useRef<SearchSuggestion[]>([]);
-
-  // Keep latestSuggestions in sync so we can read them in setTimeout callbacks
-  useEffect(() => {
-    latestSuggestions.current = suggestions;
-  }, [suggestions]);
-
   useEffect(() => {
     setQuery(value);
   }, [value]);
-
 
   useEffect(() => {
     if (typeof window !== 'undefined' && navigator.geolocation) {
@@ -144,25 +139,54 @@ const SearchInput: React.FC<SearchInputProps> = ({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const sessionTokenRef = useRef<string>('');
+  const abortControllerRef = useRef<AbortController | null>(null);
+
   const handleSearch = (text: string) => {
     setQuery(text);
     onTextChange?.(text);
     if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
-    if (text.length < 3) { setSuggestions([]); setIsLoading(false); return; }
+    if (abortControllerRef.current) abortControllerRef.current.abort();
+
+    if (text.trim().length < 2) { setSuggestions([]); setIsLoading(false); return; }
     setIsLoading(true);
+
+    if (!sessionTokenRef.current) {
+      sessionTokenRef.current = typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `session-${Date.now()}`;
+    }
+
     debounceTimeout.current = setTimeout(async () => {
-      const results = await fetchSuggestions(text, proximity || undefined);
+      abortControllerRef.current = new AbortController();
+      const results = await fetchSuggestions(text, proximity || undefined, sessionTokenRef.current, abortControllerRef.current.signal);
       setSuggestions(results);
       setIsLoading(false);
       setShowSuggestions(true);
       onFocusChange?.(true);
-    }, 600);
+    }, 100);
   };
 
-  const handleSelect = (s: SearchSuggestion) => {
+  const handleSelect = async (s: SearchSuggestion) => {
     if (pendingAutoSelect.current) clearTimeout(pendingAutoSelect.current);
-    onSelect({ id: s.id, name: s.name, lng: s.center[0], lat: s.center[1] });
-    setQuery(s.name);
+
+    let lat = s.center?.[1];
+    let lng = s.center?.[0];
+
+    // If suggestion came from Google Places without coordinates, resolve via Place Details
+    if ((lat === undefined || lng === undefined) && s.placeId) {
+      setIsLoading(true);
+      const resolved = await resolveGooglePlaceCoords(s.placeId, sessionTokenRef.current);
+      setIsLoading(false);
+      if (resolved) {
+        lat = resolved.lat;
+        lng = resolved.lng;
+      }
+      sessionTokenRef.current = '';
+    }
+
+    if (lat !== undefined && lng !== undefined) {
+      onSelect({ id: s.id, name: s.name, lng, lat });
+      setQuery(s.name);
+    }
     setSuggestions([]);
     setShowSuggestions(false);
     onFocusChange?.(false);
@@ -222,94 +246,71 @@ const SearchInput: React.FC<SearchInputProps> = ({
     );
   };
 
-  const inputBorder = hasCoords && query
-    ? '1px solid rgba(16,185,129,0.4)'
-    : '1px solid var(--color-outline)';
-
-  const dotColor = hasCoords ? '#10b981' : '#f59e0b';
-  const dotGlow = hasCoords
-    ? '0 0 6px rgba(16,185,129,0.7)'
-    : '0 0 6px rgba(245,158,11,0.7)';
+  const labelText = isOrigin ? 'Origen Actual' : isDestination ? 'Destino Final' : 'Parada Intermedia';
 
   return (
-    <div ref={wrapperRef} style={{ position: 'relative', flex: 1, zIndex: showSuggestions ? 100 : 1 }}>
-      <div style={{ position: 'relative' }}>
-        {/* Coordinate validity indicator */}
-        {query && (
-          <div
-            title={hasCoords ? 'Coordenadas confirmadas' : 'Selecciona del menú desplegable'}
-            style={{
-              position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)',
-              width: '7px', height: '7px', borderRadius: '50%', zIndex: 1,
-              background: dotColor, boxShadow: dotGlow,
+    <div ref={wrapperRef} className="relative flex-1" style={{ zIndex: showSuggestions ? 100 : 1 }}>
+      <div className={`flex items-center space-x-2.5 bg-slate-900/85 border rounded-xl p-2.5 pl-3 transition ${
+        hasCoords && query 
+          ? 'border-white/15 focus-within:border-brand-cyan shadow-sm' 
+          : 'border-white/10 focus-within:border-brand-cyan'
+      }`}>
+        <div className="flex-1 min-w-0">
+          <label className="block text-[9px] font-mono text-slate-400 uppercase leading-none mb-1">
+            {labelText}
+          </label>
+          <input
+            type="text"
+            value={query}
+            placeholder={placeholder}
+            onChange={(e) => handleSearch(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && suggestions.length > 0) {
+                e.preventDefault();
+                handleSelect(suggestions[0]);
+              }
             }}
+            onFocus={() => {
+              setShowSuggestions(true);
+              onFocusChange?.(true);
+              if (query.length >= 3 && suggestions.length === 0) handleSearch(query);
+            }}
+            className="w-full bg-transparent border-0 p-0 text-xs font-medium text-white placeholder-slate-500 focus:outline-none focus:ring-0"
           />
-        )}
+        </div>
 
-        <input
-          type="text"
-          value={query}
-          placeholder={placeholder}
-          onChange={(e) => handleSearch(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' && suggestions.length > 0) {
-              e.preventDefault();
-              handleSelect(suggestions[0]);
-            }
-          }}
-          onFocus={() => {
-            setShowSuggestions(true);
-            onFocusChange?.(true);
-            if (query.length >= 3 && suggestions.length === 0) handleSearch(query);
-          }}
-          style={{
-            width: '100%',
-            padding: query ? '12px 64px 12px 24px' : '12px 64px 12px 12px',
-            background: 'rgba(255, 255, 255, 0.05)',
-            color: 'var(--color-text)',
-            border: inputBorder,
-            borderRadius: '8px',
-            fontSize: '0.9rem',
-            outline: 'none',
-            transition: 'border-color 0.2s, background 0.2s',
-          }}
-          onFocusCapture={(e) => { e.currentTarget.style.borderColor = 'var(--color-primary)'; }}
-          onBlurCapture={(e) => {
-            e.currentTarget.style.borderColor = hasCoords && query
-              ? 'rgba(16,185,129,0.4)'
-              : 'var(--color-outline)';
-          }}
-        />
-
-        <div style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', display: 'flex', gap: '8px', alignItems: 'center' }}>
+        <div className="flex items-center gap-1.5 shrink-0 text-slate-400">
           {isLoading ? (
-            <Loader2 size={16} className="animate-spin" style={{ color: 'var(--color-primary)' }} />
+            <Loader2 size={14} className="animate-spin text-brand-cyan" />
           ) : (
             <>
               {query && (
-                <X
-                  size={16}
-                  style={{ cursor: 'pointer', color: 'var(--color-text-dim)' }}
+                <button
+                  type="button"
                   onClick={() => { setQuery(''); setSuggestions([]); onTextChange?.(''); }}
-                />
+                  className="p-1 hover:text-white transition"
+                  title="Limpiar"
+                >
+                  <X size={14} />
+                </button>
               )}
               {hasCoords && (
                 <button
                   type="button"
                   onClick={toggleFavorite}
-                  style={{ background: 'none', border: 'none', color: currentFav ? '#f59e0b' : 'var(--color-text-dim)', cursor: 'pointer', padding: '4px' }}
+                  className={`p-1 transition ${currentFav ? 'text-amber-400' : 'hover:text-amber-400'}`}
                   title={currentFav ? 'Quitar de favoritos' : 'Añadir a favoritos'}
                 >
-                  <Star size={16} fill={currentFav ? '#f59e0b' : 'none'} />
+                  <Star size={14} fill={currentFav ? '#fbbf24' : 'none'} />
                 </button>
               )}
               <button
                 type="button"
                 onClick={(e) => { e.stopPropagation(); useCurrentLocation(); }}
-                style={{ background: 'none', border: 'none', color: 'var(--color-primary)', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '4px' }}
+                className="p-1 hover:text-brand-cyan transition text-slate-400"
                 title="Usar mi ubicación actual"
               >
-                <MapPin size={16} />
+                <MapPin size={14} />
               </button>
             </>
           )}
@@ -317,30 +318,21 @@ const SearchInput: React.FC<SearchInputProps> = ({
       </div>
 
       {showSuggestions && (
-        <div style={{
-          position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 2001,
-          background: '#1a1a1f', border: '1px solid var(--color-outline)',
-          borderRadius: '8px', marginTop: '4px',
-          boxShadow: '0 10px 25px rgba(0,0,0,0.8)', maxHeight: '280px', overflowY: 'auto',
-        }}>
+        <div className="absolute top-full left-0 right-0 z-[2001] mt-1.5 bg-slate-900/95 backdrop-blur-xl border border-white/15 rounded-xl shadow-2xl max-h-[280px] overflow-y-auto custom-scrollbar divide-y divide-white/5">
           <div
             onClick={useCurrentLocation}
-            style={{ padding: '12px', cursor: 'pointer', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--color-primary)', fontSize: '0.875rem', fontWeight: 500, transition: 'background 0.2s' }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
+            className="p-2.5 cursor-pointer flex items-center gap-2 text-brand-cyan text-xs font-semibold hover:bg-white/5 transition"
           >
-            <MapPin size={16} />
+            <MapPin size={14} />
             <span>Usar mi ubicación actual</span>
           </div>
 
           {onSelectFromMap && (
             <div
               onClick={(e) => { e.stopPropagation(); onSelectFromMap(); setShowSuggestions(false); onFocusChange?.(false); }}
-              style={{ padding: '12px', cursor: 'pointer', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--color-primary)', fontSize: '0.875rem', fontWeight: 500, transition: 'background 0.2s' }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
+              className="p-2.5 cursor-pointer flex items-center gap-2 text-brand-lime text-xs font-semibold hover:bg-white/5 transition"
             >
-              <MapPin size={16} />
+              <MapPin size={14} />
               <span>📍 Seleccionar en el mapa</span>
             </div>
           )}
@@ -349,14 +341,12 @@ const SearchInput: React.FC<SearchInputProps> = ({
             <div
               key={`fav-${f.id}`}
               onClick={() => handleSelect({ id: f.id, name: f.name, place_name: f.name, center: [f.lng, f.lat] } as SearchSuggestion)}
-              style={{ padding: '12px', cursor: 'pointer', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--color-primary)', fontSize: '0.875rem', fontWeight: 500, transition: 'background 0.2s' }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
+              className="p-2.5 cursor-pointer flex items-center gap-2.5 hover:bg-white/5 transition"
             >
-              <Star size={16} color="#f59e0b" fill="#f59e0b" style={{ flexShrink: 0 }} />
-              <div style={{ overflow: 'hidden', flex: 1 }}>
-                <div style={{ fontWeight: 600, fontSize: '0.875rem', color: 'var(--color-text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{f.name}</div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--color-text-dim)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              <Star size={14} className="text-amber-400 fill-amber-400 shrink-0" />
+              <div className="overflow-hidden flex-1">
+                <div className="font-semibold text-xs text-slate-200 truncate">{f.name}</div>
+                <div className="text-[10px] text-slate-400 truncate">
                   {f.address && f.address !== f.name ? f.address : 'Guardado en Favoritos'}
                 </div>
               </div>
@@ -367,12 +357,14 @@ const SearchInput: React.FC<SearchInputProps> = ({
             <div
               key={s.id}
               onClick={() => handleSelect(s)}
-              style={{ padding: '12px', cursor: 'pointer', borderBottom: '1px solid rgba(255,255,255,0.05)', transition: 'background 0.2s' }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
+              className="p-2.5 cursor-pointer hover:bg-white/5 transition flex items-center justify-between gap-2"
             >
-              <div style={{ fontWeight: 600, fontSize: '0.875rem', color: 'var(--color-text)' }}>{s.name}</div>
-              <div style={{ fontSize: '0.75rem', color: 'var(--color-text-dim)' }}>{s.place_name}</div>
+              <div className="min-w-0 flex-1">
+                <div className="font-semibold text-xs text-white truncate flex items-center gap-1.5">
+                  <span>{s.name}</span>
+                </div>
+                <div className="text-[10px] text-slate-400 truncate">{s.place_name}</div>
+              </div>
             </div>
           ))}
         </div>
@@ -380,32 +372,32 @@ const SearchInput: React.FC<SearchInputProps> = ({
 
       {/* Modals para alertas y alias */}
       {alertMsg && typeof document !== 'undefined' && createPortal(
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', zIndex: 99999, display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={(e) => { e.stopPropagation(); setAlertMsg(''); }}>
-          <div style={{ background: 'var(--color-bg)', padding: '24px', borderRadius: '12px', width: '90%', maxWidth: '360px', border: '1px solid var(--color-outline)', textAlign: 'center' }} onClick={(e) => e.stopPropagation()}>
-            <h3 style={{ marginTop: 0, marginBottom: '16px', color: 'var(--color-text)', fontSize: '1.125rem' }}>Atención</h3>
-            <p style={{ color: 'var(--color-text-dim)', fontSize: '0.875rem', marginBottom: '24px' }}>{alertMsg}</p>
-            <button type="button" onClick={() => setAlertMsg('')} style={{ width: '100%', padding: '10px 16px', background: 'var(--color-primary)', color: 'var(--color-bg)', border: 'none', cursor: 'pointer', borderRadius: '8px', fontWeight: 600 }}>Entendido</button>
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[99999] flex items-center justify-center p-4" onClick={(e) => { e.stopPropagation(); setAlertMsg(''); }}>
+          <div className="hud-panel p-6 rounded-2xl w-full max-w-sm border border-white/10 text-center shadow-hud" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-base font-bold text-white mb-2">Atención</h3>
+            <p className="text-slate-300 text-xs mb-6">{alertMsg}</p>
+            <button type="button" onClick={() => setAlertMsg('')} className="w-full py-2.5 px-4 bg-brand-cyan text-slate-950 rounded-xl font-bold text-xs uppercase tracking-wider hover:brightness-110 transition">Entendido</button>
           </div>
         </div>,
         document.body
       )}
 
       {promptOpen && typeof document !== 'undefined' && createPortal(
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', zIndex: 99999, display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={(e) => { e.stopPropagation(); setPromptOpen(false); }}>
-          <div style={{ background: 'var(--color-bg)', padding: '24px', borderRadius: '12px', width: '90%', maxWidth: '400px', border: '1px solid var(--color-outline)' }} onClick={(e) => e.stopPropagation()}>
-            <h3 style={{ marginTop: 0, marginBottom: '16px', color: 'var(--color-text)', fontSize: '1.125rem' }}>Guardar lugar favorito</h3>
-            <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.875rem', color: 'var(--color-text-dim)' }}>Nombre o alias (opcional):</label>
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[99999] flex items-center justify-center p-4" onClick={(e) => { e.stopPropagation(); setPromptOpen(false); }}>
+          <div className="hud-panel p-6 rounded-2xl w-full max-w-md border border-white/10 shadow-hud" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-base font-bold text-white mb-3">Guardar lugar favorito</h3>
+            <label className="block mb-2 text-xs text-slate-300">Nombre o alias (opcional):</label>
             <input 
               autoFocus
               type="text" 
               value={aliasValue} 
               onChange={e => setAliasValue(e.target.value)} 
               onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); handleSaveFavorite(); } }}
-              style={{ width: '100%', padding: '12px', borderRadius: '8px', background: 'var(--color-bg-secondary)', border: '1px solid var(--color-outline)', color: 'var(--color-text)', marginBottom: '24px', outline: 'none' }} 
+              className="w-full p-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs mb-5 focus:outline-none focus:border-brand-cyan"
             />
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
-              <button type="button" onClick={() => setPromptOpen(false)} style={{ padding: '8px 16px', background: 'transparent', color: 'var(--color-text)', border: 'none', cursor: 'pointer', borderRadius: '8px' }}>Cancelar</button>
-              <button type="button" onClick={handleSaveFavorite} style={{ padding: '8px 16px', background: 'var(--color-primary)', color: 'var(--color-bg)', border: 'none', cursor: 'pointer', borderRadius: '8px', fontWeight: 600 }}>Guardar</button>
+            <div className="flex justify-end gap-2">
+              <button type="button" onClick={() => setPromptOpen(false)} className="px-4 py-2 text-xs text-slate-300 hover:text-white transition">Cancelar</button>
+              <button type="button" onClick={handleSaveFavorite} className="px-4 py-2 bg-brand-cyan text-slate-950 font-bold text-xs rounded-xl hover:brightness-110 transition">Guardar</button>
             </div>
           </div>
         </div>,
@@ -413,13 +405,13 @@ const SearchInput: React.FC<SearchInputProps> = ({
       )}
 
       {deleteConfirmOpen.isOpen && typeof document !== 'undefined' && createPortal(
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', zIndex: 99999, display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={(e) => { e.stopPropagation(); setDeleteConfirmOpen({ isOpen: false, id: '' }); }}>
-          <div style={{ background: 'var(--color-bg)', padding: '24px', borderRadius: '12px', width: '90%', maxWidth: '360px', border: '1px solid var(--color-outline)', textAlign: 'center' }} onClick={(e) => e.stopPropagation()}>
-            <h3 style={{ marginTop: 0, marginBottom: '16px', color: 'var(--color-text)', fontSize: '1.125rem' }}>Eliminar favorito</h3>
-            <p style={{ color: 'var(--color-text-dim)', fontSize: '0.875rem', marginBottom: '24px' }}>¿Estás seguro de que deseas eliminar esta ubicación de tus favoritos?</p>
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '12px' }}>
-              <button type="button" onClick={() => setDeleteConfirmOpen({ isOpen: false, id: '' })} style={{ padding: '8px 16px', background: 'transparent', color: 'var(--color-text)', border: 'none', cursor: 'pointer', borderRadius: '8px' }}>Cancelar</button>
-              <button type="button" onClick={handleConfirmDelete} style={{ padding: '8px 16px', background: '#ef4444', color: 'white', border: 'none', cursor: 'pointer', borderRadius: '8px', fontWeight: 600 }}>Eliminar</button>
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[99999] flex items-center justify-center p-4" onClick={(e) => { e.stopPropagation(); setDeleteConfirmOpen({ isOpen: false, id: '' }); }}>
+          <div className="hud-panel p-6 rounded-2xl w-full max-w-sm border border-white/10 text-center shadow-hud" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-base font-bold text-white mb-2">Eliminar favorito</h3>
+            <p className="text-slate-300 text-xs mb-6">¿Estás seguro de que deseas eliminar esta ubicación de tus favoritos?</p>
+            <div className="flex justify-center gap-3">
+              <button type="button" onClick={() => setDeleteConfirmOpen({ isOpen: false, id: '' })} className="px-4 py-2 text-xs text-slate-300 hover:text-white transition">Cancelar</button>
+              <button type="button" onClick={handleConfirmDelete} className="px-4 py-2 bg-rose-600 text-white font-bold text-xs rounded-xl hover:bg-rose-500 transition">Eliminar</button>
             </div>
           </div>
         </div>,
@@ -433,9 +425,10 @@ const SearchInput: React.FC<SearchInputProps> = ({
 // RouteSearch
 // ─────────────────────────────────────────────────────────────────────────────
 
-export const RouteSearch: React.FC<RouteSearchProps> = ({ locations, onChange }) => {
+const RouteSearchComponent: React.FC<RouteSearchProps> = ({ locations, onChange }) => {
   const filterCompatibleChargers = useTripStore(state => state.filterCompatibleChargers);
   const setFilterCompatibleChargers = useTripStore(state => state.setFilterCompatibleChargers);
+  const selectedVehicle = useTripStore(state => state.selectedVehicle);
   const setMapSelectionIndex = useTripStore(state => state.setMapSelectionIndex);
   const mapSelectionIndex = useTripStore(state => state.mapSelectionIndex);
   
@@ -444,8 +437,8 @@ export const RouteSearch: React.FC<RouteSearchProps> = ({ locations, onChange })
   const dragIdx = useRef<number | null>(null);
 
   const addWaypoint = () => {
-    if (locations.length >= 7) {
-        alert('Máximo 5 paradas intermedias permitidas (7 puntos en total).');
+    if (locations.length >= 12) {
+        alert('Máximo 10 paradas intermedias permitidas (12 puntos en total).');
         return;
     }
     const newLocations = [...locations];
@@ -484,6 +477,13 @@ export const RouteSearch: React.FC<RouteSearchProps> = ({ locations, onChange })
     ]);
   };
 
+  const clearIntermediateStops = () => {
+    if (locations.length <= 2) return;
+    const origin = locations[0];
+    const destination = locations[locations.length - 1];
+    onChange([origin, destination]);
+  };
+
   const handleDrop = (toIdx: number) => {
     const fromIdx = dragIdx.current;
     if (fromIdx === null || fromIdx === toIdx) return;
@@ -497,46 +497,53 @@ export const RouteSearch: React.FC<RouteSearchProps> = ({ locations, onChange })
 
   const hasUnsetPoints = locations.some((l) => l.name !== '' && l.lat === 0 && l.lng === 0);
 
-  // Extracted to avoid block-body arrow function inside JSX map (TypeScript 5 + Next 16 parsing issue)
   const renderRow = (loc: Waypoint, idx: number) => {
     const isOrigin = idx === 0;
     const isDestination = idx === locations.length - 1;
-    const iconColor = isOrigin ? '#10b981' : isDestination ? '#ef4444' : '#3b82f6';
     const isDragTarget = dragOverIdx === idx;
     const isSelectingOnMap = mapSelectionIndex === idx;
     const rowZIndex = focusedIdx === idx ? 2000 : locations.length - idx;
-    const rowBg = isSelectingOnMap ? 'rgba(59,130,246,0.15)' : isDragTarget ? 'rgba(63,255,139,0.07)' : 'transparent';
-    const rowOutline = isSelectingOnMap ? '1px dashed #3b82f6' : isDragTarget ? '1px dashed var(--color-primary)' : 'none';
-    const waypointLabel = isOrigin ? 'Origen' : isDestination ? 'Destino' : 'Añadir parada';
+    const waypointLabel = isOrigin ? 'Buscar origen (ej. Quito)' : isDestination ? 'Buscar destino (ej. Ibarra)' : 'Añadir parada intermedia';
 
     return (
       <React.Fragment key={loc.id}>
         {isDestination && locations.length < 7 && (
-          <div style={{ paddingLeft: '36px', zIndex: 1, position: 'relative' }}>
+          <div className="pl-6 z-10 relative my-0.5">
             <button
+              type="button"
               onClick={addWaypoint}
-              style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'none', border: 'none', color: 'var(--color-primary)', fontSize: '0.875rem', fontWeight: 600, cursor: 'pointer', padding: '8px 0', marginTop: '-4px', marginBottom: '-4px' }}
+              className="flex items-center gap-1.5 text-[11px] font-mono font-semibold text-brand-lime hover:text-lime-300 transition"
             >
-              <Plus size={18} />
-              <span>Añadir parada</span>
+              <Plus size={14} />
+              <span>+ Añadir parada</span>
             </button>
           </div>
         )}
 
         <div
-
           draggable={true}
           onDragStart={() => { dragIdx.current = idx; }}
           onDragOver={(e) => { e.preventDefault(); if (dragOverIdx !== idx) setDragOverIdx(idx); }}
           onDragLeave={() => setDragOverIdx(null)}
           onDrop={(e) => { e.preventDefault(); handleDrop(idx); }}
           onDragEnd={() => { dragIdx.current = null; setDragOverIdx(null); }}
-          style={{ display: 'flex', gap: '12px', alignItems: 'center', zIndex: rowZIndex, borderRadius: '8px', transition: 'background 0.15s', background: rowBg, outline: rowOutline, padding: '2px 0' }}
+          style={{ zIndex: rowZIndex }}
+          className={`flex items-center gap-2 rounded-xl transition ${
+            isSelectingOnMap ? 'ring-1 ring-brand-cyan bg-brand-cyan/10' :
+            isDragTarget ? 'ring-1 ring-brand-lime bg-brand-lime/10' : ''
+          }`}
         >
-          <div style={{ width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: iconColor }}>
-            {isOrigin && <div style={{ width: '10px', height: '10px', borderRadius: '50%', border: '2px solid currentColor', background: 'transparent' }} />}
-            {isDestination && <MapPin size={18} />}
-            {!isOrigin && !isDestination && <div style={{ width: '8px', height: '8px', background: 'currentColor', borderRadius: '1px' }} />}
+          {/* Dot Indicator */}
+          <div className="w-5 flex items-center justify-center shrink-0">
+            {isOrigin && (
+              <div className="w-2.5 h-2.5 rounded-full bg-brand-cyan ring-4 ring-brand-cyan/20 z-10" />
+            )}
+            {isDestination && (
+              <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 ring-4 ring-emerald-400/20 z-10" />
+            )}
+            {!isOrigin && !isDestination && (
+              <div className="w-2.5 h-2.5 rounded-full bg-amber-400 ring-4 ring-amber-400/20 z-10" />
+            )}
           </div>
 
           <SearchInput
@@ -547,18 +554,24 @@ export const RouteSearch: React.FC<RouteSearchProps> = ({ locations, onChange })
             onSelect={(newLoc) => updateLocation(idx, newLoc)}
             onSelectFromMap={() => setMapSelectionIndex(idx)}
             onTextChange={(text) => { const u = [...locations]; u[idx] = { ...u[idx], name: text, lat: 0, lng: 0 }; onChange(u); }}
-            isLast={isDestination}
+            isOrigin={isOrigin}
+            isDestination={isDestination}
             onFocusChange={(focused) => setFocusedIdx(focused ? idx : null)}
           />
 
-          {!isOrigin && !isDestination && (
-            <button onClick={() => removeLocation(idx)} style={{ background: 'none', border: 'none', color: 'var(--color-text-dim)', cursor: 'pointer', padding: '4px' }}>
-              <X size={16} />
+          {idx > 0 && locations.length > 2 && (
+            <button 
+              type="button"
+              onClick={() => removeLocation(idx)} 
+              className="text-slate-400 hover:text-rose-400 p-1 rounded transition cursor-pointer shrink-0"
+              title={isDestination ? "Quitar destino final (la parada anterior será el destino)" : "Quitar parada"}
+            >
+              <X size={15} />
             </button>
           )}
 
-          <div title="Arrastrar para reordenar" style={{ width: '20px', color: 'var(--color-text-dim)', cursor: 'grab', flexShrink: 0 }}>
-            <GripVertical size={16} />
+          <div title="Arrastrar para reordenar" className="text-slate-500 hover:text-slate-300 cursor-grab shrink-0 p-0.5">
+            <GripVertical size={14} />
           </div>
         </div>
       </React.Fragment>
@@ -566,29 +579,53 @@ export const RouteSearch: React.FC<RouteSearchProps> = ({ locations, onChange })
   };
 
   return (
-    <div className="glass-card" style={{ padding: 'var(--spacing-lg)', display: 'flex', flexDirection: 'column', gap: 'var(--spacing-md)' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h3 style={{ fontSize: '1rem', fontWeight: 600 }}>Planificar Ruta</h3>
-        <div style={{ display: 'flex', gap: '8px' }}>
+    <div className="hud-panel rounded-2xl p-5 shadow-hud border border-white/10 flex flex-col gap-4">
+      <div className="flex items-center justify-between pb-2 border-b border-white/10">
+        <div className="flex items-center space-x-2">
+          <Navigation className="w-4 h-4 text-brand-cyan" />
+          <span className="text-xs font-bold uppercase tracking-wider text-slate-200">Planificador de Viaje</span>
+        </div>
+        <div className="flex items-center space-x-1">
           <button
-            onClick={swapOriginDestination}
-            style={{ background: 'none', border: 'none', color: 'var(--color-primary)', cursor: 'pointer', padding: '4px' }}
-            title="Invertir ruta"
+            type="button"
+            onClick={() => {
+              if (locations.length > 2) {
+                clearIntermediateStops();
+              } else {
+                clearRoute();
+              }
+            }}
+            className="text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 p-1.5 rounded transition cursor-pointer"
+            title={locations.length > 2 ? "Borrar paradas intermedias" : "Eliminar ruta"}
+            aria-label={locations.length > 2 ? "Borrar paradas intermedias" : "Eliminar ruta"}
           >
-            <ArrowUpDown size={18} />
+            <Trash2 size={15} />
           </button>
           <button
-            onClick={clearRoute}
-            style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', padding: '4px' }}
-            title="Borrar ruta"
+            type="button"
+            onClick={swapOriginDestination}
+            className="text-slate-400 hover:text-white hover:bg-white/10 p-1.5 rounded transition cursor-pointer"
+            title="Invertir trayecto"
+            aria-label="Invertir trayecto"
           >
-            <Trash2 size={18} />
+            <ArrowUpDown size={15} />
+          </button>
+          <button
+            type="button"
+            onClick={clearRoute}
+            className="text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 p-1.5 rounded transition cursor-pointer"
+            title="Reiniciar ruta"
+            aria-label="Reiniciar ruta"
+          >
+            <RotateCcw size={15} />
           </button>
         </div>
       </div>
 
-      <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: 'var(--spacing-sm)' }}>
-        <div style={{ position: 'absolute', left: '11px', top: '20px', bottom: '20px', width: '2px', background: 'linear-gradient(to bottom, var(--color-primary), var(--color-secondary))', opacity: 0.3, zIndex: 0 }} />
+      <div className="flex flex-col gap-2 relative">
+        {/* Connecting Graphic Line */}
+        <div className="absolute left-2.5 top-5 bottom-5 w-0.5 bg-gradient-to-b from-brand-cyan via-brand-lime to-emerald-400 opacity-50 z-0 pointer-events-none" />
+        
         {locations.map((loc, idx) => (
           <React.Fragment key={`route-point-${loc.id || idx}`}>
             {renderRow(loc, idx)}
@@ -597,36 +634,32 @@ export const RouteSearch: React.FC<RouteSearchProps> = ({ locations, onChange })
       </div>
 
       {hasUnsetPoints && (
-        <div style={{ background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.25)', borderRadius: '8px', padding: '8px 10px', fontSize: '0.75rem', color: '#f59e0b', display: 'flex', alignItems: 'center', gap: '6px' }}>
+        <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-2.5 text-[11px] font-mono text-amber-300 flex items-center gap-2">
           <span>⚠️</span>
-          <span>Selecciona los lugares del menú desplegable para confirmar coordenadas</span>
+          <span>Selecciona los lugares del menú para fijar coordenadas</span>
         </div>
       )}
 
       {/* Filter Checkbox */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
-        <input 
-          type="checkbox" 
-          id="filterCompatible" 
-          checked={filterCompatibleChargers}
-          onChange={(e) => setFilterCompatibleChargers(e.target.checked)}
-          style={{ accentColor: 'var(--color-primary)', cursor: 'pointer', width: '16px', height: '16px', borderRadius: '4px' }}
-        />
-        <label htmlFor="filterCompatible" style={{ fontSize: '0.8rem', color: 'var(--color-text-dim)', cursor: 'pointer', userSelect: 'none' }}>
-          Mostrar solo cargadores compatibles
+      <div className="flex items-center justify-between pt-2 border-t border-white/10 text-[11px] font-mono">
+        <label className="flex items-center space-x-2 text-slate-300 cursor-pointer select-none">
+          <input 
+            type="checkbox" 
+            id="filterCompatible" 
+            checked={filterCompatibleChargers}
+            onChange={(e) => setFilterCompatibleChargers(e.target.checked)}
+            className="rounded bg-slate-900 border-white/20 text-brand-cyan focus:ring-0 focus:ring-offset-0 cursor-pointer w-3.5 h-3.5"
+          />
+          <span>
+            Solo compatibles ({selectedVehicle?.brand ? `${selectedVehicle.brand} • ` : ''}{selectedVehicle?.specs?.charger_type || 'EV'})
+          </span>
         </label>
-      </div>
-
-      <div style={{ borderTop: '1px solid var(--color-outline)', paddingTop: 'var(--spacing-md)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <span style={{ fontSize: '0.75rem', color: 'var(--color-text-dim)' }}>
-          {locations.length} puntos en el trayecto
+        <span className="text-slate-500 text-[10px]">
+          {locations.length} puntos
         </span>
-        <div style={{ display: 'flex', gap: '4px' }}>
-          <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#10b981' }} />
-          <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#3b82f6' }} />
-          <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#ef4444' }} />
-        </div>
       </div>
     </div>
   );
 };
+
+export const RouteSearch = React.memo(RouteSearchComponent);

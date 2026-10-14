@@ -15,12 +15,8 @@ const withPWA = require("@ducanh2912/next-pwa").default({
 
 const nextConfig: any = {
   reactStrictMode: false,
-  eslint: { ignoreDuringBuilds: true },
-  typescript: { ignoreBuildErrors: true },
-  serverExternalPackages: ['sharp'],
-  experimental: {
-    serverComponentsExternalPackages: ['sharp']
-  }
+  typescript: { ignoreBuildErrors: false },
+  serverExternalPackages: ['sharp', 'msedge-tts']
 };
 
 export default withPWA(nextConfig);

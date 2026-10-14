@@ -13,6 +13,18 @@
   --color-surface: #171a1f;
   --color-surface-hover: #23262c;
   --color-outline: #46484d;
+  
+  --color-brand-lime: #84CC16;
+  --color-brand-cyan: #06B6D4;
+  --color-brand-emerald: #10B981;
+  --color-brand-dark: #030712;
+  --color-brand-surface: rgba(15, 23, 42, 0.82);
+  --color-brand-surfaceLight: rgba(30, 41, 59, 0.65);
+  --color-brand-border: rgba(255, 255, 255, 0.08);
+
+  --shadow-glow-cyan: 0 0 25px -5px rgba(6, 182, 212, 0.35);
+  --shadow-glow-lime: 0 0 25px -5px rgba(132, 204, 22, 0.35);
+  --shadow-hud: 0 20px 40px -15px rgba(0, 0, 0, 0.7), inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
 }
 
 @font-face {
@@ -20,16 +32,14 @@
   src: url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
 }
 
-* {
+*, ::before, ::after {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
 }
 
 body {
-  background-color: var(--color-background);
-  color: var(--color-text);
-  font-family: var(--font-main);
+  background-color: #030712;
+  color: #f8fafc;
+  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -40,6 +50,39 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
   letter-spacing: -0.02em;
+}
+
+.hud-panel {
+  background: radial-gradient(130% 100% at 50% 0%, rgba(20, 29, 44, 0.92) 0%, rgba(10, 16, 26, 0.96) 100%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  contain: paint layout;
+  transform: translateZ(0);
+}
+
+.hud-panel:hover {
+  border-color: rgba(6, 182, 212, 0.3);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 9999px;
+}
+
+@keyframes radarPulse {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.4); opacity: 0; }
+  100% { transform: scale(0.95); opacity: 0; }
+}
+
+.radar-beacon {
+  animation: radarPulse 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 .glass-card {
@@ -78,15 +121,15 @@ h1, h2, h3, h4, h5, h6 {
   background: var(--color-text-dim);
 }
 
-/* Route charger pulse animation */
+/* Route charger pulse animation (Hardware accelerated on GPU compositor) */
 @keyframes pulse {
   0%, 100% {
     transform: scale(1);
-    box-shadow: 0 0 14px rgba(245,158,11,0.9), 0 0 28px rgba(245,158,11,0.4);
+    opacity: 0.95;
   }
   50% {
-    transform: scale(1.15);
-    box-shadow: 0 0 20px rgba(245,158,11,1), 0 0 40px rgba(245,158,11,0.6);
+    transform: scale(1.12);
+    opacity: 1;
   }
 }
 
@@ -106,5 +149,105 @@ h1, h2, h3, h4, h5, h6 {
   animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+/* Custom Interactive EV Range Slider Thumb */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #84CC16;
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 12px rgba(132, 204, 22, 0.9), 0 2px 4px rgba(0, 0, 0, 0.5);
+  cursor: grab;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:active {
+  cursor: grabbing;
+  transform: scale(1.2);
+  box-shadow: 0 0 18px rgba(132, 204, 22, 1);
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #84CC16;
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 12px rgba(132, 204, 22, 0.9);
+  cursor: grab;
+}
+
+/* Proposal 1 Cyber HUD Audio & Cockpit Animations */
+@keyframes soundwave {
+  0%, 100% { height: 4px; opacity: 0.6; }
+  50% { height: 16px; opacity: 1; }
+}
+
+.animate-wave-1 { animation: soundwave 0.9s ease-in-out infinite; }
+.animate-wave-2 { animation: soundwave 1.3s ease-in-out 0.2s infinite; }
+.animate-wave-3 { animation: soundwave 0.7s ease-in-out 0.35s infinite; }
+.animate-wave-4 { animation: soundwave 1.1s ease-in-out 0.15s infinite; }
+.animate-wave-5 { animation: soundwave 0.85s ease-in-out 0.25s infinite; }
+
+@keyframes hud-spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-hud-spin {
+  animation: hud-spin-slow 20s linear infinite;
+}
+
+.bg-cockpit-carbon {
+  background-color: #080c14;
+  background-image: 
+    radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(15, 23, 42, 0.75), rgba(3, 7, 18, 0.95));
+  background-size: 6px 6px, 100% 100%;
+}
+
+/* Apple VisionOS Frosted Crystal Glassmorphism (GPU Optimized) */
+.vision-glass-panel {
+  background: linear-gradient(165deg, rgba(255, 255, 255, 0.12) 0%, rgba(15, 23, 42, 0.55) 45%, rgba(3, 7, 18, 0.88) 100%);
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  contain: paint;
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+.vision-glass-reflection {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.24) 0%, rgba(255, 255, 255, 0.06) 32%, transparent 65%);
+}
+
+.crystal-orb {
+  background: radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.1) 40%, rgba(6, 182, 212, 0.2) 70%, rgba(0, 0, 0, 0.7) 100%);
+  box-shadow: 
+    inset 0 2px 6px rgba(255, 255, 255, 0.7),
+    inset 0 -3px 8px rgba(0, 0, 0, 0.75),
+    0 0 28px rgba(6, 182, 212, 0.5);
+}
+
+.crystal-orb-active {
+  background: radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.1) 40%, rgba(244, 63, 94, 0.25) 70%, rgba(0, 0, 0, 0.7) 100%);
+  box-shadow: 
+    inset 0 2px 6px rgba(255, 255, 255, 0.7),
+    inset 0 -3px 8px rgba(0, 0, 0, 0.75),
+    0 0 28px rgba(244, 63, 94, 0.55);
+}
+
+/* User Location GPS Radar Animations */
+@keyframes userRadarPing {
+  0% { transform: scale(0.9); opacity: 0.8; }
+  70% { transform: scale(2.2); opacity: 0; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+@keyframes userRadarPulse {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.18); opacity: 0.4; }
+}
 
 

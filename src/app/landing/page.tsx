@@ -97,7 +97,7 @@ export default function AdventureTechEditorialLandingPage() {
   const netMonthlyProfit = hostBaseProfit - commissionMonthly;
 
   return (
-    <div className="min-h-screen bg-[#0A0E14] text-[#E8EEF5] flex flex-col font-sans selection:bg-[#FF6B00] selection:text-white antialiased">
+    <div className="min-h-screen bg-[#0A0E14] text-[#E8EEF5] flex flex-col font-sans selection:bg-[#00F5A0] selection:text-black antialiased">
       
       {/* ── TIPOGRAFÍA EDITORIAL ADVENTURE TECH (SYNE + SPACE GROTESK + JETBRAINS MONO) ── */}
       <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -122,14 +122,14 @@ export default function AdventureTechEditorialLandingPage() {
       {/* ════════ 1. NAVBAR ASIMÉTRICO ADVENTURE TECH ════════ */}
       <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
         isNavScrolled 
-          ? 'bg-[#0A0E14]/90 backdrop-blur-2xl border-b border-white/[0.08] py-3.5 shadow-2xl' 
+          ? 'bg-[#070B12]/90 backdrop-blur-2xl border-b border-cyan-500/15 py-3.5 shadow-2xl' 
           : 'bg-transparent py-6'
       }`}>
         <div className="max-w-7xl mx-auto px-6 sm:px-12 flex items-center justify-between">
           
           {/* Logo & Marca con Estilo Aventura */}
           <Link href="/landing" className="flex items-center gap-3 group">
-            <div className="w-9 h-9 rounded-xl overflow-hidden border border-[#FF6B00]/40 shadow-[0_0_20px_rgba(255,107,0,0.3)] group-hover:scale-105 transition-all">
+            <div className="w-10 h-10 rounded-xl overflow-hidden border border-cyan-500/40 shadow-[0_0_20px_rgba(0,245,160,0.3)] group-hover:scale-105 transition-all bg-[#070B12]/80">
               <img
                 src="/logo.png"
                 alt="ChargeWay Logo"
@@ -138,9 +138,9 @@ export default function AdventureTechEditorialLandingPage() {
             </div>
             <div className="flex items-baseline gap-1.5">
               <span className="text-xl font-display font-bold text-white tracking-tight">
-                Charge<span className="text-[#FF6B00]">Way</span>
+                Charge<span className="text-[#00F5A0]">Way</span>
               </span>
-              <span className="text-[10px] font-mono uppercase tracking-widest text-[#FFAA00] font-bold">
+              <span className="text-[10px] font-mono uppercase tracking-widest text-[#00D2FF] font-bold">
                 EC
               </span>
             </div>
@@ -148,20 +148,20 @@ export default function AdventureTechEditorialLandingPage() {
 
           {/* Menú de Navegación Técnico */}
           <nav className="hidden lg:flex items-center gap-8 text-xs font-mono uppercase tracking-widest text-neutral-400">
-            <a href="#adventure" className="hover:text-[#FFAA00] transition-colors flex items-center gap-1.5">
-              <Compass size={13} className="text-[#FF6B00]" />
+            <a href="#adventure" className="hover:text-[#00D2FF] transition-colors flex items-center gap-1.5">
+              <Compass size={13} className="text-[#00F5A0]" />
               <span>Rutas Andinas</span>
             </a>
-            <a href="#host-section" className="hover:text-[#FFAA00] transition-colors flex items-center gap-1.5">
-              <Building2 size={13} className="text-[#FF6B00]" />
+            <a href="#host-section" className="hover:text-[#00D2FF] transition-colors flex items-center gap-1.5">
+              <Building2 size={13} className="text-[#00D2FF]" />
               <span>Anfitriones</span>
             </a>
-            <a href="#simulator" className="hover:text-[#FFAA00] transition-colors flex items-center gap-1.5">
-              <Activity size={13} className="text-[#FF6B00]" />
+            <a href="#simulator" className="hover:text-[#00D2FF] transition-colors flex items-center gap-1.5">
+              <Activity size={13} className="text-[#00F5A0]" />
               <span>Simulador</span>
             </a>
-            <a href="#compliance" className="hover:text-[#FFAA00] transition-colors flex items-center gap-1.5">
-              <ShieldCheck size={13} className="text-[#FF6B00]" />
+            <a href="#compliance" className="hover:text-[#00D2FF] transition-colors flex items-center gap-1.5">
+              <ShieldCheck size={13} className="text-[#00D2FF]" />
               <span>ARCONEL</span>
             </a>
           </nav>
@@ -177,7 +177,7 @@ export default function AdventureTechEditorialLandingPage() {
 
             <button
               onClick={() => setIsMapModalOpen(true)}
-              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#FF6B00] to-[#FFAA00] hover:brightness-110 text-black font-extrabold text-xs font-mono uppercase tracking-wider shadow-[0_0_25px_rgba(255,107,0,0.35)] transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#00F5A0] to-[#00D2FF] hover:brightness-110 text-black font-extrabold text-xs font-mono uppercase tracking-wider shadow-[0_0_25px_rgba(0,245,160,0.35)] transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
             >
               Explorar Mapa
             </button>
@@ -203,12 +203,12 @@ export default function AdventureTechEditorialLandingPage() {
             <div className="absolute inset-0 bg-gradient-to-t from-[#0A0E14] via-[#0A0E14]/50 to-[#0A0E14]/75 pointer-events-none" />
           </div>
 
-          {/* ── LOGO OFICIAL CHARGEWAY EN EL CUADRANTE SUPERIOR IZQUIERDO ── */}
-          <div className="absolute top-24 sm:top-28 left-6 sm:left-14 z-20 w-28 h-28 sm:w-36 sm:h-36 rounded-3xl overflow-hidden border border-[#FF6B00]/40 shadow-[0_0_50px_rgba(255,107,0,0.35)] hover:scale-105 transition-all duration-300 group bg-[#0A0E14]/60 backdrop-blur-md">
+          {/* ── BADGE OFICIAL CHARGEWAY INTEGRADO CON GLASSMORPHISM Y GLOW CIAN/ESMERALDA ── */}
+          <div className="absolute top-24 sm:top-28 left-6 sm:left-14 z-20 w-24 h-24 sm:w-32 sm:h-32 rounded-3xl overflow-hidden border border-cyan-400/30 shadow-[0_0_40px_rgba(0,245,160,0.25)] hover:scale-105 transition-all duration-300 group bg-[#070B12]/75 backdrop-blur-xl p-1.5 flex items-center justify-center">
             <img
               src="/logo.png"
               alt="ChargeWay Official Logo"
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              className="w-full h-full object-cover rounded-2xl group-hover:scale-105 transition-transform duration-300"
             />
           </div>
 
@@ -221,12 +221,12 @@ export default function AdventureTechEditorialLandingPage() {
             }}
           >
             <div className="max-w-2xl space-y-3">
-              <span className="text-xs font-mono uppercase tracking-[0.3em] text-[#FFAA00] font-bold block">
+              <span className="text-xs font-mono uppercase tracking-[0.3em] text-[#00D2FF] font-bold block">
                 Plataforma de Movilidad Eléctrica · Ecuador
               </span>
               <h1 className="text-4xl sm:text-6xl lg:text-7xl font-display font-extrabold text-white leading-[1.02] tracking-tight">
                 Charge Your <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF6B00] via-[#FFAA00] to-amber-200">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00F5A0] via-[#00D2FF] to-teal-200">
                   Adventure.
                 </span>
               </h1>
@@ -236,7 +236,7 @@ export default function AdventureTechEditorialLandingPage() {
             </div>
 
             {/* Medidor Circular de Telemetría (Widget de Aventura) */}
-            <div className="p-5 rounded-3xl bg-[#111722]/80 backdrop-blur-xl border border-white/[0.08] shadow-2xl flex items-center gap-5 shrink-0 self-start lg:self-auto">
+            <div className="p-5 rounded-3xl bg-[#111722]/80 backdrop-blur-xl border border-cyan-500/15 shadow-2xl flex items-center gap-5 shrink-0 self-start lg:self-auto">
               <div className="relative w-20 h-20 flex items-center justify-center">
                 <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
                   <path
@@ -247,7 +247,7 @@ export default function AdventureTechEditorialLandingPage() {
                     d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                   />
                   <path
-                    className="text-[#FF6B00]"
+                    className="text-[#00F5A0]"
                     strokeDasharray="94, 100"
                     strokeWidth="3.5"
                     strokeLinecap="round"
@@ -261,7 +261,7 @@ export default function AdventureTechEditorialLandingPage() {
                 </div>
               </div>
               <div className="space-y-0.5">
-                <span className="text-[10px] font-mono uppercase tracking-widest text-[#FFAA00] font-bold block">
+                <span className="text-[10px] font-mono uppercase tracking-widest text-[#00D2FF] font-bold block">
                   Estado de Red
                 </span>
                 <span className="text-sm font-bold text-white block">150+ Puntos Operativos</span>
@@ -278,7 +278,7 @@ export default function AdventureTechEditorialLandingPage() {
               transform: `translateY(${(0.45 - scrollProgress) * 25}px)`
             }}
           >
-            <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#FFAA00] block mb-3 font-semibold">
+            <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#00D2FF] block mb-3 font-semibold">
               ChargeWay Partner Program
             </span>
             <h2 className="text-3xl sm:text-5xl lg:text-6xl font-display font-black text-white leading-tight">
@@ -297,7 +297,7 @@ export default function AdventureTechEditorialLandingPage() {
               transform: `translateY(${(0.80 - scrollProgress) * 25}px)`
             }}
           >
-            <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#FFAA00] block mb-3 font-semibold">
+            <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#00D2FF] block mb-3 font-semibold">
               Ecosistema Integral
             </span>
             <h2 className="text-3xl sm:text-5xl lg:text-6xl font-display font-black text-white leading-tight">
@@ -313,7 +313,7 @@ export default function AdventureTechEditorialLandingPage() {
             <span>Scroll</span>
             <div className="w-1 h-6 bg-neutral-800 rounded-full overflow-hidden">
               <div 
-                className="w-full bg-[#FF6B00] transition-all duration-75" 
+                className="w-full bg-[#00F5A0] transition-all duration-75" 
                 style={{ height: `${Math.max(20, scrollProgress * 100)}%` }} 
               />
             </div>
@@ -327,7 +327,7 @@ export default function AdventureTechEditorialLandingPage() {
         
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-2">
-            <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#FFAA00] font-bold">
+            <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#00D2FF] font-bold">
               Infraestructura y Tecnología
             </span>
             <h2 className="text-3xl sm:text-5xl font-display font-extrabold text-white">
@@ -342,12 +342,12 @@ export default function AdventureTechEditorialLandingPage() {
         {/* 3 Tarjetas de Aventura Asimétricas */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           
-          <div className="p-8 rounded-3xl bg-[#121824] border border-white/[0.08] hover:border-[#FF6B00]/40 transition-all space-y-4 shadow-xl group">
+          <div className="p-8 rounded-3xl bg-[#121824] border border-white/[0.08] hover:border-[#00F5A0]/40 transition-all space-y-4 shadow-xl group">
             <div className="flex items-center justify-between">
-              <div className="w-12 h-12 rounded-2xl bg-[#FF6B00]/15 border border-[#FF6B00]/30 flex items-center justify-center text-[#FFAA00]">
+              <div className="w-12 h-12 rounded-2xl bg-[#00F5A0]/15 border border-[#00F5A0]/30 flex items-center justify-center text-[#00F5A0]">
                 <Sun size={24} />
               </div>
-              <span className="text-[10px] font-mono text-[#FFAA00] uppercase font-bold tracking-wider">01 / SOLAR</span>
+              <span className="text-[10px] font-mono text-[#00D2FF] uppercase font-bold tracking-wider">01 / SOLAR</span>
             </div>
             <h3 className="text-xl font-bold text-white tracking-tight">Solar-Ready Hubs</h3>
             <p className="text-xs text-neutral-400 leading-relaxed font-light">
@@ -355,12 +355,12 @@ export default function AdventureTechEditorialLandingPage() {
             </p>
           </div>
 
-          <div className="p-8 rounded-3xl bg-[#121824] border border-white/[0.08] hover:border-[#FF6B00]/40 transition-all space-y-4 shadow-xl group">
+          <div className="p-8 rounded-3xl bg-[#121824] border border-white/[0.08] hover:border-[#00F5A0]/40 transition-all space-y-4 shadow-xl group">
             <div className="flex items-center justify-between">
-              <div className="w-12 h-12 rounded-2xl bg-[#FF6B00]/15 border border-[#FF6B00]/30 flex items-center justify-center text-[#FFAA00]">
+              <div className="w-12 h-12 rounded-2xl bg-[#00F5A0]/15 border border-[#00F5A0]/30 flex items-center justify-center text-[#00F5A0]">
                 <Mountain size={24} />
               </div>
-              <span className="text-[10px] font-mono text-[#FFAA00] uppercase font-bold tracking-wider">02 / ALTITUD</span>
+              <span className="text-[10px] font-mono text-[#00D2FF] uppercase font-bold tracking-wider">02 / ALTITUD</span>
             </div>
             <h3 className="text-xl font-bold text-white tracking-tight">Modelado Topográfico</h3>
             <p className="text-xs text-neutral-400 leading-relaxed font-light">
@@ -368,12 +368,12 @@ export default function AdventureTechEditorialLandingPage() {
             </p>
           </div>
 
-          <div className="p-8 rounded-3xl bg-[#121824] border border-white/[0.08] hover:border-[#FF6B00]/40 transition-all space-y-4 shadow-xl group">
+          <div className="p-8 rounded-3xl bg-[#121824] border border-white/[0.08] hover:border-[#00F5A0]/40 transition-all space-y-4 shadow-xl group">
             <div className="flex items-center justify-between">
-              <div className="w-12 h-12 rounded-2xl bg-[#FF6B00]/15 border border-[#FF6B00]/30 flex items-center justify-center text-[#FFAA00]">
+              <div className="w-12 h-12 rounded-2xl bg-[#00F5A0]/15 border border-[#00F5A0]/30 flex items-center justify-center text-[#00F5A0]">
                 <QrCode size={24} />
               </div>
-              <span className="text-[10px] font-mono text-[#FFAA00] uppercase font-bold tracking-wider">03 / RESERVA</span>
+              <span className="text-[10px] font-mono text-[#00D2FF] uppercase font-bold tracking-wider">03 / RESERVA</span>
             </div>
             <h3 className="text-xl font-bold text-white tracking-tight">Token QR Garantizado</h3>
             <p className="text-xs text-neutral-400 leading-relaxed font-light">
@@ -390,7 +390,7 @@ export default function AdventureTechEditorialLandingPage() {
         <div className="max-w-7xl mx-auto space-y-10">
           
           <div className="space-y-2">
-            <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#FFAA00] font-bold">
+            <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#00D2FF] font-bold">
               Proceso de Habilitación
             </span>
             <h2 className="text-3xl sm:text-4xl font-display font-black text-white">
@@ -405,47 +405,47 @@ export default function AdventureTechEditorialLandingPage() {
           <div className="p-8 sm:p-10 rounded-3xl bg-[#121824] border border-white/[0.08] shadow-2xl relative overflow-hidden">
             <svg viewBox="0 0 800 200" className="w-full h-48 sm:h-56 overflow-visible">
               <defs>
-                <linearGradient id="timelineAmberGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#FF6B00" stopOpacity="0.4" />
-                  <stop offset="100%" stopColor="#FF6B00" stopOpacity="0.0" />
+                <linearGradient id="timelineCyanGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#00F5A0" stopOpacity="0.4" />
+                  <stop offset="100%" stopColor="#00D2FF" stopOpacity="0.0" />
                 </linearGradient>
               </defs>
               
               {/* Relleno de Curva de Elevación */}
               <path
                 d="M 50,160 L 220,130 L 400,90 L 580,50 L 750,20 L 750,190 L 50,190 Z"
-                fill="url(#timelineAmberGrad)"
+                fill="url(#timelineCyanGrad)"
               />
               <path
                 d="M 50,160 L 220,130 L 400,90 L 580,50 L 750,20"
                 fill="none"
-                stroke="#FF6B00"
+                stroke="#00F5A0"
                 strokeWidth="3"
               />
 
               {/* Hito 1 */}
-              <circle cx="50" cy="160" r="6" fill="#FFAA00" stroke="#FFFFFF" strokeWidth="2" />
+              <circle cx="50" cy="160" r="6" fill="#00D2FF" stroke="#FFFFFF" strokeWidth="2" />
               <text x="50" y="145" textAnchor="middle" fill="#FFFFFF" fontSize="11" fontWeight="bold">1. Registro</text>
               <text x="50" y="180" textAnchor="middle" fill="#8B98A5" fontSize="9" fontFamily="monospace">0m · Solicitud</text>
 
               {/* Hito 2 */}
-              <circle cx="220" cy="130" r="6" fill="#FFAA00" stroke="#FFFFFF" strokeWidth="2" />
+              <circle cx="220" cy="130" r="6" fill="#00D2FF" stroke="#FFFFFF" strokeWidth="2" />
               <text x="220" y="115" textAnchor="middle" fill="#FFFFFF" fontSize="11" fontWeight="bold">2. Inspección</text>
               <text x="220" y="150" textAnchor="middle" fill="#8B98A5" fontSize="9" fontFamily="monospace">150m · Validación Técnica</text>
 
               {/* Hito 3 */}
-              <circle cx="400" cy="90" r="6" fill="#FFAA00" stroke="#FFFFFF" strokeWidth="2" />
+              <circle cx="400" cy="90" r="6" fill="#00D2FF" stroke="#FFFFFF" strokeWidth="2" />
               <text x="400" y="75" textAnchor="middle" fill="#FFFFFF" fontSize="11" fontWeight="bold">3. Compliance</text>
               <text x="400" y="110" textAnchor="middle" fill="#8B98A5" fontSize="9" fontFamily="monospace">300m · ARCONEL</text>
 
               {/* Hito 4 */}
-              <circle cx="580" cy="50" r="6" fill="#FFAA00" stroke="#FFFFFF" strokeWidth="2" />
+              <circle cx="580" cy="50" r="6" fill="#00D2FF" stroke="#FFFFFF" strokeWidth="2" />
               <text x="580" y="35" textAnchor="middle" fill="#FFFFFF" fontSize="11" fontWeight="bold">4. Instalación</text>
               <text x="580" y="70" textAnchor="middle" fill="#8B98A5" fontSize="9" fontFamily="monospace">500m · Conectores</text>
 
               {/* Hito 5 (Meta) */}
-              <circle cx="750" cy="20" r="8" fill="#FF6B00" stroke="#FFFFFF" strokeWidth="2.5" />
-              <text x="750" y="5" textAnchor="middle" fill="#FFAA00" fontSize="12" fontWeight="bold">5. Go-Live ⚡</text>
+              <circle cx="750" cy="20" r="8" fill="#00F5A0" stroke="#FFFFFF" strokeWidth="2.5" />
+              <text x="750" y="5" textAnchor="middle" fill="#00D2FF" fontSize="12" fontWeight="bold">5. Go-Live ⚡</text>
               <text x="750" y="40" textAnchor="middle" fill="#FFFFFF" fontSize="9" fontFamily="monospace">650m · 5 Reservas Libres</text>
             </svg>
 
@@ -455,7 +455,7 @@ export default function AdventureTechEditorialLandingPage() {
               </span>
               <button
                 onClick={() => setIsRegisterModalOpen(true)}
-                className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#FF6B00] to-[#FFAA00] hover:brightness-110 text-black font-extrabold text-xs font-mono uppercase tracking-wider shadow-lg cursor-pointer transition-all hover:scale-[1.02]"
+                className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#00F5A0] to-[#00D2FF] hover:brightness-110 text-black font-extrabold text-xs font-mono uppercase tracking-wider shadow-lg cursor-pointer transition-all hover:scale-[1.02]"
               >
                 Habilitar Mi Punto Ahora
               </button>
@@ -469,7 +469,7 @@ export default function AdventureTechEditorialLandingPage() {
       <section id="simulator" className="py-28 px-6 sm:px-12 max-w-7xl mx-auto w-full space-y-12">
         
         <div className="max-w-2xl space-y-2">
-          <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#FFAA00] font-bold">
+          <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#00D2FF] font-bold">
             Simulador de Rentabilidad
           </span>
           <h2 className="text-3xl sm:text-5xl font-display font-extrabold text-white">
@@ -488,7 +488,7 @@ export default function AdventureTechEditorialLandingPage() {
             <div className="space-y-3">
               <label className="text-xs font-mono uppercase tracking-wider text-neutral-300 flex justify-between">
                 <span>Potencia Nominal del Cargador</span>
-                <span className="text-[#FFAA00] font-bold">{selectedPowerKw} kW</span>
+                <span className="text-[#00D2FF] font-bold">{selectedPowerKw} kW</span>
               </label>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                 {ARCONEL_POWER_TIERS.slice(0, 4).map((tier) => (
@@ -502,7 +502,7 @@ export default function AdventureTechEditorialLandingPage() {
                     }}
                     className={`p-3.5 rounded-2xl border text-xs font-bold transition-all text-center cursor-pointer ${
                       selectedPowerKw === tier.power_kw
-                        ? 'border-[#FF6B00] bg-[#FF6B00]/15 text-white shadow-[0_0_15px_rgba(255,107,0,0.25)]'
+                        ? 'border-[#00F5A0] bg-[#00F5A0]/15 text-white shadow-[0_0_15px_rgba(0,245,160,0.25)]'
                         : 'border-white/[0.08] bg-[#0A0E14] text-neutral-400 hover:border-white/20'
                     }`}
                   >
@@ -516,7 +516,7 @@ export default function AdventureTechEditorialLandingPage() {
             <div className="space-y-3">
               <div className="flex justify-between text-xs font-mono uppercase tracking-wider">
                 <span className="text-neutral-300">Precio de Parqueo por Hora</span>
-                <span className="text-[#FFAA00] text-base font-bold">${hourlyPriceUsd.toFixed(2)} USD/h</span>
+                <span className="text-[#00D2FF] text-base font-bold">${hourlyPriceUsd.toFixed(2)} USD/h</span>
               </div>
               <input
                 type="range"
@@ -525,11 +525,11 @@ export default function AdventureTechEditorialLandingPage() {
                 step={0.05}
                 value={hourlyPriceUsd}
                 onChange={(e) => setHourlyPriceUsd(parseFloat(e.target.value))}
-                className="w-full h-1.5 bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-[#FF6B00]"
+                className="w-full h-1.5 bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-[#00F5A0]"
               />
               <div className="flex items-center justify-between text-[11px] text-neutral-400 font-light pt-1">
                 <span>Tope legal ARCONEL-029/25: ${compliance.max_allowed_hourly_price_usd} USD/h</span>
-                <span className="text-[#FFAA00] font-medium">✓ Tarifa 100% Legal</span>
+                <span className="text-[#00F5A0] font-medium">✓ Tarifa 100% Legal</span>
               </div>
             </div>
 
@@ -546,7 +546,7 @@ export default function AdventureTechEditorialLandingPage() {
                   step={1}
                   value={monthlyReservations}
                   onChange={(e) => setMonthlyReservations(parseInt(e.target.value))}
-                  className="w-full h-1.5 bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-[#FF6B00]"
+                  className="w-full h-1.5 bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-[#00F5A0]"
                 />
               </div>
 
@@ -562,7 +562,7 @@ export default function AdventureTechEditorialLandingPage() {
                   step={1}
                   value={sessionHours}
                   onChange={(e) => setSessionHours(parseInt(e.target.value))}
-                  className="w-full h-1.5 bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-[#FF6B00]"
+                  className="w-full h-1.5 bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-[#00F5A0]"
                 />
               </div>
             </div>
@@ -572,7 +572,7 @@ export default function AdventureTechEditorialLandingPage() {
           {/* Resultado Panel */}
           <div className="lg:col-span-5 p-8 rounded-3xl bg-[#0A0E14] border border-white/[0.08] shadow-2xl flex flex-col justify-between space-y-6">
             <div>
-              <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#FFAA00] font-bold block mb-2">
+              <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#00D2FF] font-bold block mb-2">
                 Ganancia Neta Estimada
               </span>
               <div className="text-4xl sm:text-5xl font-display font-extrabold text-white tracking-tight">
@@ -593,18 +593,18 @@ export default function AdventureTechEditorialLandingPage() {
                 </div>
                 <div className="flex justify-between">
                   <span>Cuota Gratuita (5 reservas):</span>
-                  <span className="text-[#FFAA00]">$0.00</span>
+                  <span className="text-[#00F5A0]">$0.00</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Comisión ChargeWay (20% en {billableCount} res.):</span>
-                  <span className="text-[#FF6B00]">-${commissionMonthly.toFixed(2)}</span>
+                  <span className="text-[#00D2FF]">-${commissionMonthly.toFixed(2)}</span>
                 </div>
               </div>
             </div>
 
             <button
               onClick={() => setIsRegisterModalOpen(true)}
-              className="w-full py-4 rounded-xl bg-gradient-to-r from-[#FF6B00] to-[#FFAA00] hover:brightness-110 text-black font-extrabold text-xs font-mono uppercase tracking-wider shadow-[0_0_25px_rgba(255,107,0,0.35)] transition-all cursor-pointer flex items-center justify-center gap-2 hover:scale-[1.02]"
+              className="w-full py-4 rounded-xl bg-gradient-to-r from-[#00F5A0] to-[#00D2FF] hover:brightness-110 text-black font-extrabold text-xs font-mono uppercase tracking-wider shadow-[0_0_25px_rgba(0,245,160,0.35)] transition-all cursor-pointer flex items-center justify-center gap-2 hover:scale-[1.02]"
             >
               <span>Habilitar Mi Punto Ahora</span>
               <ArrowRight size={15} />
@@ -618,7 +618,7 @@ export default function AdventureTechEditorialLandingPage() {
       <section id="compliance" className="py-24 px-6 sm:px-12 max-w-7xl mx-auto w-full border-t border-white/[0.08] space-y-12">
         
         <div className="max-w-2xl space-y-2">
-          <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#FFAA00] font-bold">
+          <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#00D2FF] font-bold">
             Marco Regulatorio Oficial
           </span>
           <h2 className="text-3xl sm:text-4xl font-display font-black text-white">
@@ -631,21 +631,21 @@ export default function AdventureTechEditorialLandingPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="p-7 rounded-3xl bg-[#121824] border border-white/[0.08] space-y-3">
-            <h4 className="font-bold text-white text-base text-[#FFAA00]">Exención LOSPEE</h4>
+            <h4 className="font-bold text-white text-base text-[#00F5A0]">Exención LOSPEE</h4>
             <p className="text-xs text-neutral-400 leading-relaxed font-light">
               El servicio opera legalmente como arriendo de espacio físico de parqueo con infraestructura, exento de título habilitante de comercialización.
             </p>
           </div>
 
           <div className="p-7 rounded-3xl bg-[#121824] border border-white/[0.08] space-y-3">
-            <h4 className="font-bold text-white text-base text-[#FFAA00]">Topes ARCONEL-029/25</h4>
+            <h4 className="font-bold text-white text-base text-[#00F5A0]">Topes ARCONEL-029/25</h4>
             <p className="text-xs text-neutral-400 leading-relaxed font-light">
               Control algorítmico preventivo que impide fijar tarifas por hora que excedan el límite regulatorio oficial por kWh, blindando al anfitrión.
             </p>
           </div>
 
           <div className="p-7 rounded-3xl bg-[#121824] border border-white/[0.08] space-y-3">
-            <h4 className="font-bold text-white text-base text-[#FFAA00]">Norma ARCERNNR-003/20</h4>
+            <h4 className="font-bold text-white text-base text-[#00F5A0]">Norma ARCERNNR-003/20</h4>
             <p className="text-xs text-neutral-400 leading-relaxed font-light">
               Alineación técnica con los estándares de conexión comercial a la red de las distribuidoras eléctricas (EEQ / CNEL EP).
             </p>
@@ -662,18 +662,18 @@ export default function AdventureTechEditorialLandingPage() {
             <img src="/logo.png" alt="ChargeWay Logo" className="w-8 h-8 rounded-lg object-cover opacity-80" />
             <div>
               <span className="text-sm font-display font-bold text-white">
-                Charge<span className="text-[#FF6B00]">Way</span> AI
+                Charge<span className="text-[#00F5A0]">Way</span> AI
               </span>
               <p className="text-[10px] text-neutral-500 font-mono">Movilidad Eléctrica · Ecuador</p>
             </div>
           </div>
 
           <div className="flex flex-wrap justify-center items-center gap-8 text-xs font-mono uppercase tracking-wider text-neutral-400">
-            <a href="#adventure" className="hover:text-[#FFAA00] transition-colors">Rutas Andinas</a>
-            <a href="#host-section" className="hover:text-[#FFAA00] transition-colors">Anfitriones</a>
-            <a href="#simulator" className="hover:text-[#FFAA00] transition-colors">Simulador</a>
-            <Link href="/app" className="hover:text-[#FFAA00] transition-colors">Planificador Web</Link>
-            <a href="mailto:chargewayec@gmail.com" className="hover:text-[#FFAA00] transition-colors">Contacto</a>
+            <a href="#adventure" className="hover:text-[#00D2FF] transition-colors">Rutas Andinas</a>
+            <a href="#host-section" className="hover:text-[#00D2FF] transition-colors">Anfitriones</a>
+            <a href="#simulator" className="hover:text-[#00D2FF] transition-colors">Simulador</a>
+            <Link href="/app" className="hover:text-[#00D2FF] transition-colors">Planificador Web</Link>
+            <a href="mailto:chargewayec@gmail.com" className="hover:text-[#00D2FF] transition-colors">Contacto</a>
           </div>
 
           <p className="text-neutral-600 text-[11px] font-mono">

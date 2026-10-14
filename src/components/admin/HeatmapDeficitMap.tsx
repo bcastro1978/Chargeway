@@ -301,6 +301,21 @@ export const HeatmapDeficitMap: React.FC = () => {
       features: heatPoints
     };
 
+    const corridorsGeoJson: any = {
+      type: 'FeatureCollection',
+      features: analyzedCorridors.map(c => ({
+        type: 'Feature',
+        properties: {
+          name: c.name,
+          color: c.severity === 'Crítico' ? '#ef4444' : c.severity === 'Moderado' ? '#f59e0b' : '#10b981',
+        },
+        geometry: {
+          type: 'LineString',
+          coordinates: c.coordinates,
+        }
+      }))
+    };
+
     const updateLayers = () => {
       if (!map.current || !map.current.isStyleLoaded()) return;
 

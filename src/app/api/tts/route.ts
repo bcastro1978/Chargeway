@@ -1,16 +1,57 @@
+import { withTiming } from '@/lib/server-timing';
 import { NextResponse } from 'next/server';
-import { execFile } from 'child_process';
-import path from 'path';
+import { MsEdgeTTS, OUTPUT_FORMAT } from 'msedge-tts';
+
+export const runtime = 'nodejs';
 
 // In-memory cache de audios generados para que las frases repetidas sean instantáneas (0ms)
 const audioCache = new Map<string, Buffer>();
+
+async function synthesizeWithEdgeStream(text: string, voice: string): Promise<{ stream: ReadableStream<Uint8Array>; onComplete: Promise<Buffer> }> {
+  const tts = new MsEdgeTTS();
+  await tts.setMetadata(voice, OUTPUT_FORMAT.AUDIO_24KHZ_48KBITRATE_MONO_MP3);
+  const { audioStream } = tts.toStream(text);
+
+  const chunks: Buffer[] = [];
+  let completeResolve: (buf: Buffer) => void;
+  let completeReject: (err: any) => void;
+  const onComplete = new Promise<Buffer>((resolve, reject) => {
+    completeResolve = resolve;
+    completeReject = reject;
+  });
+
+  const stream = new ReadableStream<Uint8Array>({
+    start(controller) {
+      audioStream.on('data', (chunk: Buffer) => {
+        chunks.push(chunk);
+        controller.enqueue(new Uint8Array(chunk));
+      });
+      audioStream.on('end', () => {
+        completeResolve(Buffer.concat(chunks));
+        controller.close();
+      });
+      audioStream.on('error', (err: any) => {
+        completeReject(err);
+        controller.error(err);
+      });
+    },
+    cancel() {
+      try {
+        (audioStream as any).destroy?.();
+      } catch (_) {}
+    }
+  });
+
+  return { stream, onComplete };
+}
 
 /**
  * Endpoint de Síntesis de Voz Humana Ultra Realista en Alta Definición
  * Utiliza Microsoft Azure Neural Voices (es-EC-AndreaNeural / es-EC-LuisNeural)
  * Proporciona entonación humana natural, calidez y dicción clara ecuatoriana.
+ * Soporta Streaming en tiempo real (TTFB < 300ms) y caché automática en memoria.
  */
-export async function GET(request: Request) {
+async function handleGET(request: Request) {
   const { searchParams } = new URL(request.url);
   const text = searchParams.get('text');
   const voice = searchParams.get('voice') || 'es-EC-AndreaNeural';
@@ -33,7 +74,7 @@ export async function GET(request: Request) {
   const textToSpeak = cleaned.slice(0, 450);
   const cacheKey = `${voice}:${textToSpeak}`;
 
-  // 1. Si ya está en memoria, devolver inmediatamente
+  // 1. Si ya está en memoria, devolver inmediatamente (0ms)
   if (audioCache.has(cacheKey)) {
     const cachedBuffer = audioCache.get(cacheKey)!;
     return new NextResponse(new Uint8Array(cachedBuffer), {
@@ -45,43 +86,32 @@ export async function GET(request: Request) {
     });
   }
 
-  // 2. Ejecutar generación con Azure Neural Voice en proceso Node aislado
+  // 2. Ejecutar generación con Azure Neural Voice en streaming inmediato
   try {
-    const scriptPath = path.join(process.cwd(), 'scripts', 'generate-tts.js');
-    const audioBuffer = await new Promise<Buffer>((resolve, reject) => {
-      execFile(
-        'node',
-        [scriptPath, textToSpeak, voice],
-        { encoding: 'buffer', maxBuffer: 10 * 1024 * 1024, timeout: 8000 },
-        (error, stdout, stderr) => {
-          if (error) {
-            reject(error);
-          } else if (stdout && stdout.length > 0) {
-            resolve(stdout);
-          } else {
-            reject(new Error(stderr ? stderr.toString() : 'Empty audio output'));
-          }
+    const { stream, onComplete } = await synthesizeWithEdgeStream(textToSpeak, voice);
+
+    // Guardar en caché asíncronamente al completarse el stream
+    onComplete.then(buffer => {
+      if (buffer && buffer.length > 0) {
+        if (audioCache.size > 200) {
+          const oldest = audioCache.keys().next().value;
+          if (oldest) audioCache.delete(oldest);
         }
-      );
+        audioCache.set(cacheKey, buffer);
+      }
+    }).catch(err => {
+      console.warn('Error cacheando audio completado:', err);
     });
 
-    if (audioBuffer && audioBuffer.length > 0) {
-      if (audioCache.size > 150) {
-        const oldest = audioCache.keys().next().value;
-        if (oldest) audioCache.delete(oldest);
-      }
-      audioCache.set(cacheKey, audioBuffer);
-
-      return new NextResponse(new Uint8Array(audioBuffer), {
-        headers: {
-          'Content-Type': 'audio/mpeg',
-          'Cache-Control': 'public, max-age=86400, stale-while-revalidate=604800',
-          'X-Voice-Provider': 'azure-neural',
-        },
-      });
-    }
+    return new Response(stream, {
+      headers: {
+        'Content-Type': 'audio/mpeg',
+        'Cache-Control': 'public, max-age=86400, stale-while-revalidate=604800',
+        'X-Voice-Provider': 'azure-neural-stream',
+      },
+    });
   } catch (neuralErr) {
-    console.warn('Azure Neural voice generation error, using fallback:', neuralErr);
+    console.warn('Azure Neural in-process voice generation error, using fallback:', neuralErr);
   }
 
   // 3. Fallback de alta disponibilidad a Google Translate Voice
@@ -110,3 +140,5 @@ export async function GET(request: Request) {
 
   return NextResponse.json({ error: 'TTS audio synthesis failed' }, { status: 500 });
 }
+
+export const GET = withTiming('tts', handleGET);

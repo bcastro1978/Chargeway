@@ -2,11 +2,13 @@ import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 
 export async function GET() {
-  const { data, error } = await supabase.from('charging_points').select('*').limit(5);
+  if (process.env.NODE_ENV === 'production') {
+    return NextResponse.json({ error: 'Endpoint disabled in production' }, { status: 403 });
+  }
+  const { data, error } = await supabase.from('charging_points').select('id, name, lat, lng').limit(5);
   return NextResponse.json({ 
-    envUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,
-    envKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? 'exists' : 'missing',
-    data, 
+    ok: !error,
+    sampleCount: data?.length || 0,
     error 
   });
 }

@@ -2,9 +2,13 @@
 
 import React from 'react';
 import { useTripStore } from '@/lib/store/useTripStore';
-import { LogOut, User, Loader2 } from 'lucide-react';
+import { LogOut, User, Loader2, UserCog } from 'lucide-react';
 
-export const AuthButton: React.FC = () => {
+interface AuthButtonProps {
+  onOpenProfile?: () => void;
+}
+
+export const AuthButton: React.FC<AuthButtonProps> = ({ onOpenProfile }) => {
   const { user, isLoadingUser, loginWithGoogle, logout } = useTripStore();
 
   if (isLoadingUser) {
@@ -18,32 +22,61 @@ export const AuthButton: React.FC = () => {
 
   if (user) {
     return (
-      <div className="bg-neutral-900/50 backdrop-blur-md border border-neutral-800 p-3 rounded-2xl flex items-center justify-between gap-3">
-        <div className="flex items-center gap-2.5 overflow-hidden">
-          {user.avatar_url ? (
-            <img
-              src={user.avatar_url}
-              alt={user.full_name || 'Usuario'}
-              className="w-8 h-8 rounded-full object-cover border border-neutral-700 shrink-0"
-              referrerPolicy="no-referrer"
-            />
-          ) : (
-            <div className="w-8 h-8 rounded-full bg-neutral-800 border border-neutral-700 flex items-center justify-center shrink-0">
-              <User size={14} className="text-neutral-400" />
-            </div>
-          )}
-          <div className="flex flex-col min-w-0">
-            <span className="text-xs font-bold text-white truncate">{user.full_name || 'Conductor EV'}</span>
-            <span className="text-[10px] text-neutral-500 truncate">{user.email}</span>
-          </div>
-        </div>
+      <div className="bg-neutral-900/60 backdrop-blur-md border border-neutral-800 hover:border-neutral-700/80 p-2 sm:p-2.5 rounded-2xl flex items-center justify-between gap-3 shadow-lg shadow-black/20 transition-all">
+        {/* Clickable Profile Area */}
         <button
-          onClick={logout}
-          className="p-1.5 rounded-lg bg-neutral-800/80 hover:bg-rose-500/10 text-neutral-400 hover:text-rose-400 border border-neutral-700/50 hover:border-rose-500/30 transition-all cursor-pointer"
-          title="Cerrar Sesión"
+          onClick={onOpenProfile}
+          type="button"
+          className="flex items-center gap-2.5 overflow-hidden text-left hover:opacity-90 transition cursor-pointer group"
+          title="Ver y editar mi perfil"
         >
-          <LogOut size={14} />
+          <div className="relative shrink-0">
+            {user.avatar_url ? (
+              <img
+                src={user.avatar_url}
+                alt={user.full_name || 'Usuario'}
+                className="w-8 h-8 rounded-full object-cover border border-neutral-700 group-hover:border-emerald-500/60 transition shrink-0"
+                referrerPolicy="no-referrer"
+              />
+            ) : (
+              <div className="w-8 h-8 rounded-full bg-neutral-800 border border-neutral-700 group-hover:border-emerald-500/60 flex items-center justify-center shrink-0 transition">
+                <User size={14} className="text-neutral-400 group-hover:text-emerald-400" />
+              </div>
+            )}
+            {user.is_admin && (
+              <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-amber-400 rounded-full border-2 border-neutral-900" title="Administrador" />
+            )}
+          </div>
+          <div className="flex flex-col min-w-0">
+            <span className="text-xs font-bold text-white group-hover:text-emerald-400 transition truncate">
+              {user.full_name || 'Conductor EV'}
+            </span>
+            <span className="text-[10px] text-neutral-500 truncate group-hover:text-neutral-400 transition">
+              {user.email}
+            </span>
+          </div>
         </button>
+
+        {/* Action Buttons: Edit Profile + Logout */}
+        <div className="flex items-center gap-1.5 shrink-0">
+          <button
+            onClick={onOpenProfile}
+            type="button"
+            className="p-1.5 rounded-lg bg-neutral-800/80 hover:bg-emerald-500/15 text-neutral-400 hover:text-emerald-400 border border-neutral-700/50 hover:border-emerald-500/40 transition-all cursor-pointer flex items-center gap-1"
+            title="Editar Mi Perfil"
+          >
+            <UserCog size={15} />
+            <span className="hidden xl:inline text-[11px] font-mono font-medium">Editar</span>
+          </button>
+          <button
+            onClick={logout}
+            type="button"
+            className="p-1.5 rounded-lg bg-neutral-800/80 hover:bg-rose-500/10 text-neutral-400 hover:text-rose-400 border border-neutral-700/50 hover:border-rose-500/30 transition-all cursor-pointer"
+            title="Cerrar Sesión"
+          >
+            <LogOut size={14} />
+          </button>
+        </div>
       </div>
     );
   }

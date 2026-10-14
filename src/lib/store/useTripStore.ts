@@ -34,6 +34,7 @@ interface TripState {
   loginWithGoogle: () => Promise<void>;
   logout: () => Promise<void>;
   checkSession: () => Promise<void>;
+  updateUserProfile: (data: Partial<any>) => void;
   fetchGlobalVehicles: () => Promise<void>;
   saveTripToDatabase: () => Promise<void>;
   favoriteLocations: Waypoint[];
@@ -63,6 +64,14 @@ interface TripState {
   theme: 'dark' | 'light';
   toggleTheme: () => void;
 }
+
+// planRoute concurrency control (module-level, not persisted):
+// - planRequestSeq: monotonically increasing id; only the latest request may write results.
+// - inFlightPlan: identical concurrent requests share one promise instead of re-fetching.
+// - lastCompletedPlanSig: identical consecutive requests are skipped entirely.
+let planRequestSeq = 0;
+let inFlightPlan: { sig: string; promise: Promise<void> } | null = null;
+let lastCompletedPlanSig: string | null = null;
 
 export const useTripStore = create<TripState>()(
   persist(
@@ -108,13 +117,14 @@ export const useTripStore = create<TripState>()(
   setRoutePoints: (points) => set({ routePoints: points }),
   setMapFlyTo: (coords) => set({ mapFlyTo: coords }),
   setIsNavigating: (val) => set((state) => {
-    const isFreshStart = val && state.currentDistance === 0 && (state.accumulatedDistanceKm || 0) === 0;
+    const isContinuing = val && state.currentDistance > 0 && state.navigationStartTime !== null;
     return { 
       isNavigating: val, 
-      navigationStartTime: val ? (state.navigationStartTime || Date.now()) : null,
-      navigationStartSoc: val ? (isFreshStart ? state.soc : (state.navigationStartSoc ?? state.soc)) : null,
-      speedSamples: isFreshStart ? [] : state.speedSamples,
-      accumulatedDistanceKm: isFreshStart ? 0 : state.accumulatedDistanceKm,
+      navigationStartTime: val ? (isContinuing ? state.navigationStartTime : Date.now()) : state.navigationStartTime,
+      navigationStartSoc: val ? (isContinuing ? state.navigationStartSoc : state.soc) : state.navigationStartSoc,
+      speedSamples: isContinuing ? state.speedSamples : (val ? [] : state.speedSamples),
+      currentDistance: isContinuing ? state.currentDistance : (val ? 0 : state.currentDistance),
+      accumulatedDistanceKm: isContinuing ? state.accumulatedDistanceKm : (val ? 0 : state.accumulatedDistanceKm),
       dynamicArrivalSoc: val ? state.dynamicArrivalSoc : null
     };
   }),
@@ -170,6 +180,27 @@ export const useTripStore = create<TripState>()(
     }
 
     const coords = validPoints.map(p => ({ lat: p.lat, lng: p.lng }));
+
+    const sig = JSON.stringify({
+      c: coords.map(c => [c.lat.toFixed(5), c.lng.toFixed(5)]),
+      v: selectedVehicle?.id ?? null,
+      s: soc,
+      f: get().filterCompatibleChargers,
+    });
+
+    // Same inputs already being planned → wait for that result instead of re-fetching.
+    if (inFlightPlan && inFlightPlan.sig === sig) {
+      await inFlightPlan.promise;
+      return;
+    }
+    // Same inputs as the last completed plan → nothing to do.
+    if (lastCompletedPlanSig === sig && get().tripPlan) {
+      set({ isLoadingPlan: false });
+      return;
+    }
+
+    const requestId = ++planRequestSeq;
+    const run = (async () => {
     try {
       const defaultSpecs = {
         usable_battery_kwh: 44.5,
@@ -181,13 +212,33 @@ export const useTripStore = create<TripState>()(
         frontal_area_m2: 2.3,
       };
       const specs = selectedVehicle?.specs || (defaultSpecs as any);
-      const plan = await generateTripPlan(coords, specs, soc);
-      set({ tripPlan: plan, mapFlyTo: null });
+      const plan = await generateTripPlan(coords, specs, soc, selectedVehicle?.brand);
+      // A newer request started while this one was running → drop this stale result.
+      if (requestId !== planRequestSeq) return;
+      lastCompletedPlanSig = sig;
+      set({ 
+        tripPlan: plan, 
+        mapFlyTo: null,
+        currentDistance: 0,
+        accumulatedDistanceKm: 0,
+        navigationStartTime: null,
+        navigationStartSoc: null,
+        speedSamples: []
+      });
     } catch (error) {
+      if (requestId !== planRequestSeq) return;
       console.warn('Could not plan trip:', error);
       set({ tripPlan: null });
     } finally {
-      set({ isLoadingPlan: false });
+      if (requestId === planRequestSeq) set({ isLoadingPlan: false });
+    }
+    })();
+
+    inFlightPlan = { sig, promise: run };
+    try {
+      await run;
+    } finally {
+      if (inFlightPlan?.promise === run) inFlightPlan = null;
     }
   },
 
@@ -230,7 +281,7 @@ export const useTripStore = create<TripState>()(
       const consumedSoc = (totalDrivenKm * baseWhKm) / 1000 / batteryCapacity;
       const currentSocEstimate = Math.max(0.05, Math.min(1.0, startSoc - consumedSoc));
 
-      const plan = await generateTripPlan(coords, selectedVehicle.specs, currentSocEstimate);
+      const plan = await generateTripPlan(coords, selectedVehicle.specs, currentSocEstimate, selectedVehicle.brand);
       if (plan && plan.route?.geometry) {
         set((state) => ({
           accumulatedDistanceKm: (state.accumulatedDistanceKm || 0) + state.currentDistance,
@@ -319,6 +370,13 @@ export const useTripStore = create<TripState>()(
       set({ user: null });
     } else {
       console.error('Error logging out:', error.message);
+    }
+  },
+
+  updateUserProfile: (data: Partial<any>) => {
+    const current = get().user;
+    if (current) {
+      set({ user: { ...current, ...data } });
     }
   },
 

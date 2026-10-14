@@ -4,15 +4,16 @@ import React from 'react';
 import Map, { Marker, NavigationControl } from 'react-map-gl/mapbox';
 
 interface ChargingStation {
-  id: string;
+  id?: string;
   name: string;
   lat: number;
   lng: number;
+  [key: string]: any;
 }
 
 interface AdminMapProps {
-  stations: ChargingStation[];
-  onStationClick?: (station: ChargingStation) => void;
+  stations: any[];
+  onStationClick?: (station: any) => void;
 }
 
 export const AdminMap: React.FC<AdminMapProps> = ({ stations, onStationClick }) => {

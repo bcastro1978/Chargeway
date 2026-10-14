@@ -629,6 +629,23 @@
     }
   },
   {
+    "id": "kia-ev2",
+    "brand": "Kia",
+    "model": "EV2 (42.2 kWh)",
+    "specs": {
+      "usable_battery_kwh": 42.2,
+      "drag_coefficient": 0.28,
+      "frontal_area_m2": 2.42,
+      "weight_kg": 1530,
+      "peak_charging_kw": 85,
+      "wltp_range_km": 450,
+      "charger_type": "CCS1",
+      "commercial_range_km": 450,
+      "commercial_standard": "WLTP",
+      "certificado_wltp": "si"
+    }
+  },
+  {
     "id": "kia-ev3-long-range",
     "brand": "Kia",
     "model": "EV3 Long Range",
@@ -1032,6 +1049,57 @@
       "wltp_range_km": 340,
       "charger_type": "GB/T",
       "commercial_range_km": 401,
+      "commercial_standard": "CLTC",
+      "certificado_wltp": "no"
+    }
+  },
+  {
+    "id": "gwm-ora-5",
+    "brand": "GWM",
+    "model": "ORA 5",
+    "specs": {
+      "usable_battery_kwh": 58.33,
+      "drag_coefficient": 0.29,
+      "frontal_area_m2": 2.3,
+      "weight_kg": 1540,
+      "peak_charging_kw": 80,
+      "wltp_range_km": 435,
+      "charger_type": "CCS2",
+      "commercial_range_km": 435,
+      "commercial_standard": "WLTC",
+      "certificado_wltp": "si"
+    }
+  },
+  {
+    "id": "icar-v23-2wd",
+    "brand": "iCAR",
+    "model": "V23 (401 km 2WD)",
+    "specs": {
+      "usable_battery_kwh": 59.9,
+      "drag_coefficient": 0.36,
+      "frontal_area_m2": 2.9,
+      "weight_kg": 1710,
+      "peak_charging_kw": 85,
+      "wltp_range_km": 341,
+      "charger_type": "CCS2",
+      "commercial_range_km": 401,
+      "commercial_standard": "CLTC",
+      "certificado_wltp": "no"
+    }
+  },
+  {
+    "id": "icar-v23-4wd",
+    "brand": "iCAR",
+    "model": "V23 (501 km 4WD)",
+    "specs": {
+      "usable_battery_kwh": 81.8,
+      "drag_coefficient": 0.36,
+      "frontal_area_m2": 2.9,
+      "weight_kg": 1825,
+      "peak_charging_kw": 100,
+      "wltp_range_km": 426,
+      "charger_type": "CCS2",
+      "commercial_range_km": 501,
       "commercial_standard": "CLTC",
       "certificado_wltp": "no"
     }

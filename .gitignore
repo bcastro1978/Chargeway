@@ -45,3 +45,10 @@ yarn-error.log*
 next-env.d.ts
 
 .vercel
+
+/respaldos/
+/.design_proposal/
+/.vscode/
+*.bak
+find_guajalo.js
+test_supabase_chargers.js

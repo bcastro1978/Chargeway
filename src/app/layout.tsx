@@ -1,16 +1,25 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Inter, JetBrains_Mono } from "next/font/google";
+import "mapbox-gl/dist/mapbox-gl.css";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
   subsets: ["latin"],
+  display: "swap",
 });
+
+export const viewport: Viewport = {
+  themeColor: "#06b6d4",
+  width: "device-width",
+  initialScale: 1,
+};
 
 export const metadata: Metadata = {
   title: "ChargeWay - Drive with Electric Tranquility",
@@ -20,7 +29,6 @@ export const metadata: Metadata = {
     icon: "/logo.png",
     apple: "/logo.png",
   },
-  themeColor: "#10b981",
 };
 
 export default function RootLayout({
@@ -29,11 +37,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
-      <head>
-        <link href="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css" rel="stylesheet" />
-      </head>
-      <body>{children}</body>
+    <html lang="es" suppressHydrationWarning className={`${inter.variable} ${jetbrainsMono.variable}`}>
+      <body suppressHydrationWarning className="font-sans antialiased bg-slate-950 text-slate-100 min-h-screen selection:bg-cyan-500/30 selection:text-cyan-200">
+        {children}
+      </body>
     </html>
   );
 }

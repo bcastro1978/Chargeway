@@ -7,6 +7,7 @@ interface MapPickerProps {
   lat: number;
   lng: number;
   onChange: (lat: number, lng: number) => void;
+  onGeocodeDetails?: (details: { address: string; province: string; city: string; }) => void;
 }
 
 export const MapPicker: React.FC<MapPickerProps> = ({ lat, lng, onChange }) => {

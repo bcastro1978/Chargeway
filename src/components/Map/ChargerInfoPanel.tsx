@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Charger } from '@/lib/services/charging';
+import { Charger, getChargerExclusiveBrands } from '@/lib/services/charging';
 import { fetchNearbyAmenities, NearbyPlace } from '@/lib/services/places';
-import { X, MapPin, Zap, Clock, Navigation, CheckCircle2, AlertCircle, ExternalLink, DollarSign, Coffee, Utensils, ShoppingBag, Store, Sparkles, ChevronDown, ChevronUp, Star } from 'lucide-react';
+import { X, MapPin, Zap, Clock, Navigation, CheckCircle2, AlertCircle, ExternalLink, DollarSign, Coffee, Utensils, ShoppingBag, Store, Sparkles, ChevronDown, ChevronUp, Star, ShieldAlert } from 'lucide-react';
 
 interface ChargerInfoPanelProps {
   charger: Charger | null;
@@ -111,6 +111,31 @@ export const ChargerInfoPanel: React.FC<ChargerInfoPanelProps> = ({ charger, onC
       {/* Body */}
       <div style={{ padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: '12px', maxHeight: '55vh', overflowY: 'auto' }}>
         
+        {(() => {
+          const brands = charger.exclusiveBrands && charger.exclusiveBrands.length > 0
+            ? charger.exclusiveBrands
+            : getChargerExclusiveBrands(charger.nombre || charger.operator);
+          if (brands.length === 0) return null;
+          return (
+            <div style={{
+              background: 'rgba(88, 28, 135, 0.25)',
+              border: '1px solid rgba(168, 85, 247, 0.4)',
+              borderRadius: '10px',
+              padding: '10px 12px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              fontSize: '0.78rem',
+              color: '#e9d5ff'
+            }}>
+              <ShieldAlert size={16} style={{ color: '#c084fc', flexShrink: 0 }} />
+              <span>
+                Cargador exclusivo para vehículos de marca <strong style={{ color: '#ffffff' }}>{brands.join(' / ')}</strong>. No disponible para otras marcas.
+              </span>
+            </div>
+          );
+        })()}
+
         {/* Connector Details */}
         <div>
           <span style={{ fontSize: '0.7rem', fontWeight: 600, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>

@@ -16,9 +16,37 @@ export interface CopilotActiveTrip {
   arrivalRangeKm?: number;
   safetyMarginKm?: number;
   recommendedChargerName?: string;
+  suggestedStop?: {
+    name: string;
+    lat: number;
+    lng: number;
+    power?: string;
+    canton?: string;
+    kwhToCharge?: number;
+    estMinutes?: number;
+    targetSocPct?: number;
+    arrivalSocPct?: number;
+  };
+  suggestedStops?: Array<{
+    name: string;
+    lat: number;
+    lng: number;
+    power?: string;
+    canton?: string;
+    kwhToCharge?: number;
+    estMinutes?: number;
+    targetSocPct?: number;
+    arrivalSocPct?: number;
+    legIndex?: number;
+    totalLegs?: number;
+    posKm?: number;
+  }>;
 }
 
 export interface CopilotContext {
+  userId?: string;
+  userEmail?: string;
+  vehicleBrand?: string;
   vehicleModel?: string;
   batteryCapacityKwh?: number;
   currentSoC?: number; // Porcentaje actual de batería (ej. 68)
@@ -35,6 +63,13 @@ export interface CopilotContext {
     speed: string;
     lat: number;
     lng: number;
+    operator?: string;
+    isBrandMatch?: boolean;
+    isNecessaryStop?: boolean;
+    legIndex?: number;
+    totalLegs?: number;
+    kwhToCharge?: number;
+    estMinutes?: number;
   }>;
 }
 
@@ -44,6 +79,10 @@ export interface CopilotDestination {
   lng: number;
   distKm?: number;
   isRoundTrip?: boolean;
+  origin?: { name: string; lat: number; lng: number };
+  vehicleModel?: string;
+  vehicleBrand?: string;
+  waypoints?: Array<{ name: string; lat: number; lng: number }>;
 }
 
 export interface CopilotCharger {
@@ -52,6 +91,25 @@ export interface CopilotCharger {
   lng: number;
   power?: string;
   speed?: string;
+  operator?: string;
+  isBrandMatch?: boolean;
+  isNecessaryStop?: boolean;
+  legIndex?: number;
+  totalLegs?: number;
+  kwhToCharge?: number;
+  estMinutes?: number;
+  posKm?: number;
+  isInbound?: boolean;
+  distKm?: number;
+}
+
+export interface CopilotPlace {
+  name: string;
+  category: string;
+  rating?: number;
+  address?: string;
+  isOpenNow?: boolean;
+  mapsUri?: string;
 }
 
 export interface CopilotMessage {
@@ -59,6 +117,7 @@ export interface CopilotMessage {
   content: string;
   destination?: CopilotDestination;
   chargers?: CopilotCharger[];
+  places?: CopilotPlace[];
   action?: 'set_destination' | 'add_waypoint';
   waypoint?: {
     name: string;
@@ -73,12 +132,18 @@ export interface CopilotResponse {
   audioRecommended?: boolean;
   destination?: CopilotDestination;
   chargers?: CopilotCharger[];
+  places?: CopilotPlace[];
   action?: 'set_destination' | 'add_waypoint';
   waypoint?: {
     name: string;
     lat: number;
     lng: number;
     power?: string;
+  };
+  quota?: {
+    limit: number;
+    remaining: number;
+    used: number;
   };
 }
 
@@ -98,18 +163,26 @@ export async function askEvCopilot(
       }),
     });
 
+    const data = await res.json().catch(() => ({}));
+
     if (!res.ok) {
-      throw new Error(`Copilot API error: ${res.statusText}`);
+      return {
+        text: data.reply || (res.status === 429
+          ? 'Has alcanzado el límite de 20 consultas diarias. Por favor vuelve a intentarlo mañana.'
+          : `Error en copiloto: ${res.statusText}`),
+        quota: data.quota,
+      };
     }
 
-    const data = await res.json();
     return {
       text: data.reply || 'Lo siento, no pude procesar la consulta en este momento.',
       audioRecommended: true,
       destination: data.destination,
       chargers: data.chargers,
+      places: data.places,
       action: data.action,
       waypoint: data.waypoint,
+      quota: data.quota,
     };
   } catch (err) {
     console.error('Error invoking EV Copilot:', err);
