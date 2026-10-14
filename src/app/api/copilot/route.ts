@@ -536,17 +536,45 @@ const HIGHWAY_DISTANCE_CACHE: Record<string, number> = {
 
 function detectVehicleFromQuery(normQuery: string): { brand: string; model: string; batteryKwh: number; wltpRangeKm: number; fullName: string } | null {
   try {
+    // Solo detectar vehículo si el usuario explícitamente expresa viajar en/con un vehículo o cambiarlo
+    // Ej: "en un dolphin", "con mi yuan pro", "a bordo de un tesla", "cambiar a byd seal", "usando un gac"
+    const vehicleIntentRegex = /\b(?:en|con|a bordo de|manejando|conducir en|cambiar a|cambia a|en un|en una|con un|con una|usando|en el|en la)\s+([a-z0-9\s]+)/i;
+    const match = normQuery.match(vehicleIntentRegex);
+    if (!match || !match[1]) {
+      return null; // El usuario NO está pidiendo cambiar ni especificar un vehículo diferente
+    }
+
+    const queryTarget = match[1];
+
     for (const v of (vehiclesData as any[])) {
-      const fullNorm = normalize(`${v.brand} ${v.model}`);
-      const modelNorm = normalize(v.model);
-      if (normQuery.includes(fullNorm) || normQuery.includes(modelNorm)) {
+      const baseModel = v.model.replace(/\(.*?\)/g, '').trim();
+      const fullNorm = normalize(`${v.brand} ${baseModel}`);
+      const modelNorm = normalize(baseModel);
+
+      const escapedFull = fullNorm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const fullRegex = new RegExp(`(^|\\s)${escapedFull}($|\\s)`, 'i');
+      if (fullRegex.test(queryTarget)) {
         return {
           brand: v.brand,
           model: v.model,
           batteryKwh: Number(v.specs?.usable_battery_kwh) || 45,
           wltpRangeKm: Number(v.specs?.wltp_range_km) || 320,
-          fullName: `${v.brand} ${v.model}`,
+          fullName: `${v.brand} ${baseModel}`,
         };
+      }
+
+      if (modelNorm.length >= 3) {
+        const escapedModel = modelNorm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const modelRegex = new RegExp(`(^|\\s)${escapedModel}($|\\s)`, 'i');
+        if (modelRegex.test(queryTarget)) {
+          return {
+            brand: v.brand,
+            model: v.model,
+            batteryKwh: Number(v.specs?.usable_battery_kwh) || 45,
+            wltpRangeKm: Number(v.specs?.wltp_range_km) || 320,
+            fullName: `${v.brand} ${baseModel}`,
+          };
+        }
       }
     }
   } catch (e) {
@@ -1670,9 +1698,10 @@ REGLAS ESENCIALES PARA VOZ HUMANA (TTS):
           { role: 'user', parts: [{ text: query }] },
         ];
 
-        const targetModels = ['gemini-3.5-flash-lite', 'gemini-3.6-flash', 'gemini-flash-latest', 'gemini-3.8-flash'];
+        const targetModels = ['gemini-3.8-flash', 'gemini-3.5-flash', 'gemini-3.7-flash'];
         let candidatePart: any = null;
-        let usedModel = 'gemini-3.5-flash-lite';
+        let usedModel = 'gemini-3.8-flash';
+
 
         for (const modelName of targetModels) {
           try {

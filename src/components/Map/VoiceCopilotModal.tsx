@@ -203,19 +203,23 @@ export const VoiceCopilotModal: React.FC<VoiceCopilotModalProps> = React.memo(({
             ? routePoints[0]
             : { id: 'origin', name: 'Quito Centro', lat: -0.1807, lng: -78.4678 });
 
-      // Si la consulta detectó un modelo específico (ej. "en un yuan pro"), sincronizarlo en el store
+      // Si la consulta detectó un modelo específico explícito (ej. "en un yuan pro"), sincronizarlo en el store
       if (dest.vehicleModel) {
         const normModel = dest.vehicleModel.toLowerCase().trim();
-        const globalVehicles = useTripStore.getState().globalVehicles || [];
-        const matchedVehicle = globalVehicles.find(v =>
-          v.model.toLowerCase().includes(normModel) ||
-          `${v.brand} ${v.model}`.toLowerCase().includes(normModel) ||
-          normModel.includes(v.model.toLowerCase())
-        );
-        if (matchedVehicle) {
-          useTripStore.getState().setSelectedVehicle(matchedVehicle);
+        const { globalVehicles, selectedVehicle, setSelectedVehicle } = useTripStore.getState();
+        const currentModelNorm = (selectedVehicle?.model || '').toLowerCase().trim();
+        // Solo actualizar si el modelo detectado difiere del actualmente configurado
+        if (currentModelNorm !== normModel && !currentModelNorm.includes(normModel)) {
+          const matchedVehicle = (globalVehicles || []).find(v => {
+            const base = v.model.replace(/\(.*?\)/g, '').trim().toLowerCase();
+            return base === normModel || `${v.brand} ${base}`.toLowerCase() === normModel;
+          });
+          if (matchedVehicle) {
+            setSelectedVehicle(matchedVehicle);
+          }
         }
       }
+
 
       let basePoints: any[] = [];
       if (dest.waypoints && dest.waypoints.length > 0) {
@@ -541,6 +545,17 @@ export const VoiceCopilotModal: React.FC<VoiceCopilotModalProps> = React.memo(({
     // Si ya está escuchando y el usuario presiona el micrófono:
     // Interpreta la acción como "ENVIAR" lo que se ha hablado (o detener si no hay nada)
     if (isListeningRef.current) {
+      // Caso 1: Grabación en curso con MediaRecorder
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
+        setActiveSyncNotice('Procesando audio...');
+        try {
+          mediaRecorderRef.current.stop();
+        } catch (_) {}
+        setListeningState(false);
+        return;
+      }
+
+      // Caso 2: Reconocimiento nativo SpeechRecognition
       const textToSubmit = lastTranscriptRef.current.trim();
       stopActiveRecognition();
       setInterimTranscript('');
@@ -548,7 +563,7 @@ export const VoiceCopilotModal: React.FC<VoiceCopilotModalProps> = React.memo(({
       if (textToSubmit) {
         lastTranscriptRef.current = '';
         const normalized = normalizeVoiceQuery(textToSubmit);
-        setActiveSyncNotice(null);
+        setActiveSyncNotice('Procesando consulta...');
         handleSendMessageRef.current(normalized);
       } else {
         setActiveSyncNotice('No se capturó voz clara. Toca para hablar de nuevo.');
@@ -573,11 +588,11 @@ export const VoiceCopilotModal: React.FC<VoiceCopilotModalProps> = React.memo(({
         const recognition = new SpeechRecognition();
         recognition.continuous = true;
         recognition.interimResults = true;
-        recognition.lang = 'es-EC';
+        recognition.lang = 'es-419'; // Idioma estándar para reconocimiento en Latinoamérica (soporte universal Chrome/Safari)
 
         recognition.onstart = () => {
           setListeningState(true);
-          setActiveSyncNotice('🎤 Escuchando... Toca el micro para enviar');
+          setActiveSyncNotice('🎤 Escuchando... Habla tu consulta');
         };
 
         recognition.onresult = (event: any) => {
@@ -597,9 +612,10 @@ export const VoiceCopilotModal: React.FC<VoiceCopilotModalProps> = React.memo(({
           if (combined) {
             lastTranscriptRef.current = combined;
             setInterimTranscript(interim || combined);
+            setActiveSyncNotice(`🎤 "${combined}"`);
           }
 
-          // Temporizador de silencio: si deja de hablar por 2.2 segundos tras haber dicho algo, auto-enviar
+          // Temporizador de silencio: si deja de hablar por 1.8 segundos tras haber dicho algo, auto-enviar
           if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
           if (combined.length >= 3) {
             silenceTimerRef.current = setTimeout(() => {
@@ -608,10 +624,10 @@ export const VoiceCopilotModal: React.FC<VoiceCopilotModalProps> = React.memo(({
                 lastTranscriptRef.current = '';
                 stopActiveRecognition();
                 setInterimTranscript('');
-                setActiveSyncNotice(null);
+                setActiveSyncNotice('Procesando consulta...');
                 handleSendMessageRef.current(textToSend);
               }
-            }, 2200);
+            }, 1800);
           }
         };
 
@@ -621,7 +637,10 @@ export const VoiceCopilotModal: React.FC<VoiceCopilotModalProps> = React.memo(({
             setActiveSyncNotice('Permiso de micrófono no otorgado');
             stopActiveRecognition();
           } else if (event.error !== 'no-speech') {
+            // Error de red o incompatibilidad: fallback automático a MediaRecorder + Gemini
+            console.warn('SpeechRecognition falló con:', event.error, 'conmutando a MediaRecorder fallback');
             stopActiveRecognition();
+            startMediaRecorderFallback();
           }
         };
 
@@ -634,6 +653,7 @@ export const VoiceCopilotModal: React.FC<VoiceCopilotModalProps> = React.memo(({
             if (textToSend) {
               lastTranscriptRef.current = '';
               const normalized = normalizeVoiceQuery(textToSend);
+              setActiveSyncNotice('Procesando consulta...');
               handleSendMessageRef.current(normalized);
             }
           }
@@ -650,6 +670,7 @@ export const VoiceCopilotModal: React.FC<VoiceCopilotModalProps> = React.memo(({
     // Fallback universal con MediaRecorder + Gemini
     startMediaRecorderFallback();
   };
+
 
   const startMediaRecorderFallback = async () => {
     if (typeof window === 'undefined' || typeof navigator?.mediaDevices?.getUserMedia !== 'function') {

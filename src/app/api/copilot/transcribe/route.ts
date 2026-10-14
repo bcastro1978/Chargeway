@@ -20,8 +20,9 @@ async function handlePOST(req: NextRequest) {
     // Clean mime type (e.g., 'audio/webm;codecs=opus' -> 'audio/webm')
     const cleanMimeType = (mimeType || 'audio/webm').split(';')[0].trim();
 
-    const targetModels = ['gemini-2.5-flash', 'gemini-3.5-flash', 'gemini-flash-latest'];
+    const targetModels = ['gemini-3.8-flash', 'gemini-3.5-flash', 'gemini-3.7-flash'];
     let transcript = '';
+
 
     for (const model of targetModels) {
       try {
@@ -35,10 +36,11 @@ async function handlePOST(req: NextRequest) {
                 {
                   parts: [
                     {
-                      inline_data: {
-                        mime_type: cleanMimeType,
+                      inlineData: {
+                        mimeType: cleanMimeType,
                         data: audioBase64,
                       },
+
                     },
                     {
                       text: 'Transcribe exactamente lo que dice el conductor en este audio en español de Ecuador. El usuario viaja en vehículo eléctrico por Ecuador y puede mencionar destinos (Quito, Tena, Baños, Ambato, Riobamba, Latacunga, Cotopaxi, Pelileo, Puyo, Ibarra, Cuenca, Guayaquil, Manta, etc.), cargadores o batería. Devuelve ÚNICAMENTE el texto transcrito en texto plano, sin comillas ni explicaciones adicionales.',
