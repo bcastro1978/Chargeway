@@ -1379,8 +1379,9 @@ function resolveBestChargingCandidate({
     lng: c.lng,
     power: c.power || '50 kW',
     speed: c.speed || 'Rápida',
-    operator: c.operator || 'Supabase',
+    operator: c.operator || undefined,
     isNecessaryStop: Boolean(c.isNecessaryStop),
+
     posKm: c.posKm,
     isInbound: c.isInbound,
   }));
@@ -1698,9 +1699,9 @@ REGLAS ESENCIALES PARA VOZ HUMANA (TTS):
           { role: 'user', parts: [{ text: query }] },
         ];
 
-        const targetModels = ['gemini-3.8-flash', 'gemini-3.5-flash', 'gemini-3.7-flash'];
+        const targetModels = ['gemini-2.5-flash', 'gemini-3.8-flash', 'gemini-3.5-flash', 'gemini-3.7-flash'];
         let candidatePart: any = null;
-        let usedModel = 'gemini-3.8-flash';
+        let usedModel = 'gemini-2.5-flash';
 
 
         for (const modelName of targetModels) {
@@ -1829,8 +1830,9 @@ REGLAS ESENCIALES PARA VOZ HUMANA (TTS):
                     lng: c.lng,
                     power: c.power || '50 kW',
                     speed: c.speed || 'Rápida',
-                    operator: c.operator || 'Supabase',
+                    operator: c.operator || undefined,
                     isBrandMatch: isBrandMatch({ name: c.name, operator: c.operator }, vehicleBrand),
+
                     isNecessaryStop: Boolean(c.isNecessaryStop),
                   }));
                 } else {
@@ -1899,8 +1901,9 @@ REGLAS ESENCIALES PARA VOZ HUMANA (TTS):
                     lng: s.lng,
                     power: s.power || '50 kW',
                     speed: 'Rápida',
-                    operator: 'Supabase',
+                    operator: s.operator || undefined,
                     isBrandMatch: isBrandMatch({ name: s.name }, vehicleBrand),
+
                     isNecessaryStop: true,
                     legIndex: s.legIndex ?? (idx + 1),
                     totalLegs: s.totalLegs ?? rawNecStops.length,
@@ -2084,6 +2087,11 @@ REGLAS ESENCIALES PARA VOZ HUMANA (TTS):
 
               // Catálogo de sectores, barrios e hitos urbanos frecuentes en Ecuador para máxima precisión geográfica
               const ECUADOR_SECTORS: Record<string, { lat: number; lng: number; name: string }> = {
+                // Sur de Quito (San Bartolo / Quitumbe / El Recreo / Guajaló)
+                'al sur de quito': { lat: -0.2750, lng: -78.5400, name: 'el Sur de Quito' },
+                'sur de quito': { lat: -0.2750, lng: -78.5400, name: 'el Sur de Quito' },
+                'quito sur': { lat: -0.2750, lng: -78.5400, name: 'el Sur de Quito' },
+                'en el sur': { lat: -0.2750, lng: -78.5400, name: 'el Sur de Quito' },
                 'guajalo': { lat: -0.2690, lng: -78.5340, name: 'Puente de Guajaló' },
                 'puente de guajalo': { lat: -0.2690, lng: -78.5340, name: 'Puente de Guajaló' },
                 'el recreo': { lat: -0.2443, lng: -78.5204, name: 'C.C. El Recreo' },
@@ -2092,17 +2100,44 @@ REGLAS ESENCIALES PARA VOZ HUMANA (TTS):
                 'villaflora': { lat: -0.2380, lng: -78.5180, name: 'Villaflora' },
                 'solanda': { lat: -0.2700, lng: -78.5400, name: 'Solanda' },
                 'quitumbe': { lat: -0.2890, lng: -78.5530, name: 'Quitumbe' },
-                'cumbaya': { lat: -0.2010, lng: -78.4350, name: 'Cumbayá' },
-                'tumbaco': { lat: -0.2130, lng: -78.4020, name: 'Tumbaco' },
-                'valle de los chillos': { lat: -0.3047, lng: -78.4519, name: 'Valle de los Chillos' },
-                'san rafael': { lat: -0.3047, lng: -78.4519, name: 'San Rafael' },
-                'san luis shopping': { lat: -0.3150, lng: -78.4500, name: 'San Luis Shopping' },
+                'san bartolo': { lat: -0.2736, lng: -78.5479, name: 'San Bartolo' },
+                'guamani': { lat: -0.3150, lng: -78.5520, name: 'Guamaní' },
+                'chillogallo': { lat: -0.2850, lng: -78.5580, name: 'Chillogallo' },
+
+                // Norte de Quito (Carcelén / Condado / Carolina / Batan)
+                'al norte de quito': { lat: -0.1350, lng: -78.4850, name: 'el Norte de Quito' },
+                'norte de quito': { lat: -0.1350, lng: -78.4850, name: 'el Norte de Quito' },
+                'quito norte': { lat: -0.1350, lng: -78.4850, name: 'el Norte de Quito' },
                 'carcelen': { lat: -0.0980, lng: -78.4830, name: 'Carcelén' },
                 'calderon': { lat: -0.0930, lng: -78.4320, name: 'Calderón' },
                 'el condado': { lat: -0.1030, lng: -78.4980, name: 'El Condado' },
                 'condado': { lat: -0.1030, lng: -78.4980, name: 'El Condado' },
                 'la carolina': { lat: -0.1807, lng: -78.4678, name: 'La Carolina' },
                 'carolina': { lat: -0.1807, lng: -78.4678, name: 'La Carolina' },
+                'el batan': { lat: -0.1750, lng: -78.4720, name: 'El Batán' },
+                'iñaquito': { lat: -0.1810, lng: -78.4850, name: 'Iñaquito' },
+
+                // Centro de Quito
+                'centro de quito': { lat: -0.2200, lng: -78.5120, name: 'el Centro de Quito' },
+                'centro historico': { lat: -0.2200, lng: -78.5120, name: 'el Centro Histórico de Quito' },
+
+                // Valles
+                'cumbaya': { lat: -0.2010, lng: -78.4350, name: 'Cumbayá' },
+                'tumbaco': { lat: -0.2130, lng: -78.4020, name: 'Tumbaco' },
+                'valle de los chillos': { lat: -0.3047, lng: -78.4519, name: 'el Valle de los Chillos' },
+                'los chillos': { lat: -0.3047, lng: -78.4519, name: 'el Valle de los Chillos' },
+                'san rafael': { lat: -0.3047, lng: -78.4519, name: 'San Rafael' },
+                'san luis shopping': { lat: -0.3150, lng: -78.4500, name: 'San Luis Shopping' },
+                'aeropuerto quito': { lat: -0.1260, lng: -78.3580, name: 'el Aeropuerto Tababela' },
+                'tababela': { lat: -0.1260, lng: -78.3580, name: 'Tababela' },
+
+                // Guayaquil
+                'norte de guayaquil': { lat: -2.1400, lng: -79.8950, name: 'el Norte de Guayaquil' },
+                'sur de guayaquil': { lat: -2.2350, lng: -79.9050, name: 'el Sur de Guayaquil' },
+                'centro de guayaquil': { lat: -2.1950, lng: -79.8850, name: 'el Centro de Guayaquil' },
+                'samborondon': { lat: -2.1450, lng: -79.8650, name: 'Samborondón' },
+                'via a la costa': { lat: -2.1850, lng: -80.0200, name: 'la Vía a la Costa' },
+                'via daule': { lat: -2.1150, lng: -79.9350, name: 'la Vía a Daule' },
               };
 
               let searchCoords: { lat: number; lng: number } | undefined = undefined;
@@ -2312,23 +2347,73 @@ REGLAS ESENCIALES PARA VOZ HUMANA (TTS):
     // FALLBACK DE SEGURIDAD (Si Gemini está offline o sin conexión)
     // =========================================================================
     if (normQuery.includes('cargador') || normQuery.includes('electrolinera') || normQuery.includes('recarga') || normQuery.includes('donde cargar') || normQuery.includes('mas cercana') || normQuery.includes('cercana')) {
-      // 1. Detectar si el usuario consultó por una ciudad o destino específico (ej. "en ambato", "en tena", "en cuenca")
-      const matchedCity = ECUADOR_CITIES_CATALOG.find(c =>
-        c.aliases.some(a => normQuery.includes(normalize(a)))
-      );
-      const targetDest = findEcuadorDestination(normQuery);
-
-      let searchCoords = effectiveOriginCoords
-        ? { lat: effectiveOriginCoords[1], lng: effectiveOriginCoords[0] }
-        : { lat: -0.1807, lng: -78.4678 };
+      // 1. Detectar si el usuario consultó por un sector urbano específico (ej. "al sur de quito", "quicentro sur", "cumbaya")
+      let searchCoords: { lat: number; lng: number } | undefined = undefined;
       let locationLabel = 'en tu ubicación actual';
 
-      if (matchedCity) {
-        searchCoords = { lat: matchedCity.lat, lng: matchedCity.lng };
-        locationLabel = `en ${matchedCity.name}`;
-      } else if (targetDest?.coords) {
-        searchCoords = targetDest.coords;
-        locationLabel = `en ${targetDest.name}`;
+      // Importar o reutilizar catálogo de sectores
+      const URBAN_SECTOR_LOOKUP: Record<string, { lat: number; lng: number; name: string }> = {
+        'al sur de quito': { lat: -0.2750, lng: -78.5400, name: 'el Sur de Quito' },
+        'sur de quito': { lat: -0.2750, lng: -78.5400, name: 'el Sur de Quito' },
+        'quito sur': { lat: -0.2750, lng: -78.5400, name: 'el Sur de Quito' },
+        'en el sur': { lat: -0.2750, lng: -78.5400, name: 'el Sur de Quito' },
+        'guajalo': { lat: -0.2690, lng: -78.5340, name: 'Puente de Guajaló' },
+        'el recreo': { lat: -0.2443, lng: -78.5204, name: 'C.C. El Recreo' },
+        'recreo': { lat: -0.2443, lng: -78.5204, name: 'C.C. El Recreo' },
+        'quicentro sur': { lat: -0.2858, lng: -78.5471, name: 'Quicentro Sur' },
+        'villaflora': { lat: -0.2380, lng: -78.5180, name: 'Villaflora' },
+        'solanda': { lat: -0.2700, lng: -78.5400, name: 'Solanda' },
+        'quitumbe': { lat: -0.2890, lng: -78.5530, name: 'Quitumbe' },
+        'san bartolo': { lat: -0.2736, lng: -78.5479, name: 'San Bartolo' },
+        'guamani': { lat: -0.3150, lng: -78.5520, name: 'Guamaní' },
+        'al norte de quito': { lat: -0.1350, lng: -78.4850, name: 'el Norte de Quito' },
+        'norte de quito': { lat: -0.1350, lng: -78.4850, name: 'el Norte de Quito' },
+        'quito norte': { lat: -0.1350, lng: -78.4850, name: 'el Norte de Quito' },
+        'carcelen': { lat: -0.0980, lng: -78.4830, name: 'Carcelén' },
+        'el condado': { lat: -0.1030, lng: -78.4980, name: 'El Condado' },
+        'la carolina': { lat: -0.1807, lng: -78.4678, name: 'La Carolina' },
+        'centro de quito': { lat: -0.2200, lng: -78.5120, name: 'el Centro de Quito' },
+        'cumbaya': { lat: -0.2010, lng: -78.4350, name: 'Cumbayá' },
+        'tumbaco': { lat: -0.2130, lng: -78.4020, name: 'Tumbaco' },
+        'valle de los chillos': { lat: -0.3047, lng: -78.4519, name: 'el Valle de los Chillos' },
+        'los chillos': { lat: -0.3047, lng: -78.4519, name: 'el Valle de los Chillos' },
+        'san rafael': { lat: -0.3047, lng: -78.4519, name: 'San Rafael' },
+        'norte de guayaquil': { lat: -2.1400, lng: -79.8950, name: 'el Norte de Guayaquil' },
+        'sur de guayaquil': { lat: -2.2350, lng: -79.9050, name: 'el Sur de Guayaquil' },
+        'samborondon': { lat: -2.1450, lng: -79.8650, name: 'Samborondón' },
+      };
+
+      for (const [secKey, secData] of Object.entries(URBAN_SECTOR_LOOKUP)) {
+        if (normQuery.includes(secKey)) {
+          searchCoords = { lat: secData.lat, lng: secData.lng };
+          locationLabel = `en ${secData.name}`;
+          break;
+        }
+      }
+
+      let matchedCity: typeof ECUADOR_CITIES_CATALOG[0] | undefined = undefined;
+      let targetDest: ReturnType<typeof findEcuadorDestination> | undefined = undefined;
+
+      // 2. Si no es sector urbano, verificar si consultó por una ciudad o destino específico (ej. "en ambato", "en tena")
+      if (!searchCoords) {
+        matchedCity = ECUADOR_CITIES_CATALOG.find(c =>
+          c.aliases.some(a => normQuery.includes(normalize(a)))
+        );
+        targetDest = findEcuadorDestination(normQuery);
+
+        if (matchedCity) {
+          searchCoords = { lat: matchedCity.lat, lng: matchedCity.lng };
+          locationLabel = `en ${matchedCity.name}`;
+        } else if (targetDest?.coords) {
+          searchCoords = targetDest.coords;
+          locationLabel = `en ${targetDest.name}`;
+        }
+      }
+
+      if (!searchCoords) {
+        searchCoords = effectiveOriginCoords
+          ? { lat: effectiveOriginCoords[1], lng: effectiveOriginCoords[0] }
+          : { lat: -0.1807, lng: -78.4678 };
       }
 
       const corridor = targetDest?.corridor || (matchedCity ? 'all' : 'local');
@@ -2370,8 +2455,19 @@ REGLAS ESENCIALES PARA VOZ HUMANA (TTS):
       const arrivalSoc = (matchesActive && activeTrip?.arrivalSoc !== undefined && !isNaN(Number(activeTrip.arrivalSoc)))
         ? Math.round(Number(activeTrip.arrivalSoc))
         : Math.max(0, Math.round(soc - ((totalKm * 0.16) / battery) * 100));
+      const fallbackChargers = resolvedFallback.chargers || [];
+      const stopCount = fallbackChargers.length;
+      let replyText = '';
+      if (arrivalSoc >= 15) {
+        replyText = `He trazado la ruta a ${resolvedFallback.name}${isRound ? ' de ida y vuelta' : ''} (${totalKm} km). Llegarás con aproximadamente ${arrivalSoc} por ciento de batería sin recargas intermedias.`;
+      } else {
+        const stopDesc = stopCount > 1
+          ? `he planificado ${stopCount} paradas de recarga necesarias en la ruta para que viajes con total seguridad`
+          : (stopCount === 1 ? `he planificado una parada de recarga estratégica para que llegues con reserva segura` : `se recomienda recargar en el trayecto para llegar con reserva segura`);
+        replyText = `He trazado la ruta a ${resolvedFallback.name}${isRound ? ' de ida y vuelta' : ''} (${totalKm} km). Como este trayecto supera tu autonomía actual, ${stopDesc}.`;
+      }
       return NextResponse.json({
-        reply: `He trazado la ruta a ${resolvedFallback.name} (${totalKm} km). Llegarás con aproximadamente ${arrivalSoc} por ciento de batería.`,
+        reply: replyText,
         destination: {
           name: resolvedFallback.name,
           lat: resolvedFallback.lat,

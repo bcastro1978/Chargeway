@@ -351,9 +351,11 @@ export function pickAllChargingStopsByPhysics(
     let targetSocPct = Math.round(targetChargeFrac * 100);
     let kwhToCharge = 0;
     if (nextSim.isDirectReachable) {
-      const energyRemainingWh = nextSim.totalConsumptionWh * 1.15; // 15% safety buffer
+      // Garantizar que la recarga cubra el consumo del tramo restante más al menos un 18% de reserva segura al arribar
+      const safeArrivalReserveWh = vehicleSpecs.usable_battery_kwh * 0.18 * 1000;
+      const neededKwh = (nextSim.totalConsumptionWh + safeArrivalReserveWh) / 1000;
       const currentKwhAtCharger = arrivalSocAtCharger * vehicleSpecs.usable_battery_kwh;
-      const targetKwh = Math.min(vehicleSpecs.usable_battery_kwh * targetChargeFrac, currentKwhAtCharger + (energyRemainingWh / 1000));
+      const targetKwh = Math.min(vehicleSpecs.usable_battery_kwh * targetChargeFrac, Math.max(currentKwhAtCharger + 4, neededKwh));
       kwhToCharge = Math.max(4, Number((targetKwh - currentKwhAtCharger).toFixed(1)));
       targetSocPct = Math.min(Math.round(targetChargeFrac * 100), Math.round(((currentKwhAtCharger + kwhToCharge) / vehicleSpecs.usable_battery_kwh) * 100));
     } else {
@@ -524,8 +526,11 @@ export async function generateTripPlan(
     for (let i = 0; i < intermediateCoords.length; i++) {
       const pt = intermediateCoords[i];
       const matchingWp = activeRoutePoints[i + 1];
-      const isNamedCharger = matchingWp?.name && /byd|kia|jac|cargador|electrolinera|ultra|evinka|condor|rayo|primax|terpel|kfc|shopping|charge/i.test(matchingWp.name);
-      const isKnownCharger = chargers.some(c => haversineKm(pt.lat, pt.lng, c.location.lat, c.location.lng) < 0.85);
+      const isNamedCharger = matchingWp?.name && (
+        /byd|kia|jac|cargador|electrolinera|ultra|evinka|condor|rayo|primax|terpel|kfc|shopping|charge|plaza|mall|recarga|estaci[oó]n/i.test(matchingWp.name) ||
+        /\b\d+\s*kw\b/i.test(matchingWp.name)
+      );
+      const isKnownCharger = chargers.some(c => haversineKm(pt.lat, pt.lng, c.location.lat, c.location.lng) < 1.5);
 
       if (isNamedCharger || isKnownCharger || matchingWp?.id?.startsWith('stop-') || matchingWp?.id?.startsWith('nec_stop_')) {
         // Project onto route cumDist

@@ -326,7 +326,7 @@ export function simulateContinuousRouteEnergy(
   const minRateWhKm = isMountainous ? 148 : 125;
   const minFloorWh = minRateWhKm * routeDistKm;
 
-  if (netConsumptionWh < minFloorWh) {
+  if (netConsumptionWh < minFloorWh && (!rechargeStops || rechargeStops.length === 0)) {
     const diff = minFloorWh - netConsumptionWh;
     netConsumptionWh = minFloorWh;
     currentEnergyKwh -= (diff / 1000);

@@ -1277,7 +1277,7 @@ export const VoiceCopilotModal: React.FC<VoiceCopilotModalProps> = React.memo(({
                                             {ch.power}
                                           </span>
                                         )}
-                                        {ch.operator && (
+                                        {ch.operator && ch.operator.toLowerCase() !== 'supabase' && (
                                           <span style={{
                                             fontSize: '0.58rem',
                                             color: 'rgba(255, 255, 255, 0.65)',
