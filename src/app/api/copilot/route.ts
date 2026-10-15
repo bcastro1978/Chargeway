@@ -2312,10 +2312,27 @@ REGLAS ESENCIALES PARA VOZ HUMANA (TTS):
     // FALLBACK DE SEGURIDAD (Si Gemini está offline o sin conexión)
     // =========================================================================
     if (normQuery.includes('cargador') || normQuery.includes('electrolinera') || normQuery.includes('recarga') || normQuery.includes('donde cargar') || normQuery.includes('mas cercana') || normQuery.includes('cercana')) {
-      const searchCoords = effectiveOriginCoords
+      // 1. Detectar si el usuario consultó por una ciudad o destino específico (ej. "en ambato", "en tena", "en cuenca")
+      const matchedCity = ECUADOR_CITIES_CATALOG.find(c =>
+        c.aliases.some(a => normQuery.includes(normalize(a)))
+      );
+      const targetDest = findEcuadorDestination(normQuery);
+
+      let searchCoords = effectiveOriginCoords
         ? { lat: effectiveOriginCoords[1], lng: effectiveOriginCoords[0] }
         : { lat: -0.1807, lng: -78.4678 };
-      const supabaseChargers = await getRouteChargersFromSupabase('local', searchCoords);
+      let locationLabel = 'en tu ubicación actual';
+
+      if (matchedCity) {
+        searchCoords = { lat: matchedCity.lat, lng: matchedCity.lng };
+        locationLabel = `en ${matchedCity.name}`;
+      } else if (targetDest?.coords) {
+        searchCoords = targetDest.coords;
+        locationLabel = `en ${targetDest.name}`;
+      }
+
+      const corridor = targetDest?.corridor || (matchedCity ? 'all' : 'local');
+      const supabaseChargers = await getRouteChargersFromSupabase(corridor, searchCoords);
       const uniqueCandidates = supabaseChargers.map(c => ({
         name: c.name,
         lat: c.location.lat,
@@ -2334,7 +2351,7 @@ REGLAS ESENCIALES PARA VOZ HUMANA (TTS):
       const distKm = topCharger?.distKm;
       const distText = distKm !== undefined ? ` a unos ${distKm} km` : '';
       return NextResponse.json({
-        reply: `La estación de recarga más cercana compatible con tu ${vehicleBrand || 'auto'} es ${topCharger?.name || 'en la zona'}${distText}. Encontré ${top4.length} opciones recomendadas.`,
+        reply: `La estación de recarga más cercana ${locationLabel} compatible con tu ${vehicleBrand || 'auto'} es ${topCharger?.name || 'en la zona'}${distText}. Encontré ${top4.length} opciones recomendadas.`,
         chargers: top4,
         provider: 'chargeway_fallback',
       });

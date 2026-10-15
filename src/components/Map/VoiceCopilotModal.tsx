@@ -54,9 +54,44 @@ const HUMAN_VOICES = [
   { id: 'es-MX-DaliaNeural', name: 'Dalia', gender: 'female' },
 ];
 
+function deduplicatePhrases(str: string): string {
+  if (!str) return '';
+  const words = str.trim().split(/\s+/);
+  if (words.length < 3) return str;
+
+  // 1. Deduplicar palabras consecutivas idénticas (ej: 'ir ir' -> 'ir')
+  const singleCleaned: string[] = [];
+  for (let i = 0; i < words.length; i++) {
+    if (i === 0 || words[i].toLowerCase() !== words[i - 1].toLowerCase()) {
+      singleCleaned.push(words[i]);
+    }
+  }
+
+  // 2. Deduplicar bloques de frases idénticas consecutivas (ej: 'ir y regresar ir y regresar')
+  let cur = singleCleaned;
+  let changed = true;
+  while (changed) {
+    changed = false;
+    for (let len = Math.floor(cur.length / 2); len >= 2; len--) {
+      for (let i = 0; i <= cur.length - 2 * len; i++) {
+        const p1 = cur.slice(i, i + len).map(w => w.toLowerCase()).join(' ');
+        const p2 = cur.slice(i + len, i + 2 * len).map(w => w.toLowerCase()).join(' ');
+        if (p1 === p2) {
+          cur.splice(i + len, len);
+          changed = true;
+          break;
+        }
+      }
+      if (changed) break;
+    }
+  }
+
+  return cur.join(' ');
+}
+
 export function normalizeVoiceQuery(raw: string): string {
   if (!raw) return '';
-  let text = raw.trim();
+  let text = deduplicatePhrases(raw.trim());
 
   const phoneticMap: Array<[RegExp, string]> = [
     // "expresar de tenen" / "regresar de tenen" -> "regresar de Tena"
@@ -95,8 +130,9 @@ export function normalizeVoiceQuery(raw: string): string {
     text = text.replace(regex, replacement);
   }
 
-  return text;
+  return deduplicatePhrases(text);
 }
+
 
 export const VoiceCopilotModal: React.FC<VoiceCopilotModalProps> = React.memo(({
   isOpen,
@@ -586,7 +622,7 @@ export const VoiceCopilotModal: React.FC<VoiceCopilotModalProps> = React.memo(({
         stopActiveRecognition();
 
         const recognition = new SpeechRecognition();
-        recognition.continuous = true;
+        recognition.continuous = false;
         recognition.interimResults = true;
         recognition.lang = 'es-419'; // Idioma estándar para reconocimiento en Latinoamérica (soporte universal Chrome/Safari)
 
@@ -600,22 +636,36 @@ export const VoiceCopilotModal: React.FC<VoiceCopilotModalProps> = React.memo(({
           let interim = '';
 
           for (let i = 0; i < event.results.length; ++i) {
-            const transcriptText = event.results[i][0].transcript;
+            const transcriptText = event.results[i][0]?.transcript?.trim() || '';
+            if (!transcriptText) continue;
+
             if (event.results[i].isFinal) {
-              confirmed += transcriptText + ' ';
+              // En Chrome Android, cada burst puede ser el buffer acumulativo completo
+              // o una repetición progresiva. Evitar duplicar frases anteriores.
+              if (!confirmed) {
+                confirmed = transcriptText;
+              } else if (transcriptText.toLowerCase().includes(confirmed.toLowerCase())) {
+                confirmed = transcriptText;
+              } else if (!confirmed.toLowerCase().includes(transcriptText.toLowerCase())) {
+                confirmed += ' ' + transcriptText;
+              }
             } else {
-              interim += transcriptText;
+              interim = transcriptText;
             }
           }
 
-          const combined = (confirmed + interim).trim();
+          let combined = (confirmed || interim).trim();
+          if (confirmed && interim && !confirmed.toLowerCase().includes(interim.toLowerCase())) {
+            combined = `${confirmed} ${interim}`.trim();
+          }
+
           if (combined) {
             lastTranscriptRef.current = combined;
             setInterimTranscript(interim || combined);
             setActiveSyncNotice(`🎤 "${combined}"`);
           }
 
-          // Temporizador de silencio: si deja de hablar por 1.8 segundos tras haber dicho algo, auto-enviar
+          // Temporizador de silencio: si deja de hablar por 1.4 segundos tras haber dicho algo, auto-enviar
           if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
           if (combined.length >= 3) {
             silenceTimerRef.current = setTimeout(() => {
@@ -627,7 +677,7 @@ export const VoiceCopilotModal: React.FC<VoiceCopilotModalProps> = React.memo(({
                 setActiveSyncNotice('Procesando consulta...');
                 handleSendMessageRef.current(textToSend);
               }
-            }, 1800);
+            }, 1400);
           }
         };
 
