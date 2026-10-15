@@ -318,7 +318,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
       </div>
 
       {showSuggestions && (
-        <div className="absolute top-full left-0 right-0 z-[2001] mt-1.5 bg-slate-900/95 backdrop-blur-xl border border-white/15 rounded-xl shadow-2xl max-h-[280px] overflow-y-auto custom-scrollbar divide-y divide-white/5">
+        <div className="absolute top-full left-0 right-0 z-[9999] mt-1.5 bg-slate-900/98 backdrop-blur-2xl border border-white/20 rounded-xl shadow-2xl max-h-[300px] overflow-y-auto custom-scrollbar divide-y divide-white/5">
           <div
             onClick={useCurrentLocation}
             className="p-2.5 cursor-pointer flex items-center gap-2 text-brand-cyan text-xs font-semibold hover:bg-white/5 transition"
@@ -579,7 +579,7 @@ const RouteSearchComponent: React.FC<RouteSearchProps> = ({ locations, onChange 
   };
 
   return (
-    <div className="hud-panel rounded-2xl p-5 shadow-hud border border-white/10 flex flex-col gap-4">
+    <div className="hud-panel rounded-2xl p-5 shadow-hud border border-white/10 flex flex-col gap-4 relative z-50">
       <div className="flex items-center justify-between pb-2 border-b border-white/10">
         <div className="flex items-center space-x-2">
           <Navigation className="w-4 h-4 text-brand-cyan" />

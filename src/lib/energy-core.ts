@@ -319,45 +319,8 @@ export function simulateContinuousRouteEnergy(
     });
   }
 
-  // Sanity floor for Andean mountain corridors:
-  // In mountainous terrain with passes, real consumption is never lower than 135-150 Wh/km
+  // Cálculo de consumo neto final derivado de la física pura del tren motriz, aerodinámica y regeneración
   const routeDistKm = totalRouteDistM / 1000;
-  const isMountainous = totalClimbWh > 4000 || (elevationPoints.length > 2 && Math.abs(elevationPoints[elevationPoints.length - 1].elevation - elevationPoints[0].elevation) > 400);
-  const minRateWhKm = isMountainous ? 148 : 125;
-  const minFloorWh = minRateWhKm * routeDistKm;
-
-  if (netConsumptionWh < minFloorWh && (!rechargeStops || rechargeStops.length === 0)) {
-    const diff = minFloorWh - netConsumptionWh;
-    netConsumptionWh = minFloorWh;
-    currentEnergyKwh -= (diff / 1000);
-
-    const totalDistKm = routeDistKm > 0 ? routeDistKm : 1;
-    const diffKwh = diff / 1000;
-    depletionKm = null;
-    warningReserveKm = null;
-    idealChargeMinKm = null;
-    idealChargeMaxKm = null;
-
-    for (let i = 0; i < socTimeline.length; i++) {
-      const distFraction = Math.min(1.0, socTimeline[i].km / totalDistKm);
-      const scaledSocReduction = (diffKwh * distFraction) / batteryCapacityKwh;
-      const adjustedSoc = Math.max(0, Math.min(1.0, socTimeline[i].soc - scaledSocReduction));
-      socTimeline[i].soc = adjustedSoc;
-
-      if (adjustedSoc <= 0 && depletionKm === null) {
-        depletionKm = socTimeline[i].km;
-      }
-      if (adjustedSoc <= 0.15 && warningReserveKm === null) {
-        warningReserveKm = socTimeline[i].km;
-      }
-      if (adjustedSoc <= 0.25 && idealChargeMinKm === null) {
-        idealChargeMinKm = socTimeline[i].km;
-      }
-      if (adjustedSoc <= 0.15 && idealChargeMaxKm === null) {
-        idealChargeMaxKm = socTimeline[i].km;
-      }
-    }
-  }
 
   const usableKwhAtEnd = currentEnergyKwh;
   const arrivalSoc = Math.max(0, usableKwhAtEnd / batteryCapacityKwh);

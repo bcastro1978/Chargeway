@@ -170,6 +170,23 @@
     }
   },
   {
+    "id": "byd-ti-7",
+    "brand": "BYD",
+    "model": "Ti 7 (26.6 kWh)",
+    "specs": {
+      "usable_battery_kwh": 26.6,
+      "drag_coefficient": 0.34,
+      "frontal_area_m2": 3.12,
+      "weight_kg": 2425,
+      "peak_charging_kw": 54,
+      "wltp_range_km": 95,
+      "charger_type": "CCS2",
+      "commercial_range_km": 115,
+      "commercial_standard": "NEDC",
+      "certificado_wltp": "no"
+    }
+  },
+  {
     "id": "byd-yuan-plus",
     "brand": "BYD",
     "model": "Yuan Plus (Atto 3)",
