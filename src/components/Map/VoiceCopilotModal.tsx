@@ -854,6 +854,7 @@ export const VoiceCopilotModal: React.FC<VoiceCopilotModalProps> = React.memo(({
       console.error('Error al procesar consulta de voz:', err);
     } finally {
       setLoading(false);
+      setActiveSyncNotice(prev => (prev === 'Procesando consulta...' || prev === 'Procesando audio...' ? null : prev));
     }
   };
 

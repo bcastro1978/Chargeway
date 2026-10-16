@@ -216,6 +216,7 @@ async function calculateDynamicRoute(
  */
 interface ConversationalTripState {
   destName: string;
+  originName?: string;
   distKm: number;
   totalDistKm?: number;
   corridor: string;
@@ -223,6 +224,19 @@ interface ConversationalTripState {
   chargers: CopilotChargerInfo[];
   deficitKm: number;
   isRoundTrip?: boolean;
+  suggestedStop?: {
+    name: string;
+    lat: number;
+    lng: number;
+    power?: string;
+    canton?: string;
+    kwhToCharge?: number;
+    estMinutes?: number;
+    targetSocPct?: number;
+    arrivalSocPct?: number;
+    isInbound?: boolean;
+  };
+  suggestedStops?: any[];
 }
 
 /**
@@ -283,9 +297,12 @@ function extractConversationState(
     }
 
     const deficitKm = Math.max(0, distKm - Number(context?.estimatedRangeKm || 200));
+    const activeSuggestedStop = activeTrip.suggestedStop || (activeTrip.suggestedStops && activeTrip.suggestedStops[0]);
+    const activeSuggestedStops = activeTrip.suggestedStops || (activeTrip.suggestedStop ? [activeTrip.suggestedStop] : []);
 
     return {
       destName,
+      originName: activeTrip.originName,
       distKm,
       totalDistKm,
       corridor,
@@ -293,6 +310,8 @@ function extractConversationState(
       chargers,
       deficitKm,
       isRoundTrip: isRound,
+      suggestedStop: activeSuggestedStop,
+      suggestedStops: activeSuggestedStops,
     };
   }
 
@@ -330,6 +349,20 @@ function extractConversationState(
         const finalChargers = chargers.length > 0 ? chargers : rawChargers;
         const deficitKm = Math.max(0, distKm - Number(context?.estimatedRangeKm || 200));
 
+        const necStop = (msg.chargers || []).find((c: any) => c.isNecessaryStop) || msg.chargers?.[0];
+        const histSuggestedStop = necStop ? {
+          name: necStop.name,
+          lat: necStop.lat,
+          lng: necStop.lng,
+          power: necStop.power,
+          canton: necStop.canton,
+          kwhToCharge: necStop.kwhToCharge,
+          estMinutes: necStop.estMinutes,
+          targetSocPct: necStop.targetSocPct,
+          arrivalSocPct: necStop.arrivalSocPct,
+          isInbound: necStop.isInbound,
+        } : undefined;
+
         return {
           destName,
           distKm,
@@ -338,14 +371,17 @@ function extractConversationState(
           chargers: finalChargers,
           deficitKm,
           isRoundTrip: isMsgRoundTrip,
+          suggestedStop: histSuggestedStop,
+          suggestedStops: msg.chargers,
         };
       }
 
       const text = msg.content || '';
-      const match = text.match(/Para viajar a (.+?) son(?: aproximadamente)? (\d+) kilómetros/i);
-      if (match && match[1] && match[2]) {
+      const match = text.match(/Para viajar a (.+?) son(?: aproximadamente)? (\d+) kilómetros/i) ||
+                    text.match(/(?:he trazado la ruta a|ruta trazada a|viaje a)\s+([a-záéíóúñ\s]+?)(?:\s+de ida y vuelta|\s+\((\d+)\s*km\)|$)/i);
+      if (match && match[1]) {
         const destName = match[1].trim();
-        const distKm = parseInt(match[2], 10);
+        const distKm = match[2] ? parseInt(match[2], 10) : 150;
         const norm = normalize(destName);
 
         const routeMatch = ECUADOR_ROUTES.find(r => r.aliases.some(a => norm.includes(a)));
@@ -379,6 +415,38 @@ function extractConversationState(
 
         const deficitKm = Math.max(0, distKm - Number(context?.estimatedRangeKm || 200));
 
+        // Extraer parada de recarga mencionada en el texto si la hubo
+        let extractedStop: any = undefined;
+        const stopMatch = text.match(/(?:paradas? de recarga necesarias?|parada de recarga estratégica|parada estratégica|recomienda recargar en)\s*(?:\(\d+\):?)?\s*([^\n\.\(]+)/i);
+        if (stopMatch && stopMatch[1]) {
+          const stopNameClean = stopMatch[1].trim();
+          const isGarbage = stopNameClean.toLowerCase().startsWith('para que') || stopNameClean.toLowerCase().startsWith('para llegar') || stopNameClean.length > 50;
+          if (!isGarbage) {
+            const kwhMatch = text.match(/~?(\d+(?:\.\d+)?)\s*kWh/i);
+            const minMatch = text.match(/~?(\d+)\s*min/i);
+            extractedStop = {
+              name: stopNameClean,
+              lat: coords.lat,
+              lng: coords.lng,
+              kwhToCharge: kwhMatch ? parseFloat(kwhMatch[1]) : 22,
+              estMinutes: minMatch ? parseInt(minMatch[1], 10) : 25,
+            };
+          }
+        }
+
+        // Si no se extrajo un nombre válido del texto, buscar en los cargadores de la ruta
+        if (!extractedStop && chargers && chargers.length > 0) {
+          const nec = chargers.find((c: any) => c.isNecessaryStop) || chargers[0];
+          extractedStop = {
+            name: nec.name,
+            lat: nec.lat,
+            lng: nec.lng,
+            power: nec.power,
+            kwhToCharge: (nec as any).kwhToCharge || 22,
+            estMinutes: (nec as any).estMinutes || 25,
+          };
+        }
+
         return {
           destName,
           distKm,
@@ -386,6 +454,8 @@ function extractConversationState(
           coords,
           chargers,
           deficitKm,
+          isRoundTrip: text.toLowerCase().includes('ida y vuelta') || text.toLowerCase().includes('regres'),
+          suggestedStop: extractedStop,
         };
       }
     }
@@ -1665,6 +1735,16 @@ async function handlePOST(request: Request) {
           },
         ];
 
+        const activePlannedStops = activeTrip?.suggestedStops || (activeTrip?.suggestedStop ? [activeTrip.suggestedStop] : (prevTrip?.suggestedStop ? [prevTrip.suggestedStop] : []));
+        const plannedStopsPrompt = activePlannedStops.length > 0 ? `
+PARADAS DE RECARGA PLANIFICADAS EN LA RUTA:
+${activePlannedStops.map((s: any, idx: number) => `- Parada ${idx + 1}: ${s.name || s.nombre} (${s.power || '50 kW'}) en ${s.canton || 'la ruta'}.
+  * Tiempo de recarga estimado: ${s.estMinutes || 25} minutos
+  * Energía requerida a cargar: ~${s.kwhToCharge || 20} kWh
+  * Coordenadas: lat ${s.lat}, lng ${s.lng}
+  * Sentido: ${s.isInbound ? 'al regreso / retorno' : 'de ida'}`).join('\n')}
+` : '';
+
         const systemInstructionText = `Eres el Copiloto Inteligente de ChargeWay, el asistente de voz y navegación para conductores de vehículos eléctricos en Ecuador.
 
 TELEMETRÍA REAL DEL VEHÍCULO ACTUAL:
@@ -1675,6 +1755,7 @@ TELEMETRÍA REAL DEL VEHÍCULO ACTUAL:
 - Temperatura exterior: ${context?.ambientTempC ?? 17}°C
 - Origen de viaje: Quito, Ecuador
 ${activeTrip ? `- Viaje activo en mapa: De ${activeTrip.originName} a ${activeTrip.destinationName} (${activeTrip.distanceKm} km, consumo estimado ${activeTrip.consumptionKwh} kWh, llegada con ${activeTrip.arrivalSoc}% / ${activeTrip.arrivalRangeKm} km de margen). ${activeTrip.isRoundTrip ? 'Es viaje de ida y vuelta.' : ''}` : '- No hay ruta activa en el mapa actualmente.'}
+${plannedStopsPrompt}
 
 REGLAS ESENCIALES PARA VOZ HUMANA (TTS):
 1. Tu respuesta será leída en voz alta mientras el conductor maneja. Sé directo, amable, conciso y claro (máximo 2 a 3 frases cortas, menos de 50 palabras). NUNCA uses formato markdown, negritas con asteriscos (**), viñetas con guiones ni tablas.
@@ -1687,22 +1768,37 @@ REGLAS ESENCIALES PARA VOZ HUMANA (TTS):
 8. LISTADO DE ESTACIONES EN COPILOTO: Al trazar una ruta ('plan_trip'), presenta las paradas obligatorias de recarga necesarias si la batería no alcanza. Cuando el usuario consulte o busque cargadores ('search_chargers'), la interfaz del copiloto desplegará automáticamente el listado interactivo con botones para ver cada estación en el mapa o agregarla como parada intermedia.
 9. EXCLUSIVIDAD DE MARCAS DE CARGADORES: Los cargadores de marcas de autos (como KIA, BYD, JAC, Tesla, Porsche) son EXCLUSIVOS para vehículos de su propia marca. El conductor maneja un ${vehicleBrand || 'vehículo'}. NUNCA le recomiendes, sugieras ni menciones cargadores de marcas exclusivas incompatibles (por ejemplo: si maneja BYD, JAMÁS menciones ni uses estaciones KIA como KIA Panavial San Gabriel o KIA Servi Ruiz; si maneja KIA, jamás menciones BYD). Solo sugiere estaciones de su propia marca (${vehicleBrand || 'compatible'}) o cargadores públicos universales sin exclusividad de marca (centros comerciales, estaciones de servicio multimarca, etc.).
 10. ADAPTABILIDAD A LA INFRAESTRUCTURA DISPONIBLE: No discrimines ni descartes cargadores porque no sean rápidos o de alta potencia. Si un corredor o pueblo no dispone de carga rápida DC, utiliza los cargadores disponibles (ej. 7.4 kW o 22 kW AC) e informa de forma transparente el tiempo realista requerido para la recarga.
-11. TOLERANCIA FONÉTICA Y NAVEGACIÓN EN ECUADOR: El usuario te habla por reconocimiento de voz mientras maneja, por lo que nombres de ciudades o intenciones pueden tener imprecisiones fonéticas (ej. 'quiero expresar de tenen' o 'regresar de tenen' significa 'quiero regresar de Tena' o 'ir a Tena'; 'coto taxi' o 'cotopasi' significa 'Cotopaxi'; 'pelileo' o 'peli leo'; 'banos' significa 'Baños de Agua Santa'; 'puyo', 'papallacta', 'cumbaya', 'ibarra', 'tulcan', 'latacunga', 'riobamba', 'ambato', etc.). Si el usuario dice algo que suena a un destino o consulta automotriz, interpreta inteligentemente la ciudad o intención e invoca 'plan_trip' o 'search_chargers' en lugar de responder 'No te entendí'.`;
+11. TOLERANCIA FONÉTICA Y NAVEGACIÓN EN ECUADOR: El usuario te habla por reconocimiento de voz mientras maneja, por lo que nombres de ciudades o intenciones pueden tener imprecisiones fonéticas (ej. 'quiero expresar de tenen' o 'regresar de tenen' significa 'quiero regresar de Tena' o 'ir a Tena'; 'coto taxi' o 'cotopasi' significa 'Cotopaxi'; 'pelileo' o 'peli leo'; 'banos' significa 'Baños de Agua Santa'; 'puyo', 'papallacta', 'cumbaya', 'ibarra', 'tulcan', 'latacunga', 'riobamba', 'ambato', etc.). Si el usuario dice algo que suena a un destino o consulta automotriz, interpreta inteligentemente la ciudad o intención e invoca 'plan_trip' o 'search_chargers' en lugar de responder 'No te entendí'.
+12. PREGUNTAS SOBRE TIEMPO DE RECARGA: Si el usuario pregunta cuánto tiempo debe recargar, cuánto se demora en cargar o cuántos minutos necesita en la ruta activa, NUNCA invoques 'search_chargers'. Responde DIRECTAMENTE con el tiempo estimado en minutos y los kWh requeridos para la parada de recarga planificada (ejemplo: 'Para tu parada en BYD Supermaxi San Gabriel debes recargar aproximadamente entre 25 y 30 minutos, unos 22 kilovatios hora, para completar el retorno seguro').
+13. PREGUNTAS SOBRE QUÉ HACER MIENTRAS ESPERA (AMENIDADES / COMIDA / ACTIVIDADES): Si el usuario pregunta qué puede hacer mientras espera, dónde comer o qué actividades realizar en la parada de recarga, invoca 'search_places_amenities' usando como ubicación la estación de recarga o ciudad de la parada, o responde describiendo directamente los comercios y servicios del lugar (por ejemplo supermercado, cafeterías y restaurantes locales). NUNCA busques cargadores cercanos al origen si la pregunta es sobre amenidades en la parada.`;
 
-        const geminiHistory = historyList.slice(-6).map(h => ({
-          role: h.role === 'assistant' ? 'model' : 'user',
-          parts: [{ text: h.content }],
-        }));
+        // Limpiar y estructurar historial asegurando alternancia estricta user <-> model
+        // y eliminando duplicados de la consulta actual al final
+        const cleanHistory: Array<{ role: 'user' | 'model'; parts: [{ text: string }] }> = [];
+        for (const h of historyList.slice(-8)) {
+          if (!h.content || !h.content.trim()) continue;
+          const role: 'user' | 'model' = h.role === 'assistant' ? 'model' : 'user';
+          if (cleanHistory.length > 0 && cleanHistory[cleanHistory.length - 1].role === role) {
+            cleanHistory[cleanHistory.length - 1] = { role, parts: [{ text: h.content.trim() }] };
+          } else {
+            cleanHistory.push({ role, parts: [{ text: h.content.trim() }] });
+          }
+        }
+
+        // Si el último mensaje es del usuario (ej. si el frontend ya envió la consulta actual en history),
+        // quitarlo para que la consulta actual 'query' sea el único turno final de usuario
+        if (cleanHistory.length > 0 && cleanHistory[cleanHistory.length - 1].role === 'user') {
+          cleanHistory.pop();
+        }
 
         const messages = [
-          ...geminiHistory,
+          ...cleanHistory,
           { role: 'user', parts: [{ text: query }] },
         ];
 
-        const targetModels = ['gemini-2.5-flash', 'gemini-3.8-flash', 'gemini-3.5-flash', 'gemini-3.7-flash'];
+        const targetModels = ['gemini-3.5-flash', 'gemini-3.6-flash', 'gemini-3.5-flash-lite', 'gemini-3.1-flash-lite'];
         let candidatePart: any = null;
-        let usedModel = 'gemini-2.5-flash';
-
+        let usedModel = 'gemini-3.5-flash';
 
         for (const modelName of targetModels) {
           try {
@@ -1714,7 +1810,7 @@ REGLAS ESENCIALES PARA VOZ HUMANA (TTS):
                 tools,
                 systemInstruction: { parts: [{ text: systemInstructionText }] },
               }),
-              signal: AbortSignal.timeout(6000),
+              signal: AbortSignal.timeout(3500),
             });
 
             if (apiRes.ok) {
@@ -1725,9 +1821,14 @@ REGLAS ESENCIALES PARA VOZ HUMANA (TTS):
                 usedModel = modelName;
                 break;
               }
+            } else if (apiRes.status === 400 || apiRes.status === 403) {
+              // Si la llave o parámetros son inválidos, cortar de inmediato al fallback sin retrasar al usuario
+              break;
+            } else {
+              continue;
             }
           } catch (_) {
-            // Continúa al siguiente modelo de respaldo
+            continue;
           }
         }
 
@@ -2284,11 +2385,25 @@ REGLAS ESENCIALES PARA VOZ HUMANA (TTS):
               }
             } else if (call.name === 'search_places_amenities') {
               const cat = call.args?.category || 'restaurant';
-              const targetCoords = prevTrip?.coords || { lat: -0.1807, lng: -78.4678 };
+              const locArg = call.args?.location;
+              const activeStop = activeTrip?.suggestedStop || activeTrip?.suggestedStops?.[0] || prevTrip?.suggestedStop;
+              
+              let targetCoords: { lat: number; lng: number } = (activeStop?.lat && activeStop?.lng)
+                ? { lat: activeStop.lat, lng: activeStop.lng }
+                : (prevTrip?.coords || { lat: -0.1807, lng: -78.4678 });
+
+              if (locArg && (!activeStop || !normalize(locArg).includes(normalize(activeStop.name || '')))) {
+                try {
+                  const geo = await geocodePlace(locArg.toLowerCase().includes('ecuador') ? locArg : `${locArg}, Ecuador`);
+                  if (geo) targetCoords = geo;
+                } catch (_) {}
+              }
+
               const places = await getPlacesRecommendationsFromGoogle(targetCoords, cat);
               returnPlaces = places;
               toolResponseData = {
                 category: cat,
+                location: locArg || activeStop?.name || 'la estación de recarga',
                 places: places.map(p => `${p.name} (${p.category})`),
               };
             }
@@ -2324,7 +2439,9 @@ REGLAS ESENCIALES PARA VOZ HUMANA (TTS):
                 .map((p: any) => (typeof p === 'string' ? p : p.name || 'un lugar recomendado'))
                 .filter(Boolean)
                 .join(' y ');
-              spokenReply = `Cerca del punto de recarga encontré opciones recomendadas: ${topP}.`;
+              const activeStop = activeTrip?.suggestedStop || activeTrip?.suggestedStops?.[0] || prevTrip?.suggestedStop;
+              const timeNote = activeStop?.estMinutes ? `El tiempo estimado de recarga es de unos ${activeStop.estMinutes} minutos (~${activeStop.kwhToCharge || 20} kWh). ` : '';
+              spokenReply = `${timeNote}Cerca del punto de recarga en ${activeStop?.name || 'la zona'} encontré buenas opciones: ${topP}.`;
             }
 
             return NextResponse.json({
@@ -2344,9 +2461,124 @@ REGLAS ESENCIALES PARA VOZ HUMANA (TTS):
     }
 
     // =========================================================================
-    // FALLBACK DE SEGURIDAD (Si Gemini está offline o sin conexión)
+    // FALLBACK DE SEGURIDAD CONTEXTUAL (Si Gemini está offline o sin conexión)
     // =========================================================================
-    if (normQuery.includes('cargador') || normQuery.includes('electrolinera') || normQuery.includes('recarga') || normQuery.includes('donde cargar') || normQuery.includes('mas cercana') || normQuery.includes('cercana')) {
+
+    const activePlannedStop = activeTrip?.suggestedStop || activeTrip?.suggestedStops?.[0] || prevTrip?.suggestedStop || prevTrip?.chargers?.find((c: any) => c.isNecessaryStop) || prevTrip?.chargers?.[0];
+
+    // 0. Manejo contextual de preguntas sobre si la batería alcanza o abastece para el retorno / regreso
+    const isReturnBatteryQuery = (
+      (normQuery.includes('regreso') || normQuery.includes('retorno') || normQuery.includes('volver') || normQuery.includes('vuelta')) &&
+      (normQuery.includes('abastece') || normQuery.includes('alcanza') || normQuery.includes('bateria') || normQuery.includes('carga') || normQuery.includes('autonomia') || normQuery.includes('llego') || normQuery.includes('llegar') || normQuery.includes('rinde') || normQuery.includes('aguanta'))
+    );
+
+    if (isReturnBatteryQuery) {
+      const destName = activeTrip?.destinationName || prevTrip?.destName || (normQuery.includes('tulcan') ? 'Tulcán' : 'tu destino');
+      const isRound = activeTrip?.isRoundTrip ?? prevTrip?.isRoundTrip ?? true;
+      const totalKm = activeTrip?.distanceKm || (prevTrip?.distKm ? prevTrip.distKm * 2 : (normQuery.includes('tulcan') ? 480 : 300));
+      const oneWayKm = Math.round(totalKm / 2);
+
+      const isLongOrMountain = oneWayKm > 150 || (activeTrip?.arrivalSoc !== undefined && activeTrip.arrivalSoc < 20);
+
+      let targetStop = (activePlannedStop?.name && !activePlannedStop.name.includes('para que'))
+        ? activePlannedStop.name
+        : (normQuery.includes('tulcan') ? 'BYD - Supermaxi San Gabriel' : 'una estación en ruta');
+
+      let reply = '';
+      if (isLongOrMountain) {
+        reply = `Para el regreso de ${destName} a Quito (~${oneWayKm} km), la batería no te abastece de forma directa debido a la distancia y desniveles de la cordillera. Necesitas realizar una recarga estratégica en ${targetStop} (unos 25 a 30 minutos) para llegar a Quito con al menos un 15% de reserva segura.`;
+      } else {
+        reply = `Para el retorno desde ${destName}, tu batería dispone de autonomía suficiente gracias a la energía recuperada por freno regenerativo en los descensos andinos. Llegarás con reserva segura.`;
+      }
+
+      return NextResponse.json({
+        reply,
+        provider: 'chargeway_context_fallback',
+      });
+    }
+
+    // 1. Manejo contextual de preguntas sobre tiempo de recarga o actividades mientras espera
+    const isChargingTimeQuery = (
+      normQuery.includes('cuanto tiempo') ||
+      normQuery.includes('que tiempo') ||
+      normQuery.includes('cuanto demor') ||
+      normQuery.includes('cuantos minutos') ||
+      normQuery.includes('duracion') ||
+      (normQuery.includes('tiempo') && (normQuery.includes('recarg') || normQuery.includes('carg')))
+    );
+
+    const isWhatToDoQuery = (
+      normQuery.includes('que puedo hacer') ||
+      normQuery.includes('que hacer') ||
+      normQuery.includes('mientras espero') ||
+      normQuery.includes('mientras cargo') ||
+      normQuery.includes('mientras recargo') ||
+      normQuery.includes('donde comer') ||
+      normQuery.includes('lugares') ||
+      normQuery.includes('actividades') ||
+      normQuery.includes('lapso de tiempo')
+    );
+
+    if (isChargingTimeQuery || isWhatToDoQuery) {
+      let stopObj = activePlannedStop;
+      if (!stopObj || !stopObj.name || stopObj.name.includes('para que')) {
+        const foundNec = prevTrip?.chargers?.find((c: any) => c.isNecessaryStop) || prevTrip?.chargers?.[0];
+        if (foundNec) {
+          stopObj = foundNec;
+        } else {
+          const destName = activeTrip?.destinationName || prevTrip?.destName || (normQuery.includes('tulcan') ? 'Tulcán' : undefined);
+          if (destName) {
+            const r = findEcuadorRoute(destName);
+            const rCharger = r?.chargers?.find(c => c.isNecessaryStop) || r?.chargers?.[0];
+            if (rCharger) stopObj = rCharger;
+          }
+        }
+      }
+
+      const stopName = (stopObj?.name && !stopObj.name.includes('para que'))
+        ? stopObj.name
+        : 'BYD - Supermaxi San Gabriel';
+      const estMins = stopObj?.estMinutes || 25;
+      const kwh = stopObj?.kwhToCharge || Math.round((Number(battery) * 0.45) * 10) / 10;
+
+      let reply = '';
+      if (isChargingTimeQuery && isWhatToDoQuery) {
+        reply = `Para tu parada en ${stopName}, debes recargar aproximadamente ${estMins} minutos (~${kwh} kWh). Mientras esperas, puedes aprovechar los comercios, cafeterías y restaurantes del sector para tomar un refrigerio o descansar.`;
+      } else if (isChargingTimeQuery) {
+        reply = `Para tu parada en ${stopName}, el tiempo estimado de recarga es de aproximadamente ${estMins} minutos (~${kwh} kWh) para completar tu viaje con reserva segura.`;
+      } else {
+        reply = `Durante tu parada de recarga en ${stopName}, puedes aprovechar los comercios, cafeterías y restaurantes del sector para descansar y tomar un refrigerio.`;
+      }
+
+      let places: any[] = [];
+      const stopCoords = (stopObj?.lat && stopObj?.lng)
+        ? { lat: stopObj.lat, lng: stopObj.lng }
+        : (prevTrip?.coords || { lat: 0.5042, lng: -77.8306 });
+
+      try {
+        places = await getPlacesRecommendationsFromGoogle(stopCoords, 'restaurant');
+      } catch (_) {}
+
+      return NextResponse.json({
+        reply,
+        places: places.length > 0 ? places : undefined,
+        provider: 'chargeway_context_fallback',
+      });
+    }
+
+    // 2. Búsqueda de cargadores cercanos solo si el usuario busca efectivamente estaciones
+    const isExplicitChargerSearch = !isChargingTimeQuery && !isWhatToDoQuery && !isReturnBatteryQuery && (
+      normQuery.includes('donde cargar') ||
+      normQuery.includes('electrolinera') ||
+      normQuery.includes('estacion de carga') ||
+      normQuery.includes('estaciones de carga') ||
+      normQuery.includes('mas cercana') ||
+      normQuery.includes('cercana') ||
+      normQuery.includes('cargador') ||
+      (normQuery.includes('recarga') && !normQuery.includes('tiempo'))
+    );
+
+    if (isExplicitChargerSearch) {
       // 1. Detectar si el usuario consultó por un sector urbano específico (ej. "al sur de quito", "quicentro sur", "cumbaya")
       let searchCoords: { lat: number; lng: number } | undefined = undefined;
       let locationLabel = 'en tu ubicación actual';

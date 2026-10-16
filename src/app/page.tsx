@@ -1311,50 +1311,106 @@ export default function Home() {
                 );
               })()
             ) : (
-              <div className="hud-panel p-3 sm:p-3.5 rounded-2xl border border-emerald-500/30 bg-emerald-950/20 shadow-hud flex flex-col gap-2.5 font-mono">
-                <div className="flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-2 min-w-0">
-                    <span className="text-emerald-400 text-base shrink-0">🛡️</span>
-                    <div className="truncate">
-                      <span className="text-emerald-300 font-bold text-xs uppercase tracking-wider">Trayecto Directo</span>
-                      <p className="text-[10.5px] text-slate-400 truncate">
-                        Autonomía suficiente • Llegada con ~{Math.round(tripPlan.arrivalSoc * 100)}% ({tripPlan.arrivalRangeKm} km)
-                      </p>
-                    </div>
-                  </div>
+              (() => {
+                const arrivalSocPct = Math.round(tripPlan.arrivalSoc * 100);
+                const isDeficit = arrivalSocPct < 12;
 
-                  <div className="flex items-center gap-2 shrink-0">
-                    <span className="text-emerald-400 font-bold text-xs bg-emerald-950/60 px-2 py-0.5 rounded-md border border-emerald-500/30">
-                      ~{Math.round(tripPlan.arrivalSoc * 100)}% SoC
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => setIsDirectCardExpanded(prev => !prev)}
-                      className="p-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-white/10 transition cursor-pointer shrink-0"
-                      title={isDirectCardExpanded ? "Ocultar detalles de llegada" : "Ver detalles de llegada"}
-                    >
-                      {isDirectCardExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-                    </button>
-                  </div>
-                </div>
+                if (isDeficit) {
+                  return (
+                    <div className="hud-panel p-3 sm:p-3.5 rounded-2xl border border-rose-500/40 bg-rose-950/30 shadow-hud flex flex-col gap-2.5 font-mono">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <span className="text-rose-400 text-base shrink-0">⚠️</span>
+                          <div className="truncate">
+                            <span className="text-rose-300 font-bold text-xs uppercase tracking-wider">Déficit de Batería • Recarga Requerida</span>
+                            <p className="text-[10.5px] text-slate-300 truncate">
+                              Autonomía insuficiente para viaje directo • Déficit de {Math.abs(arrivalSocPct)}% ({tripPlan.arrivalRangeKm} km)
+                            </p>
+                          </div>
+                        </div>
 
-                {/* Desplegable de Detalles del Trayecto Directo */}
-                {isDirectCardExpanded && (
-                  <div className="pt-2 border-t border-emerald-500/20 grid grid-cols-2 gap-2 text-xs animate-in fade-in duration-200">
-                    <div className="bg-slate-900/70 p-2 rounded-xl border border-white/5">
-                      <span className="text-[9px] text-slate-400 uppercase block">Margen de Seguridad</span>
-                      <span className="text-emerald-400 font-bold">+{tripPlan.safetyMarginKm} km</span>
+                        <div className="flex items-center gap-2 shrink-0">
+                          <span className="text-rose-400 font-bold text-xs bg-rose-950/80 px-2 py-0.5 rounded-md border border-rose-500/40 shadow-[0_0_10px_rgba(244,63,94,0.3)]">
+                            {arrivalSocPct}% SoC
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => setIsDirectCardExpanded(prev => !prev)}
+                            className="p-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-white/10 transition cursor-pointer shrink-0"
+                            title={isDirectCardExpanded ? "Ocultar detalles de déficit" : "Ver detalles de déficit"}
+                          >
+                            {isDirectCardExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Desplegable de Detalles del Déficit */}
+                      {isDirectCardExpanded && (
+                        <div className="pt-2 border-t border-rose-500/20 grid grid-cols-2 gap-2 text-xs animate-in fade-in duration-200">
+                          <div className="bg-slate-900/70 p-2 rounded-xl border border-white/5">
+                            <span className="text-[9px] text-slate-400 uppercase block">Margen Faltante</span>
+                            <span className="text-rose-400 font-bold">{tripPlan.safetyMarginKm} km</span>
+                          </div>
+                          <div className="bg-slate-900/70 p-2 rounded-xl border border-white/5">
+                            <span className="text-[9px] text-slate-400 uppercase block">Consumo Estimado</span>
+                            <span className="text-cyan-300 font-bold">{totalConsumptionKwh.toFixed(1)} kWh</span>
+                          </div>
+                          <div className="col-span-2 text-[10.5px] text-rose-300/90 italic">
+                            La batería no alcanza para completar el recorrido directo sin recargas intermedias. Selecciona o añade una estación de recarga en el mapa o asistente.
+                          </div>
+                        </div>
+                      )}
                     </div>
-                    <div className="bg-slate-900/70 p-2 rounded-xl border border-white/5">
-                      <span className="text-[9px] text-slate-400 uppercase block">Consumo Estimado</span>
-                      <span className="text-cyan-300 font-bold">{totalConsumptionKwh.toFixed(1)} kWh</span>
+                  );
+                }
+
+                return (
+                  <div className="hud-panel p-3 sm:p-3.5 rounded-2xl border border-emerald-500/30 bg-emerald-950/20 shadow-hud flex flex-col gap-2.5 font-mono">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <span className="text-emerald-400 text-base shrink-0">🛡️</span>
+                        <div className="truncate">
+                          <span className="text-emerald-300 font-bold text-xs uppercase tracking-wider">Trayecto Directo Seguro</span>
+                          <p className="text-[10.5px] text-slate-400 truncate">
+                            Autonomía suficiente • Llegada con ~{arrivalSocPct}% ({tripPlan.arrivalRangeKm} km)
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2 shrink-0">
+                        <span className="text-emerald-400 font-bold text-xs bg-emerald-950/60 px-2 py-0.5 rounded-md border border-emerald-500/30">
+                          ~{arrivalSocPct}% SoC
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => setIsDirectCardExpanded(prev => !prev)}
+                          className="p-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-white/10 transition cursor-pointer shrink-0"
+                          title={isDirectCardExpanded ? "Ocultar detalles de llegada" : "Ver detalles de llegada"}
+                        >
+                          {isDirectCardExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                        </button>
+                      </div>
                     </div>
-                    <div className="col-span-2 text-[10.5px] text-slate-400 italic">
-                      Tu batería tiene capacidad suficiente para completar el trayecto sin paradas de carga obligatorias.
-                    </div>
+
+                    {/* Desplegable de Detalles del Trayecto Directo */}
+                    {isDirectCardExpanded && (
+                      <div className="pt-2 border-t border-emerald-500/20 grid grid-cols-2 gap-2 text-xs animate-in fade-in duration-200">
+                        <div className="bg-slate-900/70 p-2 rounded-xl border border-white/5">
+                          <span className="text-[9px] text-slate-400 uppercase block">Margen de Seguridad</span>
+                          <span className="text-emerald-400 font-bold">+{tripPlan.safetyMarginKm} km</span>
+                        </div>
+                        <div className="bg-slate-900/70 p-2 rounded-xl border border-white/5">
+                          <span className="text-[9px] text-slate-400 uppercase block">Consumo Estimado</span>
+                          <span className="text-cyan-300 font-bold">{totalConsumptionKwh.toFixed(1)} kWh</span>
+                        </div>
+                        <div className="col-span-2 text-[10.5px] text-slate-400 italic">
+                          Tu batería tiene capacidad suficiente para completar el trayecto sin paradas de carga obligatorias.
+                        </div>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
+                );
+              })()
             )
           )}
         </aside>

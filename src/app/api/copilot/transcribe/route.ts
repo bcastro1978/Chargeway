@@ -20,7 +20,7 @@ async function handlePOST(req: NextRequest) {
     // Clean mime type (e.g., 'audio/webm;codecs=opus' -> 'audio/webm')
     const cleanMimeType = (mimeType || 'audio/webm').split(';')[0].trim();
 
-    const targetModels = ['gemini-3.8-flash', 'gemini-3.5-flash', 'gemini-3.7-flash'];
+    const targetModels = ['gemini-3.5-flash', 'gemini-3.6-flash', 'gemini-3.5-flash-lite', 'gemini-3.8-flash'];
     let transcript = '';
 
 
