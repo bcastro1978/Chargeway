@@ -279,7 +279,7 @@ function extractConversationState(
         chargers = CORRIDOR_CHARGERS['sur'].list;
       } else if (norm.includes('ibarra') || norm.includes('tulcan') || norm.includes('otavalo') || norm.includes('cayambe') || norm.includes('bolivar') || norm.includes('carchi') || norm.includes('san gabriel') || norm.includes('mira') || (hasCoords && dLat > 0.05 && dLng >= -78.8 && dLng <= -77.5)) {
         corridor = 'norte';
-        coords = hasCoords ? { lat: dLat, lng: dLng } : { lat: 0.3601, lng: -78.125 };
+        coords = hasCoords ? { lat: dLat, lng: dLng } : { lat: 0.3517, lng: -78.1223 };
         chargers = CORRIDOR_CHARGERS['norte'].list;
       } else {
         corridor = 'local';
@@ -404,7 +404,7 @@ function extractConversationState(
             chargers = CORRIDOR_CHARGERS['sur'].list;
           } else if (norm.includes('ibarra') || norm.includes('tulcan') || norm.includes('otavalo') || norm.includes('cayambe')) {
             corridor = 'norte';
-            coords = { lat: 0.3601, lng: -78.125 };
+            coords = { lat: 0.3517, lng: -78.1223 };
             chargers = CORRIDOR_CHARGERS['norte'].list;
           } else {
             corridor = 'local';
@@ -509,7 +509,7 @@ const ECUADOR_CITIES_CATALOG = [
   { name: 'Cayambe', aliases: ['cayambe'], lat: 0.0468, lng: -78.2009, corridor: 'norte' },
   { name: 'Otavalo', aliases: ['otavalo'], lat: 0.2337, lng: -78.2625, corridor: 'norte' },
   { name: 'Cotacachi', aliases: ['cotacachi', 'cuicocha'], lat: 0.2992, lng: -78.2669, corridor: 'norte' },
-  { name: 'Ibarra', aliases: ['ibarra', 'yahuarcocha'], lat: 0.3601, lng: -78.1250, corridor: 'norte' },
+  { name: 'Ibarra', aliases: ['ibarra', 'yahuarcocha'], lat: 0.3517, lng: -78.1223, corridor: 'norte' },
   { name: 'Bolívar (Carchi)', aliases: ['bolivar carchi', 'bolívar carchi', 'bolivar del carchi', 'bolívar del carchi', 'carchi bolivar', 'canton bolivar carchi', 'canton bolivar'], lat: 0.5011, lng: -77.9042, corridor: 'norte' },
   { name: 'San Gabriel', aliases: ['san gabriel', 'montufar', 'montúfar'], lat: 0.5985, lng: -77.8353, corridor: 'norte' },
   { name: 'Tulcán', aliases: ['tulcan', 'tulcán', 'rumichaca'], lat: 0.8123, lng: -77.7170, corridor: 'norte' },
@@ -1700,11 +1700,13 @@ async function handlePOST(request: Request) {
               },
               {
                 name: 'search_chargers',
-                description: 'Busca electrolineras y estaciones de carga rápida disponibles en una ciudad o sector en Ecuador.',
+                description: 'Busca electrolineras y estaciones de recarga disponibles en una ciudad o sector en Ecuador. Permite filtrar por multimarca universal o solo carga rápida.',
                 parameters: {
                   type: 'OBJECT',
                   properties: {
-                    location: { type: 'STRING', description: 'Nombre de la ciudad o zona (ej. Ambato, Quito, Riobamba, en la ruta)' },
+                    location: { type: 'STRING', description: 'Nombre de la ciudad o zona (ej. Ibarra, Ambato, Quito, Riobamba, Cumbayá, en la ruta)' },
+                    multibrandOnly: { type: 'BOOLEAN', description: 'True si el conductor solicita cargador multimarca, universal o abierto a todas las marcas (excluyendo concesionarios exclusivos de marcas como BYD, Kia, etc.)' },
+                    fastOnly: { type: 'BOOLEAN', description: 'True si el conductor solicita específicamente carga rápida (>= 40-50 kW DC)' },
                   },
                 },
               },
@@ -1960,7 +1962,7 @@ REGLAS ESENCIALES PARA VOZ HUMANA (TTS):
                         searchCoords = { lat: -1.2491, lng: -78.6168 }; // Ambato / Sierra Centro
                         isHighwayMidpoint = true;
                       } else if (normDest.includes('tulcan') || normDest.includes('carchi') || normDest.includes('san gabriel') || normDest.includes('bolivar')) {
-                        searchCoords = { lat: 0.3601, lng: -78.1250 }; // Ibarra / Laguna Mall
+                        searchCoords = { lat: 0.3517, lng: -78.1223 }; // Ibarra centro
                         isHighwayMidpoint = true;
                       } else if (resolved.lng > -78.1 || normDest.includes('tena') || normDest.includes('puyo') || normDest.includes('coca')) {
                         searchCoords = { lat: -0.46, lng: -77.89 }; // Baeza / Napo
@@ -2186,6 +2188,23 @@ REGLAS ESENCIALES PARA VOZ HUMANA (TTS):
               const locArg = call.args?.location || 'Quito';
               const normLoc = normalize(locArg);
 
+              const isMultibrandRequested = Boolean(
+                call.args?.multibrandOnly ||
+                /multi\s*marca|universal|todas las marcas|cualquier marca|public/i.test(normQuery) ||
+                /multi\s*marca|universal|todas las marcas|cualquier marca|public/i.test(query)
+              );
+
+              const wasRecentFastQuery = historyList.slice(-2).some(m =>
+                /r[aá]pid[oa]|dc|alta potencia|fast|50\s*kw/i.test(normalize(m.content || ''))
+              );
+
+              const isFastRequested = Boolean(
+                call.args?.fastOnly ||
+                /r[aá]pid[oa]|dc|alta potencia|fast|50\s*kw|electrolinera/i.test(normQuery) ||
+                /r[aá]pid[oa]|dc|alta potencia|fast|50\s*kw|electrolinera/i.test(query) ||
+                (isMultibrandRequested && wasRecentFastQuery)
+              );
+
               // Catálogo de sectores, barrios e hitos urbanos frecuentes en Ecuador para máxima precisión geográfica
               const ECUADOR_SECTORS: Record<string, { lat: number; lng: number; name: string }> = {
                 // Sur de Quito (San Bartolo / Quitumbe / El Recreo / Guajaló)
@@ -2308,8 +2327,11 @@ REGLAS ESENCIALES PARA VOZ HUMANA (TTS):
                 return true;
               });
 
-              // 7. Filtrar estrictamente por compatibilidad de marca (ej. Neta nunca debe recibir cargadores exclusivos BYD)
-              const brandPrioritized = prioritizeChargersByBrand(uniqueCandidates, vehicleBrand);
+              // 7. Filtrar estrictamente por compatibilidad de marca, multimarca y potencia requerida
+              const brandPrioritized = prioritizeChargersByBrand(uniqueCandidates, vehicleBrand, {
+                multibrandOnly: isMultibrandRequested,
+                fastOnly: isFastRequested,
+              });
 
               // 8. Calcular distancia exacta a searchCoords y ordenar estrictamente por proximidad física
               const withDistance: CopilotChargerInfo[] = brandPrioritized.list.map(c => {
@@ -2328,7 +2350,14 @@ REGLAS ESENCIALES PARA VOZ HUMANA (TTS):
 
               const topCharger = returnChargers[0];
               const distKm = topCharger?.distKm;
-              const distText = distKm !== undefined ? ` a unos ${distKm} km` : '';
+              let distText = '';
+              if (distKm !== undefined) {
+                if (distKm < 0.3) {
+                  distText = ' en el sector céntrico';
+                } else {
+                  distText = ` a unos ${distKm} km`;
+                }
+              }
 
               toolResponseData = {
                 location: resolvedLocationName || targetRoute?.name || targetDest?.name || locArg,
@@ -2337,6 +2366,8 @@ REGLAS ESENCIALES PARA VOZ HUMANA (TTS):
                 topChargers: returnChargers.slice(0, 4).map((c: CopilotChargerInfo) => `${c.name} (${c.power || 'Rápido'})`),
                 closestChargerName: topCharger ? topCharger.name : undefined,
                 closestChargerDistText: distText,
+                isMultibrand: isMultibrandRequested,
+                isFast: isFastRequested,
               };
 
               const isAddStopIntent = (
@@ -2432,7 +2463,16 @@ REGLAS ESENCIALES PARA VOZ HUMANA (TTS):
               const topOne = returnChargers[0];
               const placeLabel = toolResponseData?.location ? `en ${toolResponseData.location}` : 'en la zona';
               const distNote = toolResponseData?.closestChargerDistText || '';
-              spokenReply = `La estación más cercana ${placeLabel} compatible con tu ${vehicleBrand || 'auto'} es ${topOne.name}${distNote}. Encontré ${returnChargers.length} opciones disponibles.`;
+              const isFollowUp = /^(y|ademas|tambien|pero|o)\b/i.test(normQuery.trim());
+              const powerNote = topOne.power ? ` (${topOne.power})` : '';
+
+              if (toolResponseData?.isMultibrand) {
+                spokenReply = `${isFollowUp ? 'En cuanto a opciones' : 'Para carga'} multimarca abierta a todo público ${placeLabel}, la estación recomendada es ${topOne.name}${distNote}${powerNote}. Encontré ${returnChargers.length} opciones disponibles.`;
+              } else if (toolResponseData?.isFast) {
+                spokenReply = `El punto de carga rápida más cercano ${placeLabel} compatible con tu ${vehicleBrand || 'auto'} es ${topOne.name}${distNote}${powerNote}. Encontré ${returnChargers.length} opciones disponibles.`;
+              } else {
+                spokenReply = `La estación más cercana ${placeLabel} compatible con tu ${vehicleBrand || 'auto'} es ${topOne.name}${distNote}. Encontré ${returnChargers.length} opciones disponibles.`;
+              }
             } else if (returnPlaces && returnPlaces.length > 0) {
               const topP = returnPlaces
                 .slice(0, 2)
@@ -2658,7 +2698,14 @@ REGLAS ESENCIALES PARA VOZ HUMANA (TTS):
         speed: c.speed,
         operator: c.operator,
       }));
-      const brandPrioritized = prioritizeChargersByBrand(uniqueCandidates, vehicleBrand);
+      const isMultibrandRequested = /multi\s*marca|universal|todas las marcas|cualquier marca|public/i.test(normQuery);
+      const isFastRequested = /r[aá]pid[oa]|dc|alta potencia|fast|50\s*kw|electrolinera/i.test(normQuery);
+
+      const brandPrioritized = prioritizeChargersByBrand(uniqueCandidates, vehicleBrand, {
+        multibrandOnly: isMultibrandRequested,
+        fastOnly: isFastRequested,
+      });
+
       const withDistance = brandPrioritized.list.map(c => ({
         ...c,
         distKm: Math.round(Math.hypot((c.lat - searchCoords.lat) * 111, (c.lng - searchCoords.lng) * 111) * 10) / 10,
@@ -2666,9 +2713,24 @@ REGLAS ESENCIALES PARA VOZ HUMANA (TTS):
       const top4 = withDistance.slice(0, 4);
       const topCharger = top4[0];
       const distKm = topCharger?.distKm;
-      const distText = distKm !== undefined ? ` a unos ${distKm} km` : '';
+      let distText = '';
+      if (distKm !== undefined) {
+        distText = distKm < 0.3 ? ' en el sector céntrico' : ` a unos ${distKm} km`;
+      }
+
+      const isFollowUp = /^(y|ademas|tambien|pero|o)\b/i.test(normQuery.trim());
+      const powerNote = topCharger?.power ? ` (${topCharger.power})` : '';
+      let replyMsg = '';
+      if (isMultibrandRequested) {
+        replyMsg = `${isFollowUp ? 'En cuanto a opciones' : 'Para carga'} multimarca abierta a todo público ${locationLabel}, la estación recomendada es ${topCharger?.name || 'en la zona'}${distText}${powerNote}. Encontré ${top4.length} opciones multimarca recomendadas.`;
+      } else if (isFastRequested) {
+        replyMsg = `El punto de carga rápida más cercano ${locationLabel} compatible con tu ${vehicleBrand || 'auto'} es ${topCharger?.name || 'en la zona'}${distText}${powerNote}. Encontré ${top4.length} opciones recomendadas.`;
+      } else {
+        replyMsg = `La estación de recarga más cercana ${locationLabel} compatible con tu ${vehicleBrand || 'auto'} es ${topCharger?.name || 'en la zona'}${distText}. Encontré ${top4.length} opciones recomendadas.`;
+      }
+
       return NextResponse.json({
-        reply: `La estación de recarga más cercana ${locationLabel} compatible con tu ${vehicleBrand || 'auto'} es ${topCharger?.name || 'en la zona'}${distText}. Encontré ${top4.length} opciones recomendadas.`,
+        reply: replyMsg,
         chargers: top4,
         provider: 'chargeway_fallback',
       });

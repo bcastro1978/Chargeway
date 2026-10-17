@@ -1,0 +1,191 @@
+/**
+ * ChargeWay - Hoja de Estilos e Identidad de Marca
+ * Versión 2.0 (Ecuador & Latin America EV Network)
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+
+:root {
+  /* ── COLORES PRIMARIOS ── */
+  --cw-cyan: #00D2FF;
+  --cw-cyan-rgb: 0, 210, 255;
+  --cw-lime: #00F5A0;
+  --cw-lime-rgb: 0, 245, 160;
+  --cw-dark: #070B12;
+  --cw-dark-rgb: 7, 11, 18;
+
+  /* ── COLORES SECUNDARIOS Y FUNCIONALES ── */
+  --cw-emerald: #10B981;
+  --cw-sky: #06B6D4;
+  --cw-amber: #F59E0B;
+  --cw-crimson: #EF4444;
+
+  /* ── ESCALA DE GRISES Y NEUTRALES ── */
+  --cw-slate-950: #020408;
+  --cw-slate-900: #0F172A;
+  --cw-slate-800: #1E293B;
+  --cw-slate-700: #334155;
+  --cw-slate-400: #94A3B8;
+  --cw-slate-200: #E2E8F0;
+  --cw-white: #FFFFFF;
+
+  /* ── GRADIENTES ── */
+  --cw-gradient-electric: linear-gradient(135deg, #00F5A0 0%, #00D2FF 100%);
+  --cw-gradient-cyan: linear-gradient(135deg, #00D2FF 0%, #0284C7 100%);
+  --cw-gradient-partner: linear-gradient(135deg, #10B981 0%, #00F5A0 100%);
+  --cw-gradient-surface: radial-gradient(130% 100% at 50% 0%, rgba(30, 41, 59, 0.72) 0%, rgba(15, 23, 42, 0.85) 100%);
+
+  /* ── TIPOGRAFÍAS ── */
+  --cw-font-display: 'Syne', sans-serif;
+  --cw-font-sans: 'Space Grotesk', system-ui, sans-serif;
+  --cw-font-mono: 'Space Mono', monospace;
+
+  /* ── SOMBRAS Y RESPLANDOR NEÓN ── */
+  --cw-glow-cyan: 0 0 25px -5px rgba(0, 210, 255, 0.45);
+  --cw-glow-lime: 0 0 25px -5px rgba(0, 245, 160, 0.45);
+  --cw-glow-combined: 0 0 35px -5px rgba(0, 210, 255, 0.35), 0 0 15px rgba(0, 245, 160, 0.25);
+  --cw-shadow-hud: 0 25px 50px -12px rgba(0, 0, 0, 0.75), inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+}
+
+/* ── BASE & TYPOGRAPHY ── */
+body.chargeway-theme {
+  background-color: var(--cw-dark);
+  color: var(--cw-slate-200);
+  font-family: var(--cw-font-sans);
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+.cw-title-hero {
+  font-family: var(--cw-font-display);
+  font-weight: 900;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  color: var(--cw-white);
+}
+
+.cw-title-section {
+  font-family: var(--cw-font-display);
+  font-weight: 800;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  color: var(--cw-white);
+}
+
+.cw-mono-telemetry {
+  font-family: var(--cw-font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--cw-slate-400);
+}
+
+/* ── COMPONENTES GLASSMORPHIC & HUD ── */
+.cw-hud-panel {
+  background: var(--cw-gradient-surface);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: var(--cw-shadow-hud);
+  border-radius: 18px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cw-hud-panel:hover {
+  border-color: rgba(0, 210, 255, 0.35);
+  box-shadow: var(--cw-shadow-hud), var(--cw-glow-cyan);
+}
+
+.cw-glass-badge {
+  background: rgba(7, 11, 18, 0.85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(0, 210, 255, 0.3);
+  border-radius: 9999px;
+  padding: 6px 14px;
+  font-family: var(--cw-font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--cw-cyan);
+}
+
+/* ── BOTONES OFICIALES CHARGEWAY ── */
+.cw-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 32px;
+  border-radius: 9999px;
+  background: var(--cw-gradient-electric);
+  color: #020617;
+  font-family: var(--cw-font-sans);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  box-shadow: var(--cw-glow-lime);
+  transition: all 0.25s ease;
+}
+
+.cw-btn-primary:hover {
+  transform: translateY(-2px) scale(1.02);
+  filter: brightness(1.12);
+  box-shadow: var(--cw-glow-combined);
+}
+
+.cw-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 30px;
+  border-radius: 9999px;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(0, 210, 255, 0.4);
+  color: var(--cw-white);
+  font-family: var(--cw-font-sans);
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.cw-btn-secondary:hover {
+  background: rgba(0, 210, 255, 0.12);
+  border-color: var(--cw-cyan);
+  color: var(--cw-cyan);
+}
+
+/* ── ANIMACIONES DE RADAR Y BALIZA ── */
+@keyframes cwRadarPulse {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.4); opacity: 0; }
+  100% { transform: scale(0.95); opacity: 0; }
+}
+
+.cw-radar-beacon {
+  animation: cwRadarPulse 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* ── BARRA DE SCROLL HUD ── */
+.cw-custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+.cw-custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(7, 11, 18, 0.5);
+}
+.cw-custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(0, 210, 255, 0.3);
+  border-radius: 9999px;
+}
+.cw-custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--cw-cyan);
+}

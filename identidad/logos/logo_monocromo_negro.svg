@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 260" width="100%" height="100%" fill="none">
+  <!-- SÍMBOLO ICONOGRÁFICO MONOCROMÁTICO NEGRO -->
+  <g transform="translate(20, 20) scale(0.43)" fill="#000000">
+    <!-- Arco Exterior -->
+    <path d="M 256 60 C 150 60 76 142 76 242 C 76 312 136 386 216 452 L 256 488 C 240 450 200 380 180 340 C 146 276 136 240 136 216 C 136 150 186 112 256 112 C 302 112 340 132 366 166 L 406 130 C 370 86 318 60 256 60 Z" />
+
+    <!-- Carretera Lado Derecho -->
+    <path d="M 374 168 C 410 214 424 266 414 316 C 400 386 338 440 256 488 C 290 440 340 376 356 320 C 370 270 358 224 330 188 L 374 168 Z" />
+
+    <!-- Línea Punteada Central -->
+    <path d="M 346 198 C 370 240 374 285 362 334 C 346 390 298 446 260 482" 
+          fill="none" 
+          stroke="#FFFFFF" 
+          stroke-width="8" 
+          stroke-linecap="round" 
+          stroke-dasharray="14 18" />
+
+    <!-- Rayo Central -->
+    <polygon points="280,100 196,248 266,248 226,376 332,224 260,224" fill="#000000" stroke="#FFFFFF" stroke-width="4" stroke-linejoin="round" />
+
+    <!-- Punto GPS -->
+    <circle cx="256" cy="488" r="14" fill="#000000" />
+  </g>
+
+  <!-- TIPOGRAFÍA CHARGEWAY -->
+  <g transform="translate(255, 135)" fill="#000000">
+    <text x="0" y="0" font-family="'Syne', 'Space Grotesk', system-ui, -apple-system, sans-serif" font-size="82" font-weight="900" letter-spacing="-1">
+      ChargeWay
+    </text>
+
+    <!-- Badge País "ECUADOR" -->
+    <g transform="translate(470, -68)">
+      <rect x="0" y="0" width="105" height="26" rx="6" ry="6" fill="none" stroke="#000000" stroke-width="2" />
+      <text x="52" y="18" font-family="'Space Mono', monospace" font-size="12" font-weight="700" fill="#000000" text-anchor="middle" letter-spacing="2.5">
+        ECUADOR
+      </text>
+    </g>
+
+    <!-- Subtítulo Descriptor de Marca -->
+    <text x="5" y="44" font-family="'Space Mono', monospace" font-size="16" font-weight="700" fill="#334155" letter-spacing="5.5">
+      RED NACIONAL ULTRA-FAST EV
+    </text>
+
+    <line x1="5" y1="62" x2="570" y2="62" stroke="#000000" stroke-width="2" stroke-linecap="round" />
+  </g>
+</svg>

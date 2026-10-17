@@ -686,9 +686,12 @@ export default function Home() {
     const SAFETY_BUFFER = 0.20;
     const battery = selectedVehicle.specs.usable_battery_kwh;
     const wltpRange = (selectedVehicle.specs as any).wltp_range_km || 400;
-    const avgRateWhKm = routeDistanceKm > 0
+    const nominalRateWhKm = (battery * 1000) / Math.max(wltpRange, 200);
+    const routeRateWhKm = routeDistanceKm > 0
       ? tripPlan.totalConsumptionWh / routeDistanceKm
-      : (battery * 1000) / wltpRange;
+      : nominalRateWhKm;
+    // Acotar tasa para autonomía remanente y evitar proyecciones infinitas en descensos
+    const safeRemainingRateWhKm = Math.max(nominalRateWhKm * 0.8, Math.min(nominalRateWhKm * 1.3, routeRateWhKm > 80 ? routeRateWhKm : nominalRateWhKm));
 
     // Verificar si la ruta incluye paradas de recarga intermedias (agregadas por usuario o sugeridas)
     const chargingWaypointsCount = routePoints.slice(1, -1).filter(wp =>
@@ -712,8 +715,8 @@ export default function Home() {
       arrivalSoc = usableAtEnd / battery;
     }
 
-    const arrivalRangeKm = Math.round((usableAtEnd * 1000) / avgRateWhKm);
-    const safetyMarginKm = Math.round(((usableAtEnd - battery * SAFETY_BUFFER) * 1000) / avgRateWhKm);
+    const arrivalRangeKm = Math.max(0, Math.round((usableAtEnd * 1000) / safeRemainingRateWhKm));
+    const safetyMarginKm = Math.round(((usableAtEnd - battery * SAFETY_BUFFER) * 1000) / safeRemainingRateWhKm);
     return { arrivalSoc, arrivalRangeKm, safetyMarginKm };
   }, [tripPlan, soc, selectedVehicle, routeDistanceKm, routePoints]);
 
@@ -1324,7 +1327,7 @@ export default function Home() {
                           <div className="truncate">
                             <span className="text-rose-300 font-bold text-xs uppercase tracking-wider">Déficit de Batería • Recarga Requerida</span>
                             <p className="text-[10.5px] text-slate-300 truncate">
-                              Autonomía insuficiente para viaje directo • Déficit de {Math.abs(arrivalSocPct)}% ({tripPlan.arrivalRangeKm} km)
+                              Autonomía insuficiente para viaje directo • Déficit de {Math.abs(arrivalSocPct)}% SoC (~{Math.abs(liveStats?.safetyMarginKm ?? tripPlan.safetyMarginKm)} km faltantes)
                             </p>
                           </div>
                         </div>
@@ -1372,7 +1375,7 @@ export default function Home() {
                         <div className="truncate">
                           <span className="text-emerald-300 font-bold text-xs uppercase tracking-wider">Trayecto Directo Seguro</span>
                           <p className="text-[10.5px] text-slate-400 truncate">
-                            Autonomía suficiente • Llegada con ~{arrivalSocPct}% ({tripPlan.arrivalRangeKm} km)
+                            Autonomía suficiente • Llegada con ~{arrivalSocPct}% SoC (~{liveStats?.arrivalRangeKm ?? tripPlan.arrivalRangeKm} km de reserva)
                           </p>
                         </div>
                       </div>

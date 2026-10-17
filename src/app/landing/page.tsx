@@ -8,7 +8,8 @@ import {
   MapPin, Sparkles, CheckCircle2, ChevronRight, Scale, 
   ShieldCheck, BatteryCharging, QrCode, Mountain, ArrowUpRight,
   TrendingDown, Check, Clock, Shield, Sliders, Sun, Compass,
-  Layers, Radio, Activity, Navigation2, CheckCircle
+  Layers, Radio, Activity, Navigation2, CheckCircle, Volume2,
+  Leaf, Users, Award, Play, ExternalLink
 } from 'lucide-react';
 
 import { 
@@ -22,17 +23,98 @@ import {
 
 // Modales interactivos
 import { PartnerRegisterModal } from '@/components/Landing/PartnerRegisterModal';
-import { PartnerReservationModal } from '@/components/Landing/PartnerReservationModal';
 import { PartnerAdminPanelModal } from '@/components/Landing/PartnerAdminPanelModal';
 import { ElectrolinerasMapModal } from '@/components/Landing/ElectrolinerasMapModal';
 
-export default function AdventureTechEditorialLandingPage() {
+// Rutas preconfiguradas para el widget de demostración interactivo
+interface DemoRoute {
+  id: string;
+  name: string;
+  origin: string;
+  dest: string;
+  distKm: number;
+  altitudeM: number;
+  region: string;
+  regenKwh: number;
+  baseKwh: number;
+}
+
+const DEMO_ROUTES: DemoRoute[] = [
+  {
+    id: 'cotacachi',
+    name: 'Quito ➔ Cotacachi (115 km)',
+    origin: 'Quito',
+    dest: 'Cotacachi',
+    distKm: 115,
+    altitudeM: 2350,
+    region: 'Sierra Andina',
+    regenKwh: 4.2,
+    baseKwh: 18.2,
+  },
+  {
+    id: 'banos',
+    name: 'Quito ➔ Baños (178 km)',
+    origin: 'Quito',
+    dest: 'Baños',
+    distKm: 178,
+    altitudeM: 1820,
+    region: 'Avenida de los Volcanes',
+    regenKwh: 6.8,
+    baseKwh: 26.2,
+  },
+  {
+    id: 'tulcan',
+    name: 'Quito ➔ Tulcán (245 km)',
+    origin: 'Quito',
+    dest: 'Tulcán',
+    distKm: 245,
+    altitudeM: 2980,
+    region: 'Corredor Norte (Carchi)',
+    regenKwh: 5.1,
+    baseKwh: 38.0,
+  },
+  {
+    id: 'manta',
+    name: 'Guayaquil ➔ Manta (198 km)',
+    origin: 'Guayaquil',
+    dest: 'Manta',
+    distKm: 198,
+    altitudeM: 15,
+    region: 'Costa Pacífica',
+    regenKwh: 1.5,
+    baseKwh: 28.4,
+  },
+];
+
+interface DemoVehicle {
+  model: string;
+  batteryKwh: number;
+  brand: string;
+  wltpKm: number;
+}
+
+const DEMO_VEHICLES: DemoVehicle[] = [
+  { model: 'BYD T1 7', batteryKwh: 28.0, brand: 'BYD', wltpKm: 220 },
+  { model: 'BYD Yuan Pro', batteryKwh: 38.8, brand: 'BYD', wltpKm: 320 },
+  { model: 'Kia EV6 GT-Line', batteryKwh: 77.4, brand: 'Kia', wltpKm: 490 },
+  { model: 'Tesla Model Y', batteryKwh: 60.0, brand: 'Tesla', wltpKm: 455 },
+];
+
+export default function PremiumScrollytellingLandingPage() {
   const router = useRouter();
 
   // Scroll Progress Engine
   const heroSectionRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isNavScrolled, setIsNavScrolled] = useState(false);
+
+  // Widget Interactivo de Telemetría (Hero)
+  const [selectedRoute, setSelectedRoute] = useState<DemoRoute>(DEMO_ROUTES[0]);
+  const [selectedVehicle, setSelectedVehicle] = useState<DemoVehicle>(DEMO_VEHICLES[0]);
+  const [initialSoc, setInitialSoc] = useState<number>(85);
+
+  // Corredor Activo en Scrollytelling
+  const [activeCorridorTab, setActiveCorridorTab] = useState<'sierra' | 'costa' | 'amazonia' | 'valles'>('sierra');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -54,23 +136,12 @@ export default function AdventureTechEditorialLandingPage() {
     };
   }, []);
 
-  const calcOpacity = (progress: number, enterStart: number, enterEnd: number, exitStart: number, exitEnd: number) => {
-    if (progress < enterStart || progress > exitEnd) return 0;
-    if (progress < enterEnd) return (progress - enterStart) / (enterEnd - enterStart);
-    if (progress > exitStart) return Math.max(0, 1 - (progress - exitStart) / (exitEnd - exitStart));
-    return 1.0;
-  };
-
-  const phase0Opacity = calcOpacity(scrollProgress, 0.0, 0.04, 0.22, 0.30);
-  const phase1Opacity = calcOpacity(scrollProgress, 0.30, 0.38, 0.58, 0.68);
-  const phase2Opacity = calcOpacity(scrollProgress, 0.68, 0.76, 0.92, 0.99);
-
   // Modales
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
   const [isMapModalOpen, setIsMapModalOpen] = useState(false);
 
-  // Estado del Simulador
+  // Estado del Simulador Anfitriones (ARCONEL)
   const [selectedPowerKw, setSelectedPowerKw] = useState<number>(7.0);
   const [hourlyPriceUsd, setHourlyPriceUsd] = useState<number>(1.10);
   const [monthlyReservations, setMonthlyReservations] = useState<number>(30);
@@ -96,404 +167,508 @@ export default function AdventureTechEditorialLandingPage() {
   const commissionMonthly = (sessionProfit.net_profit_usd * VOLUME_COMMISSION_RATE_PCT) * billableCount;
   const netMonthlyProfit = hostBaseProfit - commissionMonthly;
 
+  // Cálculo en vivo del Widget de Telemetría
+  const batteryCapacity = selectedVehicle.batteryKwh;
+  const initialKwh = batteryCapacity * (initialSoc / 100);
+  const netKwhConsumed = Math.max(0, selectedRoute.baseKwh - selectedRoute.regenKwh);
+  const finalKwh = initialKwh - netKwhConsumed;
+  const arrivalSocPct = Math.max(0, Math.min(100, Math.round((finalKwh / batteryCapacity) * 100)));
+  const canReachWithoutStop = arrivalSocPct >= 15;
+
+  const handleLaunchRouteInApp = () => {
+    router.push(`/?origin=${encodeURIComponent(selectedRoute.origin)}&dest=${encodeURIComponent(selectedRoute.dest)}`);
+  };
+
   return (
-    <div className="min-h-screen bg-[#0A0E14] text-[#E8EEF5] flex flex-col font-sans selection:bg-[#00F5A0] selection:text-black antialiased">
+    <div className="min-h-screen bg-[#070B12] text-[#E8EEF5] flex flex-col font-sans selection:bg-[#00F5A0] selection:text-black antialiased overflow-x-hidden">
       
-      {/* ── TIPOGRAFÍA EDITORIAL ADVENTURE TECH (SYNE + SPACE GROTESK + JETBRAINS MONO) ── */}
+      {/* ── TIPOGRAFÍA EDITORIAL MODERNA (SYNE + SPACE GROTESK + SPACE MONO) ── */}
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-      <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+      <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
 
       <style jsx global>{`
         body {
           font-family: 'Space Grotesk', system-ui, sans-serif;
-          background-color: #0A0E14;
+          background-color: #070B12;
         }
         h1, h2, h3, .font-display {
           font-family: 'Syne', sans-serif;
-          letter-spacing: -0.04em;
-          text-transform: uppercase;
+          letter-spacing: -0.035em;
         }
         .font-mono {
           font-family: 'Space Mono', monospace;
         }
+        .glass-panel {
+          background: rgba(11, 23, 19, 0.72);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          border: 1px solid rgba(0, 245, 160, 0.22);
+          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.65), 0 0 25px rgba(0, 245, 160, 0.12);
+        }
+        .glass-badge {
+          background: rgba(7, 11, 18, 0.78);
+          backdrop-filter: blur(14px);
+          -webkit-backdrop-filter: blur(14px);
+          border: 1px solid rgba(0, 210, 255, 0.25);
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 210, 255, 0.15);
+        }
       `}</style>
 
-      {/* ════════ 1. NAVBAR ASIMÉTRICO ADVENTURE TECH ════════ */}
-      <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-        isNavScrolled 
-          ? 'bg-[#070B12]/90 backdrop-blur-2xl border-b border-cyan-500/15 py-3.5 shadow-2xl' 
-          : 'bg-transparent py-6'
-      }`}>
-        <div className="max-w-7xl mx-auto px-6 sm:px-12 flex items-center justify-between">
+      {/* ════════ 1. NAVBAR FLOTANTE VISIONOS CON LOGO CHARGEWAY ════════ */}
+      <header className="fixed top-0 left-0 w-full z-50 pt-5 px-4 sm:px-8 pointer-events-none">
+        <div className="max-w-5xl mx-auto rounded-full bg-[#081318]/75 backdrop-blur-2xl border border-white/[0.12] px-6 py-3 shadow-[0_15px_35px_rgba(0,0,0,0.5)] flex items-center justify-between pointer-events-auto transition-all">
           
-          {/* Logo & Marca con Estilo Aventura */}
+          {/* Logo ChargeWay */}
           <Link href="/landing" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl overflow-hidden border border-cyan-500/40 shadow-[0_0_20px_rgba(0,245,160,0.3)] group-hover:scale-105 transition-all bg-[#070B12]/80">
+            <div className="w-10 h-10 rounded-2xl overflow-hidden border border-cyan-400/40 shadow-[0_0_20px_rgba(0,210,255,0.4)] group-hover:scale-105 transition-all bg-[#09151A] p-1.5 flex items-center justify-center">
               <img
                 src="/logo.png"
                 alt="ChargeWay Logo"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
               />
             </div>
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-xl font-display font-bold text-white tracking-tight">
-                Charge<span className="text-[#00F5A0]">Way</span>
-              </span>
-              <span className="text-[10px] font-mono uppercase tracking-widest text-[#00D2FF] font-bold">
-                EC
-              </span>
-            </div>
+            <span className="text-xl sm:text-2xl font-display font-bold text-white tracking-tight">
+              ChargeWay
+            </span>
           </Link>
 
-          {/* Menú de Navegación Técnico */}
-          <nav className="hidden lg:flex items-center gap-8 text-xs font-mono uppercase tracking-widest text-neutral-400">
-            <a href="#adventure" className="hover:text-[#00D2FF] transition-colors flex items-center gap-1.5">
-              <Compass size={13} className="text-[#00F5A0]" />
-              <span>Rutas Andinas</span>
+          {/* Enlaces de Navegación */}
+          <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-neutral-300">
+            <a href="#hero-planner" className="hover:text-white transition-colors">
+              Rutas
             </a>
-            <a href="#host-section" className="hover:text-[#00D2FF] transition-colors flex items-center gap-1.5">
-              <Building2 size={13} className="text-[#00D2FF]" />
-              <span>Anfitriones</span>
+            <a href="#corredores" className="hover:text-white transition-colors">
+              Corredores Turísticos
             </a>
-            <a href="#simulator" className="hover:text-[#00D2FF] transition-colors flex items-center gap-1.5">
-              <Activity size={13} className="text-[#00F5A0]" />
-              <span>Simulador</span>
-            </a>
-            <a href="#compliance" className="hover:text-[#00D2FF] transition-colors flex items-center gap-1.5">
-              <ShieldCheck size={13} className="text-[#00D2FF]" />
-              <span>ARCONEL</span>
+            <a href="#innovaciones" className="hover:text-white transition-colors">
+              Copiloto IA
             </a>
           </nav>
 
-          {/* CTAs de Alto Impacto */}
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setIsRegisterModalOpen(true)}
-              className="hidden sm:inline-flex px-4 py-2 rounded-xl text-xs font-mono uppercase tracking-wider text-neutral-300 hover:text-white bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 transition-all cursor-pointer"
-            >
-              Registrar Hub
-            </button>
-
-            <button
-              onClick={() => setIsMapModalOpen(true)}
-              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#00F5A0] to-[#00D2FF] hover:brightness-110 text-black font-extrabold text-xs font-mono uppercase tracking-wider shadow-[0_0_25px_rgba(0,245,160,0.35)] transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
-            >
-              Explorar Mapa
-            </button>
-          </div>
+          {/* Botón Iniciar Viaje */}
+          <Link
+            href="/"
+            className="px-6 py-2.5 rounded-full bg-gradient-to-r from-[#00F5A0] via-teal-300 to-[#00D2FF] hover:brightness-110 text-slate-950 font-bold text-sm tracking-wide shadow-[0_0_25px_rgba(0,210,255,0.5)] transition-all cursor-pointer hover:scale-105 active:scale-95"
+          >
+            Iniciar Viaje
+          </Link>
 
         </div>
       </header>
 
-      {/* ════════ 2. 400vh PARALLAX HERO CON TELEMETRÍA GAUGE INTEGRADA ════════ */}
-      <div id="hero-section" ref={heroSectionRef} className="relative h-[400vh] w-full">
-        <div className="sticky top-0 w-full h-screen overflow-hidden flex items-center justify-center">
-          
-          {/* Fondo Fotográfico de los Andes */}
-          <div className="absolute inset-0 w-full h-full">
-            <img
-              src="/assets/hero_ref.jpg"
-              alt="Vehículo eléctrico en los Andes de Ecuador"
-              className="w-full h-full object-cover transition-transform duration-75 ease-out"
-              style={{
-                transform: `scale(${1 + scrollProgress * 0.12}) translateY(${scrollProgress * 20}px)`
-              }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0A0E14] via-[#0A0E14]/50 to-[#0A0E14]/75 pointer-events-none" />
-          </div>
+      {/* ════════ 2. HERO PRINCIPAL IDÉNTICO A LA PROPUESTA (IMAGEN 2) ════════ */}
+      <section id="hero-planner" className="relative min-h-screen w-full flex flex-col justify-between pt-28 pb-8 px-4 sm:px-8 overflow-hidden select-none">
+        
+        {/* Fondo Limpio de Alta Definición: Volcán Cotopaxi en Atardecer Dorado con Carretera y Tesla Azul */}
+        <div className="absolute inset-0 w-full h-full pointer-events-none">
+          <img
+            src="/images/hero_cotopaxi_sunset.jpg"
+            alt="Atardecer en Cotopaxi con carretera andina y Tesla azul"
+            className="w-full h-full object-cover object-center brightness-[0.95] contrast-[1.05]"
+          />
+          {/* Sutil viñeta para contraste suave */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#070B12] via-transparent to-black/20" />
+        </div>
 
-          {/* ── BADGE OFICIAL CHARGEWAY INTEGRADO CON GLASSMORPHISM Y GLOW CIAN/ESMERALDA ── */}
-          <div className="absolute top-24 sm:top-28 left-6 sm:left-14 z-20 w-24 h-24 sm:w-32 sm:h-32 rounded-3xl overflow-hidden border border-cyan-400/30 shadow-[0_0_40px_rgba(0,245,160,0.25)] hover:scale-105 transition-all duration-300 group bg-[#070B12]/75 backdrop-blur-xl p-1.5 flex items-center justify-center">
-            <img
-              src="/logo.png"
-              alt="ChargeWay Official Logo"
-              className="w-full h-full object-cover rounded-2xl group-hover:scale-105 transition-transform duration-300"
-            />
-          </div>
+        {/* Zona Central: Tarjeta Translúcida VisionOS + Insignias Flotantes */}
+        <div className="relative z-10 max-w-5xl mx-auto w-full my-auto py-8">
+          <div className="relative flex flex-col items-center justify-center">
 
-          {/* ── FASE 0: HERO EDITORIAL CON MEDIDOR CIRCULAR (0% - 25% SCROLL) ── */}
-          <div 
-            className="absolute bottom-16 sm:bottom-20 left-6 sm:left-14 right-6 sm:right-14 flex flex-col lg:flex-row lg:items-end justify-between gap-8 pointer-events-none transition-all"
-            style={{
-              opacity: phase0Opacity,
-              transform: `translateY(${-scrollProgress * 30}px)`
-            }}
-          >
-            <div className="max-w-2xl space-y-3">
-              <span className="text-xs font-mono uppercase tracking-[0.3em] text-[#00D2FF] font-bold block">
-                Plataforma de Movilidad Eléctrica · Ecuador
-              </span>
-              <h1 className="text-4xl sm:text-6xl lg:text-7xl font-display font-extrabold text-white leading-[1.02] tracking-tight">
-                Charge Your <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00F5A0] via-[#00D2FF] to-teal-200">
-                  Adventure.
-                </span>
-              </h1>
-              <p className="text-sm sm:text-base text-neutral-300 font-light max-w-lg leading-relaxed pt-1">
-                La red de recarga inteligente para recorrer las carreteras andinas sin ansiedad de autonomía.
-              </p>
+            {/* Insignia Flotante Derecha (+500 Conductores Activos) */}
+            <div className="hidden sm:flex absolute -top-4 right-4 md:right-16 z-20 items-center gap-3 px-5 py-2.5 rounded-full bg-[#081519]/75 backdrop-blur-2xl border border-cyan-400/40 shadow-[0_15px_35px_rgba(0,0,0,0.5),0_0_20px_rgba(0,210,255,0.2)]">
+              <div className="w-9 h-9 rounded-full bg-cyan-500/20 border border-cyan-400/50 flex items-center justify-center text-cyan-300 shadow-[0_0_12px_rgba(0,210,255,0.3)]">
+                <Users size={16} />
+              </div>
+              <div className="text-left">
+                <div className="text-base font-bold text-white leading-none">+500</div>
+                <div className="text-[11px] text-neutral-300 tracking-wide mt-0.5">Conductores Activos</div>
+              </div>
             </div>
 
-            {/* Medidor Circular de Telemetría (Widget de Aventura) */}
-            <div className="p-5 rounded-3xl bg-[#111722]/80 backdrop-blur-xl border border-cyan-500/15 shadow-2xl flex items-center gap-5 shrink-0 self-start lg:self-auto">
-              <div className="relative w-20 h-20 flex items-center justify-center">
-                <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
-                  <path
-                    className="text-neutral-800"
-                    strokeWidth="3.5"
-                    stroke="currentColor"
-                    fill="none"
-                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                  />
-                  <path
-                    className="text-[#00F5A0]"
-                    strokeDasharray="94, 100"
-                    strokeWidth="3.5"
-                    strokeLinecap="round"
-                    stroke="currentColor"
-                    fill="none"
-                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                  />
-                </svg>
-                <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <span className="text-sm font-mono font-black text-white">94%</span>
+            {/* Tarjeta Central Frosted Glass (VisionOS) */}
+            <div className="w-full max-w-md p-6 sm:p-7 rounded-[28px] bg-black/35 backdrop-blur-3xl border border-white/25 shadow-[0_30px_70px_rgba(0,0,0,0.65),0_0_30px_rgba(255,255,255,0.06)] space-y-4">
+              
+              {/* Item 1: Destino y Distancia */}
+              <div className="flex items-center gap-3 text-white text-base sm:text-lg font-medium">
+                <MapPin size={20} className="text-white/80 shrink-0" />
+                <span>Quito ➔ Cotacachi (115 km)</span>
+              </div>
+
+              {/* Item 2: Vehículo y Batería */}
+              <div className="flex items-center gap-3 text-neutral-200 text-sm sm:text-base">
+                <Car size={18} className="text-white/80 shrink-0" />
+                <span>BYD Ti 7 (26.6 kWh)</span>
+              </div>
+
+              {/* Item 3: Telemetría en Vivo */}
+              <div className="flex items-start gap-3">
+                <Activity size={18} className="text-white/80 shrink-0 mt-0.5" />
+                <div className="text-sm sm:text-base">
+                  <div className="text-neutral-300">Telemetría vivo</div>
+                  <div className="text-white font-medium">
+                    Llegada con 64% SoC <span className="text-[#00F5A0] font-semibold">(Seguro)</span>
+                  </div>
                 </div>
               </div>
-              <div className="space-y-0.5">
-                <span className="text-[10px] font-mono uppercase tracking-widest text-[#00D2FF] font-bold block">
-                  Estado de Red
+
+              {/* Item 4: Altitud */}
+              <div className="flex items-center gap-3 text-neutral-200 text-sm sm:text-base">
+                <Mountain size={18} className="text-white/80 shrink-0" />
+                <span>2.850 m</span>
+              </div>
+
+              {/* Item 5: Freno Regenerativo */}
+              <div className="flex items-center justify-between text-sm sm:text-base pt-1 border-t border-white/10">
+                <div className="flex items-center gap-2.5 text-neutral-200">
+                  <Zap size={16} className="text-[#00F5A0]" />
+                  <span>Frenero regenerativo</span>
+                </div>
+                <span className="text-[#00F5A0] font-semibold tracking-wide">
+                  +4.2 kWh recuperados
                 </span>
-                <span className="text-sm font-bold text-white block">150+ Puntos Operativos</span>
-                <span className="text-[11px] font-mono text-neutral-400">Recuperación: +14.2 kWh</span>
+              </div>
+
+            </div>
+
+            {/* Insignia Flotante Inferior Izquierda (+1.500 Viajes Acompañados) */}
+            <div className="hidden sm:flex absolute -bottom-6 left-4 md:left-12 z-20 items-center gap-3 px-5 py-2.5 rounded-full bg-[#081519]/75 backdrop-blur-2xl border border-cyan-400/40 shadow-[0_15px_35px_rgba(0,0,0,0.5),0_0_20px_rgba(0,210,255,0.2)]">
+              <div className="w-9 h-9 rounded-full bg-cyan-500/20 border border-cyan-400/50 flex items-center justify-center text-cyan-300 shadow-[0_0_12px_rgba(0,210,255,0.3)]">
+                <Award size={16} />
+              </div>
+              <div className="text-left">
+                <div className="text-base font-bold text-white leading-none">+1.500</div>
+                <div className="text-[11px] text-neutral-300 tracking-wide mt-0.5">Viajes Acompañados</div>
               </div>
             </div>
-          </div>
 
-          {/* ── FASE 1: ANFITRIONES (30% - 60% SCROLL) ── */}
-          <div 
-            className="absolute top-1/3 right-6 sm:right-14 max-w-xl text-right pointer-events-none transition-all"
-            style={{
-              opacity: phase1Opacity,
-              transform: `translateY(${(0.45 - scrollProgress) * 25}px)`
-            }}
-          >
-            <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#00D2FF] block mb-3 font-semibold">
-              ChargeWay Partner Program
-            </span>
-            <h2 className="text-3xl sm:text-5xl lg:text-6xl font-display font-black text-white leading-tight">
-              Monetiza tu espacio de parqueo.
-            </h2>
-            <p className="text-sm sm:text-base text-neutral-300 mt-4 font-light leading-relaxed">
-              5 reservas mensuales libres de comisión y liquidación instantánea bajo normativa ARCONEL.
-            </p>
           </div>
+        </div>
 
-          {/* ── FASE 2: ECOSISTEMA (65% - 95% SCROLL) ── */}
-          <div 
-            className="absolute bottom-20 left-6 sm:left-14 max-w-xl pointer-events-none transition-all"
-            style={{
-              opacity: phase2Opacity,
-              transform: `translateY(${(0.80 - scrollProgress) * 25}px)`
-            }}
-          >
-            <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#00D2FF] block mb-3 font-semibold">
-              Ecosistema Integral
-            </span>
-            <h2 className="text-3xl sm:text-5xl lg:text-6xl font-display font-black text-white leading-tight">
-              Energía limpia en cada rincón de Ecuador.
-            </h2>
-            <p className="text-sm sm:text-base text-neutral-300 mt-4 font-light leading-relaxed">
-              Conduce con tranquilidad y expande la red de infraestructura nacional.
-            </p>
-          </div>
-
-          {/* Scroll Scrubber */}
-          <div className="absolute bottom-8 right-8 flex items-center gap-3 text-[10px] font-mono text-neutral-500 uppercase tracking-widest pointer-events-none">
-            <span>Scroll</span>
-            <div className="w-1 h-6 bg-neutral-800 rounded-full overflow-hidden">
-              <div 
-                className="w-full bg-[#00F5A0] transition-all duration-75" 
-                style={{ height: `${Math.max(20, scrollProgress * 100)}%` }} 
-              />
+        {/* ════════ FILA INFERIOR: 3 TARJETAS BENTO COMO EN LA PROPUESTA ════════ */}
+        <div className="relative z-10 max-w-5xl mx-auto w-full pt-4 pb-2">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+            
+            {/* Bento Card 1: Rutas & Navegación */}
+            <div className="p-4 sm:p-5 rounded-2xl bg-black/40 backdrop-blur-xl border border-white/15 hover:border-cyan-400/50 transition-all flex items-center gap-4 group cursor-pointer shadow-xl">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500/30 to-blue-600/20 border border-cyan-400/40 flex items-center justify-center text-cyan-300 shrink-0 group-hover:scale-105 transition-all shadow-[0_0_15px_rgba(0,210,255,0.2)]">
+                <Compass size={22} />
+              </div>
+              <div>
+                <h4 className="text-white font-bold text-sm">Rutas Inteligentes</h4>
+                <p className="text-neutral-400 text-xs mt-0.5 font-light">Cálculo de pendientes y paradas óptimas</p>
+              </div>
             </div>
+
+            {/* Bento Card 2: Corredores Turísticos */}
+            <div className="p-4 sm:p-5 rounded-2xl bg-black/40 backdrop-blur-xl border border-white/15 hover:border-[#00F5A0]/50 transition-all flex items-center gap-4 group cursor-pointer shadow-xl">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500/30 to-teal-600/20 border border-emerald-400/40 flex items-center justify-center text-emerald-300 shrink-0 group-hover:scale-105 transition-all shadow-[0_0_15px_rgba(0,245,160,0.2)]">
+                <MapPin size={22} />
+              </div>
+              <div>
+                <h4 className="text-white font-bold text-sm">Corredores Turísticos</h4>
+                <p className="text-neutral-400 text-xs mt-0.5 font-light">Sierra, Costa, Amazonía y Valles</p>
+              </div>
+            </div>
+
+            {/* Bento Card 3: Copiloto IA en Vivo */}
+            <div className="p-4 sm:p-5 rounded-2xl bg-black/40 backdrop-blur-xl border border-white/15 hover:border-cyan-400/50 transition-all flex items-center gap-4 group cursor-pointer shadow-xl">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500/30 to-emerald-600/20 border border-cyan-400/40 flex items-center justify-center text-cyan-300 shrink-0 group-hover:scale-105 transition-all shadow-[0_0_15px_rgba(0,210,255,0.2)]">
+                <Radio size={22} />
+              </div>
+              <div>
+                <h4 className="text-white font-bold text-sm">Copiloto de Voz IA</h4>
+                <p className="text-neutral-400 text-xs mt-0.5 font-light">Asistencia manos libres en tiempo real</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </section>
+
+      {/* ════════ 3. SCROLLYTELLING: 4 CORREDORES TURÍSTICOS DE ECUADOR ════════ */}
+      <section id="corredores" className="py-28 px-6 sm:px-12 max-w-7xl mx-auto w-full space-y-16 border-t border-white/[0.08]">
+        
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div className="space-y-2.5">
+            <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#00D2FF] font-bold block">
+              Explora Ecuador en Eléctrico
+            </span>
+            <h2 className="text-3xl sm:text-5xl font-display font-black text-white leading-tight">
+              Los 4 Corredores Turísticos.
+            </h2>
+          </div>
+          <p className="text-neutral-400 text-xs sm:text-sm max-w-md font-light leading-relaxed">
+            Cada geografía del país tiene su propia dinámica energética. ChargeWay adapta su cálculo de consumo y paradas a cada paisaje.
+          </p>
+        </div>
+
+        {/* Selector de Pestañas de Corredores */}
+        <div className="flex flex-wrap gap-2.5 border-b border-white/[0.08] pb-4">
+          {[
+            { id: 'sierra', label: '1. Sierra Andina & Volcanes', icon: Mountain },
+            { id: 'costa', label: '2. Costa & Ruta del Spondylus', icon: Sun },
+            { id: 'amazonia', label: '3. Amazonía Viva', icon: Leaf },
+            { id: 'valles', label: '4. Valles & Gastronomía', icon: Compass },
+          ].map(tab => {
+            const Icon = tab.icon;
+            const isActive = activeCorridorTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveCorridorTab(tab.id as any)}
+                className={`px-4 py-2.5 rounded-xl font-mono text-xs uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer ${
+                  isActive
+                    ? 'bg-[#00F5A0]/15 text-[#00F5A0] border border-[#00F5A0] shadow-[0_0_20px_rgba(0,245,160,0.2)]'
+                    : 'bg-white/[0.03] text-neutral-400 border border-white/[0.06] hover:text-white hover:border-white/20'
+                }`}
+              >
+                <Icon size={14} />
+                <span>{tab.label}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Tarjeta Visual de Corredor con Fotografía Real */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center rounded-3xl bg-[#0D131C] border border-white/[0.08] p-6 sm:p-10 shadow-2xl">
+          
+          {/* Imagen Real del Paisaje */}
+          <div className="lg:col-span-7 rounded-2xl overflow-hidden relative aspect-[16/10] border border-white/10 shadow-inner group">
+            <img
+              src={
+                activeCorridorTab === 'sierra'
+                  ? '/images/sierra_cotopaxi.png'
+                  : activeCorridorTab === 'costa'
+                  ? '/images/costa_spondylus.png'
+                  : activeCorridorTab === 'amazonia'
+                  ? '/images/oriente_amazon.png'
+                  : '/images/cotopaxi.png'
+              }
+              alt="Corredor turístico de Ecuador"
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
+            <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs font-mono text-white">
+              <span className="bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/20">
+                {activeCorridorTab === 'sierra' && 'Quito ➔ Cotacachi ➔ Baños ➔ Cuenca'}
+                {activeCorridorTab === 'costa' && 'Manta ➔ Salinas ➔ Olón ➔ Esmeraldas'}
+                {activeCorridorTab === 'amazonia' && 'Papallacta ➔ Baeza ➔ Tena ➔ Puyo'}
+                {activeCorridorTab === 'valles' && 'Cumbayá ➔ Los Chillos ➔ Mindo ➔ Pululahua'}
+              </span>
+              <span className="text-[#00F5A0] font-bold">100% Electrificado</span>
+            </div>
+          </div>
+
+          {/* Explicación Técnica y Beneficio Turístico */}
+          <div className="lg:col-span-5 space-y-5">
+            <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#00D2FF] font-bold block">
+              Comportamiento Energético
+            </span>
+
+            {activeCorridorTab === 'sierra' && (
+              <>
+                <h3 className="text-2xl sm:text-3xl font-display font-extrabold text-white">
+                  La física de los Andes a tu favor.
+                </h3>
+                <p className="text-xs sm:text-sm text-neutral-300 font-light leading-relaxed">
+                  Al descender desde pasos de altura como El Chasqui (3.200 m) o Papallacta (4.060 m), el freno regenerativo convierte la energía potencial en kilovatios hora limpios, sumando hasta un 18% de batería adicional a tu viaje.
+                </p>
+                <div className="grid grid-cols-2 gap-3 text-xs font-mono pt-2">
+                  <div className="p-3 rounded-xl bg-black/40 border border-white/[0.08]">
+                    <div className="text-neutral-400 text-[10px]">Cargadores DC</div>
+                    <div className="text-white font-bold text-sm mt-0.5">50 kW - 100 kW</div>
+                  </div>
+                  <div className="p-3 rounded-xl bg-black/40 border border-white/[0.08]">
+                    <div className="text-neutral-400 text-[10px]">Regeneración</div>
+                    <div className="text-[#00F5A0] font-bold text-sm mt-0.5">Hasta +6.8 kWh</div>
+                  </div>
+                </div>
+              </>
+            )}
+
+            {activeCorridorTab === 'costa' && (
+              <>
+                <h3 className="text-2xl sm:text-3xl font-display font-extrabold text-white">
+                  Kilómetros infinitos junto al mar.
+                </h3>
+                <p className="text-xs sm:text-sm text-neutral-300 font-light leading-relaxed">
+                  La costa ecuatoriana ofrece trayectos llanos con cargadores rápidos en balnearios y plazas comerciales. Carga frente a la playa mientras disfrutas de la gastronomía del Pacífico.
+                </p>
+                <div className="grid grid-cols-2 gap-3 text-xs font-mono pt-2">
+                  <div className="p-3 rounded-xl bg-black/40 border border-white/[0.08]">
+                    <div className="text-neutral-400 text-[10px]">Puntos Costeros</div>
+                    <div className="text-white font-bold text-sm mt-0.5">Manta, Salinas, Guayaquil</div>
+                  </div>
+                  <div className="p-3 rounded-xl bg-black/40 border border-white/[0.08]">
+                    <div className="text-neutral-400 text-[10px]">Tiempo Promedio</div>
+                    <div className="text-[#00D2FF] font-bold text-sm mt-0.5">25 - 35 minutos</div>
+                  </div>
+                </div>
+              </>
+            )}
+
+            {activeCorridorTab === 'amazonia' && (
+              <>
+                <h3 className="text-2xl sm:text-3xl font-display font-extrabold text-white">
+                  Cruza la cordillera hacia la selva tropical.
+                </h3>
+                <p className="text-xs sm:text-sm text-neutral-300 font-light leading-relaxed">
+                  Conecta la Sierra con los ríos amazónicos sin emitir un solo gramo de dióxido de carbono en las reservas ecológicas. Planifica recargas en Baeza o Tena con total certidumbre.
+                </p>
+                <div className="grid grid-cols-2 gap-3 text-xs font-mono pt-2">
+                  <div className="p-3 rounded-xl bg-black/40 border border-white/[0.08]">
+                    <div className="text-neutral-400 text-[10px]">Emisiones</div>
+                    <div className="text-emerald-400 font-bold text-sm mt-0.5">0.00 kg CO₂</div>
+                  </div>
+                  <div className="p-3 rounded-xl bg-black/40 border border-white/[0.08]">
+                    <div className="text-neutral-400 text-[10px]">Eco-Hosterías</div>
+                    <div className="text-white font-bold text-sm mt-0.5">Conectadas 22 kW</div>
+                  </div>
+                </div>
+              </>
+            )}
+
+            {activeCorridorTab === 'valles' && (
+              <>
+                <h3 className="text-2xl sm:text-3xl font-display font-extrabold text-white">
+                  Paradas con encanto y gastronomía local.
+                </h3>
+                <p className="text-xs sm:text-sm text-neutral-300 font-light leading-relaxed">
+                  Convierte el tiempo de recarga en una experiencia. ChargeWay te sugiere restaurantes, cafeterías de especialidad y hoteles boutique justo al lado de cada estación de carga.
+                </p>
+                <div className="grid grid-cols-2 gap-3 text-xs font-mono pt-2">
+                  <div className="p-3 rounded-xl bg-black/40 border border-white/[0.08]">
+                    <div className="text-neutral-400 text-[10px]">Amenidades</div>
+                    <div className="text-white font-bold text-sm mt-0.5">Cafés & Restaurantes</div>
+                  </div>
+                  <div className="p-3 rounded-xl bg-black/40 border border-white/[0.08]">
+                    <div className="text-neutral-400 text-[10px]">Experiencia</div>
+                    <div className="text-[#00F5A0] font-bold text-sm mt-0.5">Cero Tiempos Muertos</div>
+                  </div>
+                </div>
+              </>
+            )}
+
+            <button
+              onClick={() => router.push('/')}
+              className="inline-flex items-center gap-2 text-xs font-mono text-[#00F5A0] hover:text-[#00D2FF] uppercase font-bold tracking-wider pt-2 cursor-pointer transition-colors"
+            >
+              <span>Ver mapa interactivo de este corredor</span>
+              <ArrowRight size={14} />
+            </button>
           </div>
 
         </div>
-      </div>
 
-      {/* ════════ 3. SECCIÓN EDITORIAL: POWERING REMOTE EXPLORATION ════════ */}
-      <section id="adventure" className="py-24 px-6 sm:px-12 max-w-7xl mx-auto w-full space-y-12 border-t border-white/[0.08]">
+      </section>
+
+      {/* ════════ 4. BENTO GRID DE INNOVACIONES TECNOLÓGICAS ════════ */}
+      <section id="innovaciones" className="py-24 px-6 sm:px-12 max-w-7xl mx-auto w-full space-y-12 border-t border-white/[0.08]">
+        
+        <div className="text-center max-w-2xl mx-auto space-y-2">
+          <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#00D2FF] font-bold">
+            Ingeniería & Seguridad
+          </span>
+          <h2 className="text-3xl sm:text-5xl font-display font-black text-white">
+            4 Innovaciones al Volante.
+          </h2>
+          <p className="text-neutral-400 text-xs sm:text-sm font-light">
+            Tecnología desarrollada específicamente para las condiciones geográficas de Ecuador.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          
+          {/* Card 1: Copiloto por Voz */}
+          <div className="p-7 rounded-3xl bg-[#0C121B] border border-white/[0.08] hover:border-[#00F5A0]/40 transition-all space-y-3 group">
+            <div className="w-12 h-12 rounded-2xl bg-[#00F5A0]/15 border border-[#00F5A0]/30 flex items-center justify-center text-[#00F5A0]">
+              <Volume2 size={22} />
+            </div>
+            <h4 className="text-base font-bold text-white group-hover:text-[#00F5A0] transition-colors">
+              Copiloto de Voz IA
+            </h4>
+            <p className="text-xs text-neutral-400 leading-relaxed font-light">
+              Pregunta por tu autonomía, tiempo de recarga o destinos sin soltar el volante. Voz neural de ultra-baja latencia.
+            </p>
+          </div>
+
+          {/* Card 2: Compatibilidad de Marca */}
+          <div className="p-7 rounded-3xl bg-[#0C121B] border border-white/[0.08] hover:border-[#00D2FF]/40 transition-all space-y-3 group">
+            <div className="w-12 h-12 rounded-2xl bg-[#00D2FF]/15 border border-[#00D2FF]/30 flex items-center justify-center text-[#00D2FF]">
+              <ShieldCheck size={22} />
+            </div>
+            <h4 className="text-base font-bold text-white group-hover:text-[#00D2FF] transition-colors">
+              Compatibilidad Real
+            </h4>
+            <p className="text-xs text-neutral-400 leading-relaxed font-light">
+              Filtro estricto que solo te muestra cargadores que sirven con tu vehículo y conector, evitando paradas en estaciones exclusivas bloqueadas.
+            </p>
+          </div>
+
+          {/* Card 3: Motor Topográfico */}
+          <div className="p-7 rounded-3xl bg-[#0C121B] border border-white/[0.08] hover:border-[#00F5A0]/40 transition-all space-y-3 group">
+            <div className="w-12 h-12 rounded-2xl bg-[#00F5A0]/15 border border-[#00F5A0]/30 flex items-center justify-center text-[#00F5A0]">
+              <Mountain size={22} />
+            </div>
+            <h4 className="text-base font-bold text-white group-hover:text-[#00F5A0] transition-colors">
+              Algoritmo Físico Real
+            </h4>
+            <p className="text-xs text-neutral-400 leading-relaxed font-light">
+              No calculamos distancias planas. Integramos pendientes, curvas, temperatura ambiente y masa del auto para una predicción exacta.
+            </p>
+          </div>
+
+          {/* Card 4: Impacto y Ahorro */}
+          <div className="p-7 rounded-3xl bg-[#0C121B] border border-white/[0.08] hover:border-[#00D2FF]/40 transition-all space-y-3 group">
+            <div className="w-12 h-12 rounded-2xl bg-cyan-500/15 border border-cyan-400/30 flex items-center justify-center text-cyan-300">
+              <Leaf size={22} />
+            </div>
+            <h4 className="text-base font-bold text-white group-hover:text-cyan-300 transition-colors">
+              Huella Positiva
+            </h4>
+            <p className="text-xs text-neutral-400 leading-relaxed font-light">
+              Visualiza en tiempo real los kilos de CO₂ evitados y el dinero ahorrado frente al consumo de gasolina en cada viaje.
+            </p>
+          </div>
+
+        </div>
+
+      </section>
+
+      {/* ════════ 5. SECCIÓN ANFITRIONES: SIMULADOR DE MONETIZACIÓN ARCONEL ════════ */}
+      <section id="anfitriones" className="py-24 px-6 sm:px-12 max-w-7xl mx-auto w-full border-t border-white/[0.08] space-y-12">
         
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-2">
             <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#00D2FF] font-bold">
-              Infraestructura y Tecnología
+              ChargeWay Partner Program
             </span>
-            <h2 className="text-3xl sm:text-5xl font-display font-extrabold text-white">
-              Powering Remote Exploration.
+            <h2 className="text-3xl sm:text-5xl font-display font-black text-white">
+              Monetiza tu Punto de Carga.
             </h2>
           </div>
-          <p className="text-neutral-400 text-xs sm:text-sm max-w-md font-light">
-            Algoritmos avanzados de elevación andina y conectividad garantizada para toda la flota eléctrica de Ecuador.
+          <p className="text-neutral-400 text-xs sm:text-sm max-w-md font-light leading-relaxed">
+            Convierte el parqueadero de tu hotel, restaurante o local comercial en una electrolinera 100% legal bajo normativa ARCONEL.
           </p>
         </div>
 
-        {/* 3 Tarjetas de Aventura Asimétricas */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          
-          <div className="p-8 rounded-3xl bg-[#121824] border border-white/[0.08] hover:border-[#00F5A0]/40 transition-all space-y-4 shadow-xl group">
-            <div className="flex items-center justify-between">
-              <div className="w-12 h-12 rounded-2xl bg-[#00F5A0]/15 border border-[#00F5A0]/30 flex items-center justify-center text-[#00F5A0]">
-                <Sun size={24} />
-              </div>
-              <span className="text-[10px] font-mono text-[#00D2FF] uppercase font-bold tracking-wider">01 / SOLAR</span>
-            </div>
-            <h3 className="text-xl font-bold text-white tracking-tight">Solar-Ready Hubs</h3>
-            <p className="text-xs text-neutral-400 leading-relaxed font-light">
-              Estaciones diseñadas para integrar paneles solares y respaldo de batería en puntos estratégicos de alta montaña.
-            </p>
-          </div>
-
-          <div className="p-8 rounded-3xl bg-[#121824] border border-white/[0.08] hover:border-[#00F5A0]/40 transition-all space-y-4 shadow-xl group">
-            <div className="flex items-center justify-between">
-              <div className="w-12 h-12 rounded-2xl bg-[#00F5A0]/15 border border-[#00F5A0]/30 flex items-center justify-center text-[#00F5A0]">
-                <Mountain size={24} />
-              </div>
-              <span className="text-[10px] font-mono text-[#00D2FF] uppercase font-bold tracking-wider">02 / ALTITUD</span>
-            </div>
-            <h3 className="text-xl font-bold text-white tracking-tight">Modelado Topográfico</h3>
-            <p className="text-xs text-neutral-400 leading-relaxed font-light">
-              Cálculo metro a metro de la regeneración por gravedad en bajadas andinas (hasta +18 kWh en la ruta Quito - Guayaquil).
-            </p>
-          </div>
-
-          <div className="p-8 rounded-3xl bg-[#121824] border border-white/[0.08] hover:border-[#00F5A0]/40 transition-all space-y-4 shadow-xl group">
-            <div className="flex items-center justify-between">
-              <div className="w-12 h-12 rounded-2xl bg-[#00F5A0]/15 border border-[#00F5A0]/30 flex items-center justify-center text-[#00F5A0]">
-                <QrCode size={24} />
-              </div>
-              <span className="text-[10px] font-mono text-[#00D2FF] uppercase font-bold tracking-wider">03 / RESERVA</span>
-            </div>
-            <h3 className="text-xl font-bold text-white tracking-tight">Token QR Garantizado</h3>
-            <p className="text-xs text-neutral-400 leading-relaxed font-light">
-              Reserva digital con verificación en destino que asegura tu espacio de parqueo y conexión antes de iniciar el viaje.
-            </p>
-          </div>
-
-        </div>
-
-      </section>
-
-      {/* ════════ 4. SECCIÓN TIMELINE & ELEVATION PROFILE INTERACTIVO ════════ */}
-      <section className="py-20 px-6 sm:px-12 bg-[#0E141E] border-y border-white/[0.08]">
-        <div className="max-w-7xl mx-auto space-y-10">
-          
-          <div className="space-y-2">
-            <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#00D2FF] font-bold">
-              Proceso de Habilitación
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-display font-black text-white">
-              Hosting Elevation Profile & Project Timeline
-            </h2>
-            <p className="text-neutral-400 text-xs sm:text-sm font-light max-w-xl">
-              De la solicitud inicial a la puesta en marcha: un flujo transparente para convertir tu propiedad en un punto de recarga oficial.
-            </p>
-          </div>
-
-          {/* Timeline Gráfico Escalonado SVG */}
-          <div className="p-8 sm:p-10 rounded-3xl bg-[#121824] border border-white/[0.08] shadow-2xl relative overflow-hidden">
-            <svg viewBox="0 0 800 200" className="w-full h-48 sm:h-56 overflow-visible">
-              <defs>
-                <linearGradient id="timelineCyanGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#00F5A0" stopOpacity="0.4" />
-                  <stop offset="100%" stopColor="#00D2FF" stopOpacity="0.0" />
-                </linearGradient>
-              </defs>
-              
-              {/* Relleno de Curva de Elevación */}
-              <path
-                d="M 50,160 L 220,130 L 400,90 L 580,50 L 750,20 L 750,190 L 50,190 Z"
-                fill="url(#timelineCyanGrad)"
-              />
-              <path
-                d="M 50,160 L 220,130 L 400,90 L 580,50 L 750,20"
-                fill="none"
-                stroke="#00F5A0"
-                strokeWidth="3"
-              />
-
-              {/* Hito 1 */}
-              <circle cx="50" cy="160" r="6" fill="#00D2FF" stroke="#FFFFFF" strokeWidth="2" />
-              <text x="50" y="145" textAnchor="middle" fill="#FFFFFF" fontSize="11" fontWeight="bold">1. Registro</text>
-              <text x="50" y="180" textAnchor="middle" fill="#8B98A5" fontSize="9" fontFamily="monospace">0m · Solicitud</text>
-
-              {/* Hito 2 */}
-              <circle cx="220" cy="130" r="6" fill="#00D2FF" stroke="#FFFFFF" strokeWidth="2" />
-              <text x="220" y="115" textAnchor="middle" fill="#FFFFFF" fontSize="11" fontWeight="bold">2. Inspección</text>
-              <text x="220" y="150" textAnchor="middle" fill="#8B98A5" fontSize="9" fontFamily="monospace">150m · Validación Técnica</text>
-
-              {/* Hito 3 */}
-              <circle cx="400" cy="90" r="6" fill="#00D2FF" stroke="#FFFFFF" strokeWidth="2" />
-              <text x="400" y="75" textAnchor="middle" fill="#FFFFFF" fontSize="11" fontWeight="bold">3. Compliance</text>
-              <text x="400" y="110" textAnchor="middle" fill="#8B98A5" fontSize="9" fontFamily="monospace">300m · ARCONEL</text>
-
-              {/* Hito 4 */}
-              <circle cx="580" cy="50" r="6" fill="#00D2FF" stroke="#FFFFFF" strokeWidth="2" />
-              <text x="580" y="35" textAnchor="middle" fill="#FFFFFF" fontSize="11" fontWeight="bold">4. Instalación</text>
-              <text x="580" y="70" textAnchor="middle" fill="#8B98A5" fontSize="9" fontFamily="monospace">500m · Conectores</text>
-
-              {/* Hito 5 (Meta) */}
-              <circle cx="750" cy="20" r="8" fill="#00F5A0" stroke="#FFFFFF" strokeWidth="2.5" />
-              <text x="750" y="5" textAnchor="middle" fill="#00D2FF" fontSize="12" fontWeight="bold">5. Go-Live ⚡</text>
-              <text x="750" y="40" textAnchor="middle" fill="#FFFFFF" fontSize="9" fontFamily="monospace">650m · 5 Reservas Libres</text>
-            </svg>
-
-            <div className="pt-6 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4">
-              <span className="text-xs text-neutral-400 font-light">
-                Empieza hoy mismo con <strong className="text-white">5 reservas al mes 100% gratuitas</strong>.
-              </span>
-              <button
-                onClick={() => setIsRegisterModalOpen(true)}
-                className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#00F5A0] to-[#00D2FF] hover:brightness-110 text-black font-extrabold text-xs font-mono uppercase tracking-wider shadow-lg cursor-pointer transition-all hover:scale-[1.02]"
-              >
-                Habilitar Mi Punto Ahora
-              </button>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      {/* ════════ 5. SECCIÓN SIMULADOR FINANCIERO Y COMPLIANCE ════════ */}
-      <section id="simulator" className="py-28 px-6 sm:px-12 max-w-7xl mx-auto w-full space-y-12">
-        
-        <div className="max-w-2xl space-y-2">
-          <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#00D2FF] font-bold">
-            Simulador de Rentabilidad
-          </span>
-          <h2 className="text-3xl sm:text-5xl font-display font-extrabold text-white">
-            Calcula tus Ganancias Netas.
-          </h2>
-          <p className="text-neutral-400 text-xs sm:text-sm font-light">
-            Esquema por volumen: 5 reservas mensuales libres ($0) y 20% de comisión sobre saldo prepagado desde la 6ª reserva.
-          </p>
-        </div>
-
-        <div className="p-8 sm:p-12 rounded-3xl bg-[#121824] border border-white/[0.08] shadow-2xl grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+        {/* Simulador Interactivo Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
           {/* Controles de Configuración */}
-          <div className="lg:col-span-7 space-y-6">
+          <div className="lg:col-span-7 p-7 sm:p-8 rounded-3xl bg-[#0E1520] border border-white/[0.08] space-y-6 shadow-xl">
             
             <div className="space-y-3">
-              <label className="text-xs font-mono uppercase tracking-wider text-neutral-300 flex justify-between">
-                <span>Potencia Nominal del Cargador</span>
-                <span className="text-[#00D2FF] font-bold">{selectedPowerKw} kW</span>
+              <label className="text-xs font-mono uppercase tracking-wider text-neutral-300 block">
+                1. Potencia del Cargador Instalado
               </label>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                {ARCONEL_POWER_TIERS.slice(0, 4).map((tier) => (
+              <div className="grid grid-cols-3 gap-3">
+                {ARCONEL_POWER_TIERS.map((tier) => (
                   <button
-                    key={tier.id}
+                    key={tier.power_kw}
+                    type="button"
                     onClick={() => {
                       setSelectedPowerKw(tier.power_kw);
                       if (hourlyPriceUsd > tier.max_legal_hourly_price_usd) {
@@ -503,7 +678,7 @@ export default function AdventureTechEditorialLandingPage() {
                     className={`p-3.5 rounded-2xl border text-xs font-bold transition-all text-center cursor-pointer ${
                       selectedPowerKw === tier.power_kw
                         ? 'border-[#00F5A0] bg-[#00F5A0]/15 text-white shadow-[0_0_15px_rgba(0,245,160,0.25)]'
-                        : 'border-white/[0.08] bg-[#0A0E14] text-neutral-400 hover:border-white/20'
+                        : 'border-white/[0.08] bg-[#070B12] text-neutral-400 hover:border-white/20'
                     }`}
                   >
                     <div>{tier.power_kw} kW</div>
@@ -515,7 +690,7 @@ export default function AdventureTechEditorialLandingPage() {
 
             <div className="space-y-3">
               <div className="flex justify-between text-xs font-mono uppercase tracking-wider">
-                <span className="text-neutral-300">Precio de Parqueo por Hora</span>
+                <span className="text-neutral-300">2. Precio de Parqueo por Hora</span>
                 <span className="text-[#00D2FF] text-base font-bold">${hourlyPriceUsd.toFixed(2)} USD/h</span>
               </div>
               <input
@@ -569,22 +744,22 @@ export default function AdventureTechEditorialLandingPage() {
 
           </div>
 
-          {/* Resultado Panel */}
-          <div className="lg:col-span-5 p-8 rounded-3xl bg-[#0A0E14] border border-white/[0.08] shadow-2xl flex flex-col justify-between space-y-6">
+          {/* Panel de Resultado Financiero */}
+          <div className="lg:col-span-5 p-8 rounded-3xl bg-[#090E16] border border-white/[0.08] shadow-2xl flex flex-col justify-between space-y-6">
             <div>
               <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#00D2FF] font-bold block mb-2">
-                Ganancia Neta Estimada
+                Ganancia Neta Estimada Anfitrión
               </span>
               <div className="text-4xl sm:text-5xl font-display font-extrabold text-white tracking-tight">
                 ${netMonthlyProfit.toFixed(2)} <span className="text-sm font-sans font-normal text-neutral-400">USD/mes</span>
               </div>
               <p className="text-xs text-neutral-400 font-light mt-1.5">
-                Ingreso neto tras descontar costo de energía ($0.08/kWh) y comisión.
+                Ingreso neto tras descontar el costo eléctrico de distribuidora ($0.08/kWh) y comisión por volumen.
               </p>
 
               <div className="space-y-2.5 text-xs font-mono text-neutral-400 pt-6 border-t border-white/[0.06] mt-6">
                 <div className="flex justify-between">
-                  <span>Ingreso Bruto ({monthlyReservations} reservas):</span>
+                  <span>Ingreso Bruto ({monthlyReservations} sesiones):</span>
                   <span className="text-white font-bold">${grossMonthly.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
@@ -592,11 +767,11 @@ export default function AdventureTechEditorialLandingPage() {
                   <span className="text-red-400">-${energyCostMonthly.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Cuota Gratuita (5 reservas):</span>
-                  <span className="text-[#00F5A0]">$0.00</span>
+                  <span>5 Reservas Mensuales Gratuitas:</span>
+                  <span className="text-[#00F5A0]">$0.00 Comisión</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Comisión ChargeWay (20% en {billableCount} res.):</span>
+                  <span>Comisión ChargeWay ({billableCount} reservas):</span>
                   <span className="text-[#00D2FF]">-${commissionMonthly.toFixed(2)}</span>
                 </div>
               </div>
@@ -606,7 +781,7 @@ export default function AdventureTechEditorialLandingPage() {
               onClick={() => setIsRegisterModalOpen(true)}
               className="w-full py-4 rounded-xl bg-gradient-to-r from-[#00F5A0] to-[#00D2FF] hover:brightness-110 text-black font-extrabold text-xs font-mono uppercase tracking-wider shadow-[0_0_25px_rgba(0,245,160,0.35)] transition-all cursor-pointer flex items-center justify-center gap-2 hover:scale-[1.02]"
             >
-              <span>Habilitar Mi Punto Ahora</span>
+              <span>Habilitar Mi Punto de Carga</span>
               <ArrowRight size={15} />
             </button>
           </div>
@@ -614,70 +789,69 @@ export default function AdventureTechEditorialLandingPage() {
         </div>
       </section>
 
-      {/* ════════ 6. MARCO REGULATORIO Y SEGURIDAD JURÍDICA ════════ */}
-      <section id="compliance" className="py-24 px-6 sm:px-12 max-w-7xl mx-auto w-full border-t border-white/[0.08] space-y-12">
-        
-        <div className="max-w-2xl space-y-2">
-          <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#00D2FF] font-bold">
-            Marco Regulatorio Oficial
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-display font-black text-white">
-            100% Legal y Regulado en Ecuador.
-          </h2>
-          <p className="text-neutral-400 text-xs sm:text-sm font-light">
-            Operaciones blindadas bajo la Ley Orgánica del Servicio Público de Energía Eléctrica.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="p-7 rounded-3xl bg-[#121824] border border-white/[0.08] space-y-3">
-            <h4 className="font-bold text-white text-base text-[#00F5A0]">Exención LOSPEE</h4>
-            <p className="text-xs text-neutral-400 leading-relaxed font-light">
-              El servicio opera legalmente como arriendo de espacio físico de parqueo con infraestructura, exento de título habilitante de comercialización.
-            </p>
-          </div>
-
-          <div className="p-7 rounded-3xl bg-[#121824] border border-white/[0.08] space-y-3">
-            <h4 className="font-bold text-white text-base text-[#00F5A0]">Topes ARCONEL-029/25</h4>
-            <p className="text-xs text-neutral-400 leading-relaxed font-light">
-              Control algorítmico preventivo que impide fijar tarifas por hora que excedan el límite regulatorio oficial por kWh, blindando al anfitrión.
-            </p>
-          </div>
-
-          <div className="p-7 rounded-3xl bg-[#121824] border border-white/[0.08] space-y-3">
-            <h4 className="font-bold text-white text-base text-[#00F5A0]">Norma ARCERNNR-003/20</h4>
-            <p className="text-xs text-neutral-400 leading-relaxed font-light">
-              Alineación técnica con los estándares de conexión comercial a la red de las distribuidoras eléctricas (EEQ / CNEL EP).
-            </p>
-          </div>
-        </div>
-
-      </section>
-
-      {/* ════════ 7. FOOTER EDITORIAL ADVENTURE TECH ════════ */}
-      <footer className="w-full bg-[#070A0E] border-t border-white/[0.08] py-14 px-6 sm:px-12 text-neutral-500 font-sans text-xs mt-auto">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
-          
-          <div className="flex items-center gap-3">
-            <img src="/logo.png" alt="ChargeWay Logo" className="w-8 h-8 rounded-lg object-cover opacity-80" />
-            <div>
-              <span className="text-sm font-display font-bold text-white">
-                Charge<span className="text-[#00F5A0]">Way</span> AI
-              </span>
-              <p className="text-[10px] text-neutral-500 font-mono">Movilidad Eléctrica · Ecuador</p>
+      {/* ════════ 6. CTA FINAL DE ALTA GAMA ════════ */}
+      <section className="py-24 px-6 sm:px-12 max-w-7xl mx-auto w-full text-center relative overflow-hidden rounded-[36px] bg-gradient-to-b from-[#0E1724] to-[#070B12] border border-cyan-500/20 shadow-2xl my-10">
+        <div className="max-w-3xl mx-auto space-y-6 relative z-10">
+          <div className="w-16 h-16 rounded-3xl bg-gradient-to-br from-emerald-400 to-cyan-500 p-1 mx-auto shadow-[0_0_40px_rgba(0,245,160,0.4)]">
+            <div className="w-full h-full bg-[#070B12] rounded-[22px] flex items-center justify-center p-2">
+              <img src="/logo.png" alt="ChargeWay Logo" className="w-full h-full object-contain" />
             </div>
           </div>
 
-          <div className="flex flex-wrap justify-center items-center gap-8 text-xs font-mono uppercase tracking-wider text-neutral-400">
-            <a href="#adventure" className="hover:text-[#00D2FF] transition-colors">Rutas Andinas</a>
-            <a href="#host-section" className="hover:text-[#00D2FF] transition-colors">Anfitriones</a>
-            <a href="#simulator" className="hover:text-[#00D2FF] transition-colors">Simulador</a>
-            <Link href="/app" className="hover:text-[#00D2FF] transition-colors">Planificador Web</Link>
+          <h2 className="text-3xl sm:text-5xl lg:text-6xl font-display font-black text-white leading-tight">
+            Viaja sin límites. <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00F5A0] via-[#00D2FF] to-white">
+              Cero ansiedad de carga en Ecuador.
+            </span>
+          </h2>
+
+          <p className="text-sm sm:text-base text-neutral-300 font-light max-w-xl mx-auto">
+            Únete a los más de 500 conductores que ya recorren el país con telemetría en tiempo real, copiloto de voz y cálculo topográfico preciso.
+          </p>
+
+          <div className="pt-4 flex flex-wrap items-center justify-center gap-4">
+            <Link
+              href="/"
+              className="px-8 py-4 rounded-2xl bg-gradient-to-r from-[#00F5A0] via-teal-300 to-[#00D2FF] hover:brightness-110 text-slate-950 font-extrabold text-sm font-mono uppercase tracking-wider shadow-[0_0_35px_rgba(0,245,160,0.5)] transition-all cursor-pointer hover:scale-[1.03]"
+            >
+              Comenzar a Planificar Gratis
+            </Link>
+            <button
+              onClick={() => setIsMapModalOpen(true)}
+              className="px-6 py-4 rounded-2xl bg-white/[0.05] hover:bg-white/[0.1] text-white border border-white/20 text-xs font-mono uppercase tracking-wider transition-all cursor-pointer"
+            >
+              Explorar Estaciones en el Mapa
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* ════════ 7. FOOTER CON LOGO OFICIAL ════════ */}
+      <footer className="w-full bg-[#05080E] border-t border-white/[0.08] py-14 px-6 sm:px-12 text-neutral-400 font-sans text-xs mt-auto">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
+          
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-xl overflow-hidden border border-emerald-500/30 p-0.5 bg-[#091410]">
+              <img src="/logo.png" alt="ChargeWay Logo" className="w-full h-full object-contain" />
+            </div>
+            <div>
+              <span className="text-sm font-display font-bold text-white">
+                Charge<span className="text-[#00F5A0]">Way</span> Ecuador
+              </span>
+              <p className="text-[10px] text-neutral-500 font-mono">Movilidad Eléctrica Sostenible</p>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap justify-center items-center gap-6 text-xs font-mono uppercase tracking-wider text-neutral-400">
+            <Link href="/" className="hover:text-[#00F5A0] transition-colors">Planificador en Vivo</Link>
+            <a href="#corredores" className="hover:text-[#00D2FF] transition-colors">Corredores</a>
+            <a href="#innovaciones" className="hover:text-[#00F5A0] transition-colors">Copiloto IA</a>
+            <a href="#anfitriones" className="hover:text-[#00D2FF] transition-colors">Anfitriones</a>
             <a href="mailto:chargewayec@gmail.com" className="hover:text-[#00D2FF] transition-colors">Contacto</a>
           </div>
 
-          <p className="text-neutral-600 text-[11px] font-mono">
-            © 2026 ChargeWay AI · Powered by SolAI Ecuador
+          <p className="text-neutral-500 text-[11px] font-mono">
+            © 2026 ChargeWay AI · Ecuador
           </p>
 
         </div>
@@ -697,7 +871,7 @@ export default function AdventureTechEditorialLandingPage() {
       <ElectrolinerasMapModal
         isOpen={isMapModalOpen}
         onClose={() => setIsMapModalOpen(false)}
-        onGoToPlanner={() => router.push('/app')}
+        onGoToPlanner={() => router.push('/')}
       />
 
     </div>

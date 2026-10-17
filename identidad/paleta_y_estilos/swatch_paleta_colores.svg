@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="100%" height="100%" fill="none">
+  <defs>
+    <filter id="swatch-shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="12" stdDeviation="15" flood-color="#000000" flood-opacity="0.6" />
+    </filter>
+    <linearGradient id="swatch-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F172A" />
+      <stop offset="100%" stop-color="#04060A" />
+    </linearGradient>
+  </defs>
+
+  <!-- Fondo General de la Muestra -->
+  <rect width="1200" height="800" fill="url(#swatch-bg)" rx="24" ry="24" stroke="#1E293B" stroke-width="2" />
+
+  <!-- Cabecera de la Muestra -->
+  <g transform="translate(60, 70)">
+    <text x="0" y="0" font-family="'Syne', sans-serif" font-size="36" font-weight="900" fill="#FFFFFF" letter-spacing="-0.5">
+      Charge<tspan fill="#00D2FF">Way</tspan> — CARTA OFICIAL DE COLOR
+    </text>
+    <text x="0" y="30" font-family="'Space Mono', monospace" font-size="14" font-weight="700" fill="#00F5A0" letter-spacing="2">
+      ESPECIFICACIONES CROMÁTICAS PARA WEB, PREPRENSA, RENDER Y MERCHANDISING
+    </text>
+    <line x1="0" y1="45" x2="1080" y2="45" stroke="#334155" stroke-width="1.5" />
+  </g>
+
+  <!-- SECCIÓN 1: COLORES PRIMARIOS (3 BLOQUES GRANDES) -->
+  <g transform="translate(60, 150)">
+    
+    <!-- 1. ELECTRIC CYAN -->
+    <g transform="translate(0, 0)" filter="url(#swatch-shadow)">
+      <rect width="340" height="150" rx="16" fill="#00D2FF" />
+      <circle cx="300" cy="40" r="16" fill="#FFFFFF" opacity="0.4" />
+      <rect y="150" width="340" height="110" rx="0" fill="#0B1321" stroke="#1E293B" stroke-width="1" />
+      <text x="20" y="180" font-family="'Space Grotesk', sans-serif" font-size="18" font-weight="800" fill="#FFFFFF">ELECTRIC CYAN</text>
+      <text x="20" y="202" font-family="'Space Mono', monospace" font-size="12" fill="#00D2FF">HEX: #00D2FF</text>
+      <text x="20" y="220" font-family="'Space Mono', monospace" font-size="11" fill="#94A3B8">RGB: 0, 210, 255  •  CMYK: 72, 0, 0, 0</text>
+      <text x="20" y="238" font-family="'Space Mono', monospace" font-size="11" fill="#94A3B8">PANTONE: PMS 298 C (Primario HUD &amp; Acción)</text>
+    </g>
+
+    <!-- 2. CYBER LIME -->
+    <g transform="translate(370, 0)" filter="url(#swatch-shadow)">
+      <rect width="340" height="150" rx="16" fill="#00F5A0" />
+      <circle cx="300" cy="40" r="16" fill="#000000" opacity="0.15" />
+      <rect y="150" width="340" height="110" rx="0" fill="#0B1321" stroke="#1E293B" stroke-width="1" />
+      <text x="20" y="180" font-family="'Space Grotesk', sans-serif" font-size="18" font-weight="800" fill="#FFFFFF">CYBER LIME / REGEN</text>
+      <text x="20" y="202" font-family="'Space Mono', monospace" font-size="12" fill="#00F5A0">HEX: #00F5A0</text>
+      <text x="20" y="220" font-family="'Space Mono', monospace" font-size="11" fill="#94A3B8">RGB: 0, 245, 160  •  CMYK: 60, 0, 65, 0</text>
+      <text x="20" y="238" font-family="'Space Mono', monospace" font-size="11" fill="#94A3B8">PANTONE: PMS 802 C (Energía &amp; Batería Óptima)</text>
+    </g>
+
+    <!-- 3. DEEP MIDNIGHT SPACE -->
+    <g transform="translate(740, 0)" filter="url(#swatch-shadow)">
+      <rect width="340" height="150" rx="16" fill="#070B12" stroke="#00D2FF" stroke-width="1.5" />
+      <rect y="150" width="340" height="110" rx="0" fill="#0B1321" stroke="#1E293B" stroke-width="1" />
+      <text x="20" y="180" font-family="'Space Grotesk', sans-serif" font-size="18" font-weight="800" fill="#FFFFFF">DEEP SPACE DARK</text>
+      <text x="20" y="202" font-family="'Space Mono', monospace" font-size="12" fill="#BAE6FD">HEX: #070B12</text>
+      <text x="20" y="220" font-family="'Space Mono', monospace" font-size="11" fill="#94A3B8">RGB: 7, 11, 18  •  CMYK: 85, 75, 60, 80</text>
+      <text x="20" y="238" font-family="'Space Mono', monospace" font-size="11" fill="#94A3B8">PANTONE: PMS Black 6 C (Fondo Troncal SaaS)</text>
+    </g>
+  </g>
+
+  <!-- SECCIÓN 2: COLORES SECUNDARIOS / FUNCIONALES (4 BLOQUES MEDIANOS) -->
+  <g transform="translate(60, 470)">
+    <text x="0" y="0" font-family="'Syne', sans-serif" font-size="20" font-weight="800" fill="#FFFFFF">
+      COLORES SECUNDARIOS Y CÓDIGOS DE ESTADO TELEMÉTRICO
+    </text>
+
+    <!-- 1. PARTNER EMERALD -->
+    <g transform="translate(0, 20)">
+      <rect width="250" height="80" rx="10" fill="#10B981" />
+      <rect y="80" width="250" height="95" rx="0" fill="#0D1626" stroke="#1E293B" stroke-width="1" />
+      <text x="15" y="105" font-family="'Space Grotesk', sans-serif" font-size="14" font-weight="700" fill="#FFFFFF">PARTNER EMERALD</text>
+      <text x="15" y="125" font-family="'Space Mono', monospace" font-size="11" fill="#34D399">#10B981 • PMS 7723 C</text>
+      <text x="15" y="145" font-family="'Space Grotesk', sans-serif" font-size="11" fill="#94A3B8">Red Anfitriones &amp; Ganancias</text>
+    </g>
+
+    <!-- 2. HIGHWAY SKY -->
+    <g transform="translate(275, 20)">
+      <rect width="250" height="80" rx="10" fill="#06B6D4" />
+      <rect y="80" width="250" height="95" rx="0" fill="#0D1626" stroke="#1E293B" stroke-width="1" />
+      <text x="15" y="105" font-family="'Space Grotesk', sans-serif" font-size="14" font-weight="700" fill="#FFFFFF">HIGHWAY SKY</text>
+      <text x="15" y="125" font-family="'Space Mono', monospace" font-size="11" fill="#22D3EE">#06B6D4 • PMS 3115 C</text>
+      <text x="15" y="145" font-family="'Space Grotesk', sans-serif" font-size="11" fill="#94A3B8">Telemetría de Ruta &amp; GPS</text>
+    </g>
+
+    <!-- 3. CAUTION AMBER -->
+    <g transform="translate(550, 20)">
+      <rect width="250" height="80" rx="10" fill="#F59E0B" />
+      <rect y="80" width="250" height="95" rx="0" fill="#0D1626" stroke="#1E293B" stroke-width="1" />
+      <text x="15" y="105" font-family="'Space Grotesk', sans-serif" font-size="14" font-weight="700" fill="#FFFFFF">CAUTION AMBER</text>
+      <text x="15" y="125" font-family="'Space Mono', monospace" font-size="11" fill="#FBBF24">#F59E0B • PMS 137 C</text>
+      <text x="15" y="145" font-family="'Space Grotesk', sans-serif" font-size="11" fill="#94A3B8">Alerta Pendiente / Parada Req.</text>
+    </g>
+
+    <!-- 4. CRITICAL CRIMSON -->
+    <g transform="translate(825, 20)">
+      <rect width="255" height="80" rx="10" fill="#EF4444" />
+      <rect y="80" width="255" height="95" rx="0" fill="#0D1626" stroke="#1E293B" stroke-width="1" />
+      <text x="15" y="105" font-family="'Space Grotesk', sans-serif" font-size="14" font-weight="700" fill="#FFFFFF">CRITICAL CRIMSON</text>
+      <text x="15" y="125" font-family="'Space Mono', monospace" font-size="11" fill="#F87171">#EF4444 • PMS 1788 C</text>
+      <text x="15" y="145" font-family="'Space Grotesk', sans-serif" font-size="11" fill="#94A3B8">Batería &lt;10% / Fuera Cobertura</text>
+    </g>
+  </g>
+
+  <!-- Pie con Copyright y Metadatos -->
+  <g transform="translate(60, 745)">
+    <line x1="0" y1="0" x2="1080" y2="0" stroke="#1E293B" stroke-width="1" />
+    <text x="0" y="24" font-family="'Space Mono', monospace" font-size="11" fill="#64748B">
+      CHARGEWAY BRAND ASSETS SYSTEM // COPYRIGHT © 2026 CHARGEWAY ECUADOR // REPRODUCCIÓN FIDELIZADA
+    </text>
+  </g>
+</svg>

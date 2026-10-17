@@ -72,6 +72,19 @@ export function isChargerBrandCompatible(
   return brands.some(b => vBrandClean.includes(b) || b.includes(vBrandClean));
 }
 
+/**
+ * Retorna true si un cargador es multimarca / de acceso público universal
+ * (no está restringido a concesionarios o marcas exclusivas como BYD, Kia, etc.)
+ */
+export function isChargerMultibrand(
+  charger: { nombre?: string; name?: string; operator?: string; fuente?: string; exclusiveBrands?: string[] }
+): boolean {
+  const brands = charger.exclusiveBrands && charger.exclusiveBrands.length > 0
+    ? charger.exclusiveBrands
+    : getChargerExclusiveBrands(charger.nombre || charger.name, charger.operator || charger.fuente);
+  return brands.length === 0;
+}
+
 
 import { supabase } from '@/lib/supabase';
 import { ECUADOR_CHARGERS_FALLBACK } from '@/lib/data/ecuador-chargers';

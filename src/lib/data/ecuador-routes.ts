@@ -1,7 +1,7 @@
 /**
  * Ecuador Route Catalogs and Corridor Chargers
  */
-import { isChargerBrandCompatible } from '@/lib/services/charging';
+import { isChargerBrandCompatible, isChargerMultibrand } from '@/lib/services/charging';
 
 export interface CopilotChargerInfo {
   name: string;
@@ -42,7 +42,7 @@ export function isBrandMatch(charger: { name?: string; operator?: string }, bran
   return brandKeywords.some(kw => text.includes(kw));
 }
 
-function getChargerPowerKw(c: CopilotChargerInfo): number {
+export function getChargerPowerKw(c: CopilotChargerInfo): number {
   const match = (c.power || '').match(/(\d+)/);
   if (match) return parseInt(match[1], 10);
   const s = (c.speed || '').toLowerCase();
@@ -54,7 +54,8 @@ function getChargerPowerKw(c: CopilotChargerInfo): number {
 
 export function prioritizeChargersByBrand(
   chargers: CopilotChargerInfo[],
-  vehicleBrand?: string
+  vehicleBrand?: string,
+  options?: { multibrandOnly?: boolean; fastOnly?: boolean }
 ): { list: CopilotChargerInfo[]; hasBrandMatch: boolean; brandName?: string } {
   if (!chargers || chargers.length === 0) {
     return { list: [], hasBrandMatch: false };
@@ -62,14 +63,28 @@ export function prioritizeChargersByBrand(
 
   const cleanBrand = (vehicleBrand || '').trim();
 
-  // Filter out chargers exclusive to competing brands
-  const compatible = chargers.filter(c =>
-    cleanBrand ? isChargerBrandCompatible({ name: c.name, operator: c.operator }, cleanBrand) : isChargerBrandCompatible({ name: c.name, operator: c.operator })
-  );
+  // 1. Filtrar por compatibilidad o restricción multimarca
+  let compatible = chargers.filter(c => {
+    if (options?.multibrandOnly) {
+      // Excluir concesionarios / cargadores de marcas exclusivas y exigir multimarca universal
+      return isChargerMultibrand({ name: c.name, operator: c.operator });
+    }
+    return cleanBrand
+      ? isChargerBrandCompatible({ name: c.name, operator: c.operator }, cleanBrand)
+      : isChargerBrandCompatible({ name: c.name, operator: c.operator });
+  });
+
+  // 2. Si se solicitó específicamente carga rápida, filtrar por potencia >= 40 kW (si existen disponibles)
+  if (options?.fastOnly) {
+    const fastFiltered = compatible.filter(c => getChargerPowerKw(c) >= 40);
+    if (fastFiltered.length > 0) {
+      compatible = fastFiltered;
+    }
+  }
 
   const scored = compatible.map(c => {
     const kw = getChargerPowerKw(c);
-    const isBrand = cleanBrand ? isBrandMatch(c, cleanBrand) : false;
+    const isBrand = (!options?.multibrandOnly && cleanBrand) ? isBrandMatch(c, cleanBrand) : false;
     let score = kw;
     if (kw >= 40) {
       score = isBrand ? 1000 + kw : 500 + kw;

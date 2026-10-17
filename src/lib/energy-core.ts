@@ -328,11 +328,13 @@ export function simulateContinuousRouteEnergy(
     socTimeline[socTimeline.length - 1].soc = Number(arrivalSoc.toFixed(3));
   }
   const fallbackRateWhKm = (vehicleSpecs.usable_battery_kwh * 1000) / (vehicleSpecs.wltp_range_km || 300);
-  const avgRateWhKm = routeDistKm > 0 ? netConsumptionWh / routeDistKm : fallbackRateWhKm;
+  const routeRateWhKm = routeDistKm > 0 ? netConsumptionWh / routeDistKm : fallbackRateWhKm;
+  // Acotar la tasa para autonomía remanente y evitar rangos inflados en descensos andinos
+  const safeAutonomyRateWhKm = Math.max(fallbackRateWhKm * 0.8, Math.min(fallbackRateWhKm * 1.3, routeRateWhKm > 80 ? routeRateWhKm : fallbackRateWhKm));
 
   const safetyBufferKwh = batteryCapacityKwh * 0.15; // 15% safe reserve
-  const safetyMarginKm = Math.round(((usableKwhAtEnd - safetyBufferKwh) * 1000) / avgRateWhKm);
-  const arrivalRangeKm = Math.max(0, Math.round((usableKwhAtEnd * 1000) / avgRateWhKm));
+  const safetyMarginKm = Math.round(((usableKwhAtEnd - safetyBufferKwh) * 1000) / safeAutonomyRateWhKm);
+  const arrivalRangeKm = Math.max(0, Math.round((usableKwhAtEnd * 1000) / safeAutonomyRateWhKm));
 
   // Direct reachable without stopping if arrival SoC >= 12%
   const isDirectReachable = arrivalSoc >= 0.12 && depletionKm === null;

@@ -138,7 +138,7 @@ export const ECUADOR_DESTINATIONS: EcuadorDestination[] = [
     region: 'Sierra',
     corridor: 'norte',
     altitudeMeters: 2225,
-    coords: { lat: 0.3601, lng: -78.1250 },
+    coords: { lat: 0.3517, lng: -78.1223 },
     distFromQuitoKm: 115,
     tourismHighlights: ['Laguna de Yahuarcocha y Autódromo', 'Centro Comercial Laguna Mall', 'Tren de la Libertad', 'San Antonio de Ibarra (tallados)'],
     gastronomy: ['Helados de paila de Rosalia Suárez', 'Nogadas y arrope de mora', 'Fritada de Atuntaqui'],
