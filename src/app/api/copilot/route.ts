@@ -6,7 +6,7 @@ import {
   getRouteChargersFromSupabase,
   getPlacesRecommendationsFromGoogle,
 } from '@/lib/services/ecuadorGuideAgent';
-import { isChargerBrandCompatible } from '@/lib/services/charging';
+import { isChargerBrandCompatible, isChargerMultibrand, fetchAllEcuadorChargers, Charger } from '@/lib/services/charging';
 import { orderRouteWithStops } from '@/lib/services/route-helpers';
 import { geocodePlace } from '@/lib/services/mapbox';
 import {
@@ -1681,7 +1681,7 @@ async function handlePOST(request: Request) {
             functionDeclarations: [
               {
                 name: 'plan_trip',
-                description: 'Calcula y traza la ruta hacia un destino en Ecuador en el mapa interactivo. Úsalo cuando el conductor pida ir a una ciudad o lugar, armar una ruta, o pregunte si le alcanza la batería para llegar o para viaje de ida y vuelta.',
+                description: 'Calcula y traza una NUEVA ruta hacia un destino final en Ecuador en el mapa interactivo. Úsalo cuando el conductor pida ir a una ciudad o lugar, armar una ruta, o pregunte si le alcanza la batería para llegar o para viaje de ida y vuelta. NO lo uses si el usuario pide agregar o añadir una parada intermedia a una ruta ya activa.',
                 parameters: {
                   type: 'OBJECT',
                   properties: {
@@ -1700,23 +1700,25 @@ async function handlePOST(request: Request) {
               },
               {
                 name: 'search_chargers',
-                description: 'Busca electrolineras y estaciones de recarga disponibles en una ciudad o sector en Ecuador. Permite filtrar por multimarca universal o solo carga rápida.',
+                description: 'Consulta y busca en la base de datos oficial de estaciones de recarga en Ecuador. Permite consultar por ciudad, sector, provincia o a nivel nacional, y filtrar por tipo de conector (gbt, ccs2, tipo2), potencia (carga rápida DC >= 40-50 kW) o acceso multimarca.',
                 parameters: {
                   type: 'OBJECT',
                   properties: {
-                    location: { type: 'STRING', description: 'Nombre de la ciudad o zona (ej. Ibarra, Ambato, Quito, Riobamba, Cumbayá, en la ruta)' },
-                    multibrandOnly: { type: 'BOOLEAN', description: 'True si el conductor solicita cargador multimarca, universal o abierto a todas las marcas (excluyendo concesionarios exclusivos de marcas como BYD, Kia, etc.)' },
-                    fastOnly: { type: 'BOOLEAN', description: 'True si el conductor solicita específicamente carga rápida (>= 40-50 kW DC)' },
+                    location: { type: 'STRING', description: 'Ciudad, cantón, provincia, sector o "nacional"/"Ecuador" si la consulta abarca todo el país.' },
+                    connectorType: { type: 'STRING', enum: ['gbt', 'ccs2', 'tipo2', 'chademo', 'todos'], description: 'Tipo de conector solicitado: gbt (estándar chino/BYD), ccs2 (estándar europeo DC), tipo2 (AC Mennekes/Wallbox), chademo o todos.' },
+                    fastOnly: { type: 'BOOLEAN', description: 'True si el conductor solicita específicamente estaciones de carga rápida DC (>= 40-50 kW).' },
+                    multibrandOnly: { type: 'BOOLEAN', description: 'True si el conductor solicita cargador multimarca universal abierto a todas las marcas (excluyendo concesionarios exclusivos de marcas como BYD, Kia, etc.).' },
+                    query: { type: 'STRING', description: 'Término de búsqueda opcional por nombre de estación, operador o centro comercial (ej. BYD, Condor Charge, Mall del Sol).' },
                   },
                 },
               },
               {
                 name: 'add_charging_stop',
-                description: 'Añade una estación de recarga específica como parada intermedia en la ruta activa de navegación.',
+                description: 'Añade una estación de recarga o ciudad de paso como parada intermedia en la ruta de navegación activa. Úsalo cuando el conductor pida agregar, añadir, incluir o poner una parada (ej. "agrega la parada en Ambato", "añade Mall de los Andes a mi ruta", "pon una parada de carga").',
                 parameters: {
                   type: 'OBJECT',
                   properties: {
-                    chargerName: { type: 'STRING', description: 'Nombre de la estación a añadir' },
+                    chargerName: { type: 'STRING', description: 'Nombre de la estación, sector o ciudad a añadir como parada intermedia en la ruta' },
                   },
                   required: ['chargerName'],
                 },
@@ -1747,7 +1749,22 @@ ${activePlannedStops.map((s: any, idx: number) => `- Parada ${idx + 1}: ${s.name
   * Sentido: ${s.isInbound ? 'al regreso / retorno' : 'de ida'}`).join('\n')}
 ` : '';
 
-        const systemInstructionText = `Eres el Copiloto Inteligente de ChargeWay, el asistente de voz y navegación para conductores de vehículos eléctricos en Ecuador.
+        const systemInstructionText = `Eres el Copiloto Inteligente de ChargeWay, el asistente de voz y navegación para conductores de vehículos eléctricos en Ecuador. Eres un verdadero agente experto en movilidad eléctrica, topografía andina y la red nacional de recarga.
+
+CONOCIMIENTO EXPERTO DE LA RED DE CARGA Y CONECTORES EN ECUADOR:
+1. Conectores en Ecuador:
+   - GB/T (Guobiao): Estándar nacional chino (DC y AC). Utilizado ampliamente por BYD (Yuan Pro, Dolphin, Tang, Han, Song Plus), JAC, Dongfeng, Leapmotor y marcas chinas. Existen cerca de 100 puntos en el país (red oficial BYD y estaciones multiconector en Pichincha, Guayas, Manabí, Azuay, Imbabura, etc.).
+   - CCS2 (Combo 2): Estándar europeo de carga rápida DC (Kia, Hyundai, Porsche, BMW, Mercedes, Tesla con adaptador, Audi). Redes: Condor Charge, centros comerciales y estaciones públicas.
+   - Tipo 2 (Mennekes / Wallbox): Corriente alterna AC de 7.4 kW a 22 kW ampliamente disponible en centros comerciales, hoteles, restaurantes y domicilios.
+   - CHAdeMO: Disponible en algunos puntos para Nissan Leaf o autos japoneses de importación.
+2. Topografía y Física Energética Andina:
+   - En ascensos andinos (Papallacta a 4,000 msnm, El Chasqui / Cotopaxi a 3,600 msnm), el consumo se eleva notablemente.
+   - En descensos hacia la Costa o Amazonía, la regeneración gravitatoria recupera energía útil para la batería.
+3. Consultas de Información vs. Órdenes de Navegación:
+   - Si el usuario formula preguntas informativas (ej: "¿cuáles son los puntos de carga...", "¿dónde puedo cargar...", "¿cuántos cargadores hay en...", "¿qué estaciones tienen conector GB/T?"), invoca OBLIGATORIAMENTE la herramienta 'search_chargers' para consultar la base de datos real y responder con datos precisos.
+   - NUNCA agregues paradas a la ruta ni invoques 'add_charging_stop' cuando el usuario solo hace una pregunta informativa. Solo invoca 'add_charging_stop' si el conductor dice explícitamente "agrega la parada", "añade esta estación a mi ruta" o "pon esta parada".
+4. Estilo de Comunicación:
+   - Sintetiza la información devuelta por la base de datos de manera clara, autoritativa, conversacional y experta, ideal para escuchar o leer en cabina.
 
 TELEMETRÍA REAL DEL VEHÍCULO ACTUAL:
 - Vehículo: ${vehicle} (${battery} kWh de batería)
@@ -1758,21 +1775,7 @@ TELEMETRÍA REAL DEL VEHÍCULO ACTUAL:
 - Origen de viaje: Quito, Ecuador
 ${activeTrip ? `- Viaje activo en mapa: De ${activeTrip.originName} a ${activeTrip.destinationName} (${activeTrip.distanceKm} km, consumo estimado ${activeTrip.consumptionKwh} kWh, llegada con ${activeTrip.arrivalSoc}% / ${activeTrip.arrivalRangeKm} km de margen). ${activeTrip.isRoundTrip ? 'Es viaje de ida y vuelta.' : ''}` : '- No hay ruta activa en el mapa actualmente.'}
 ${plannedStopsPrompt}
-
-REGLAS ESENCIALES PARA VOZ HUMANA (TTS):
-1. Tu respuesta será leída en voz alta mientras el conductor maneja. Sé directo, amable, conciso y claro (máximo 2 a 3 frases cortas, menos de 50 palabras). NUNCA uses formato markdown, negritas con asteriscos (**), viñetas con guiones ni tablas.
-2. PREGUNTAS TÉCNICAS O CONCEPTUALES: Si te preguntan sobre el clima (frío de páramos andinos, calor de la costa), viento, lluvia, topografía (subidas a El Chasqui o Papallacta, descensos regenerativos), degradación de batería, velocidad de carga o consejos de conducción, responde DIRECTAMENTE con tu criterio experto en ingeniería de vehículos eléctricos. No invoques herramientas para preguntas conceptuales.
-3. PREGUNTAS DE NAVEGACIÓN: Si el usuario pide ir a un lugar o si le alcanza la batería para llegar, invoca 'plan_trip'.
-4. BÚSQUEDA DE CARGADORES: Si el usuario pregunta dónde cargar, qué estaciones hay o si hay cargador rápido en un lugar o sector, invoca 'search_chargers'. Al responder el resultado, sé conciso y preciso: responde directamente si hay cargadores y cuántos encontraste en la zona (ejemplo: 'Sí, tienes cargadores rápidos en el sector del Aeropuerto. Encontré 6 opciones; selecciona la que prefieras en la lista para agregarla como parada a tu ruta'). NUNCA uses redundancias ni pleonasmos como 'dispones de ... disponibles'.
-5. AÑADIR PARADA: Si el usuario pide agregar, añadir o incluir un cargador o parada a la ruta (ej. 'agrega la parada de carga en Ambato', 'añade Mall de los Andes', 'agrega la parada', 'pon la parada de recarga'), invoca OBLIGATORIAMENTE 'add_charging_stop' con el nombre de la estación o ciudad. NO invoques 'search_chargers' si la intención del usuario es agregar la parada a la ruta.
-6. AMENIDADES: Si pregunta qué hacer o dónde comer mientras carga, invoca 'search_places_amenities'.
-7. PARADAS NECESARIAS EN RUTA: En viajes donde la batería del vehículo no alcanza de forma directa para llegar a cada parada o destino con al menos 12% de reserva, debes informar al conductor las paradas obligatorias de recarga necesarias calculadas para cada tramo (por ejemplo: si requiere 1 parada al regreso o 2 en ruta). Si el auto tiene gran autonomía y la batería alcanza para completar todo el itinerario sin recargas intermedias, confirma claramente que no necesita ninguna parada obligatoria.
-8. LISTADO DE ESTACIONES EN COPILOTO: Al trazar una ruta ('plan_trip'), presenta las paradas obligatorias de recarga necesarias si la batería no alcanza. Cuando el usuario consulte o busque cargadores ('search_chargers'), la interfaz del copiloto desplegará automáticamente el listado interactivo con botones para ver cada estación en el mapa o agregarla como parada intermedia.
-9. EXCLUSIVIDAD DE MARCAS DE CARGADORES: Los cargadores de marcas de autos (como KIA, BYD, JAC, Tesla, Porsche) son EXCLUSIVOS para vehículos de su propia marca. El conductor maneja un ${vehicleBrand || 'vehículo'}. NUNCA le recomiendes, sugieras ni menciones cargadores de marcas exclusivas incompatibles (por ejemplo: si maneja BYD, JAMÁS menciones ni uses estaciones KIA como KIA Panavial San Gabriel o KIA Servi Ruiz; si maneja KIA, jamás menciones BYD). Solo sugiere estaciones de su propia marca (${vehicleBrand || 'compatible'}) o cargadores públicos universales sin exclusividad de marca (centros comerciales, estaciones de servicio multimarca, etc.).
-10. ADAPTABILIDAD A LA INFRAESTRUCTURA DISPONIBLE: No discrimines ni descartes cargadores porque no sean rápidos o de alta potencia. Si un corredor o pueblo no dispone de carga rápida DC, utiliza los cargadores disponibles (ej. 7.4 kW o 22 kW AC) e informa de forma transparente el tiempo realista requerido para la recarga.
-11. TOLERANCIA FONÉTICA Y NAVEGACIÓN EN ECUADOR: El usuario te habla por reconocimiento de voz mientras maneja, por lo que nombres de ciudades o intenciones pueden tener imprecisiones fonéticas (ej. 'quiero expresar de tenen' o 'regresar de tenen' significa 'quiero regresar de Tena' o 'ir a Tena'; 'coto taxi' o 'cotopasi' significa 'Cotopaxi'; 'pelileo' o 'peli leo'; 'banos' significa 'Baños de Agua Santa'; 'puyo', 'papallacta', 'cumbaya', 'ibarra', 'tulcan', 'latacunga', 'riobamba', 'ambato', etc.). Si el usuario dice algo que suena a un destino o consulta automotriz, interpreta inteligentemente la ciudad o intención e invoca 'plan_trip' o 'search_chargers' en lugar de responder 'No te entendí'.
-12. PREGUNTAS SOBRE TIEMPO DE RECARGA: Si el usuario pregunta cuánto tiempo debe recargar, cuánto se demora en cargar o cuántos minutos necesita en la ruta activa, NUNCA invoques 'search_chargers'. Responde DIRECTAMENTE con el tiempo estimado en minutos y los kWh requeridos para la parada de recarga planificada (ejemplo: 'Para tu parada en BYD Supermaxi San Gabriel debes recargar aproximadamente entre 25 y 30 minutos, unos 22 kilovatios hora, para completar el retorno seguro').
-13. PREGUNTAS SOBRE QUÉ HACER MIENTRAS ESPERA (AMENIDADES / COMIDA / ACTIVIDADES): Si el usuario pregunta qué puede hacer mientras espera, dónde comer o qué actividades realizar en la parada de recarga, invoca 'search_places_amenities' usando como ubicación la estación de recarga o ciudad de la parada, o responde describiendo directamente los comercios y servicios del lugar (por ejemplo supermercado, cafeterías y restaurantes locales). NUNCA busques cargadores cercanos al origen si la pregunta es sobre amenidades en la parada.`;
+`;
 
         // Limpiar y estructurar historial asegurando alternancia estricta user <-> model
         // y eliminando duplicados de la consulta actual al final
@@ -1798,9 +1801,10 @@ REGLAS ESENCIALES PARA VOZ HUMANA (TTS):
           { role: 'user', parts: [{ text: query }] },
         ];
 
-        const targetModels = ['gemini-3.5-flash', 'gemini-3.6-flash', 'gemini-3.5-flash-lite', 'gemini-3.1-flash-lite'];
+        const targetModels = ['gemini-3.8-flash', 'gemini-3.7-flash', 'gemini-flash-latest', 'gemini-3.5-flash-lite', 'gemini-3.5-flash'];
+        let candidateContent: any = null;
         let candidatePart: any = null;
-        let usedModel = 'gemini-3.5-flash';
+        let usedModel = 'gemini-3.8-flash';
 
         for (const modelName of targetModels) {
           try {
@@ -1812,13 +1816,15 @@ REGLAS ESENCIALES PARA VOZ HUMANA (TTS):
                 tools,
                 systemInstruction: { parts: [{ text: systemInstructionText }] },
               }),
-              signal: AbortSignal.timeout(3500),
+              signal: AbortSignal.timeout(4500),
             });
 
             if (apiRes.ok) {
               const resData = await apiRes.json();
-              const part = resData.candidates?.[0]?.content?.parts?.[0];
+              const content = resData.candidates?.[0]?.content;
+              const part = content?.parts?.[0];
               if (part) {
+                candidateContent = content;
                 candidatePart = part;
                 usedModel = modelName;
                 break;
@@ -1835,42 +1841,10 @@ REGLAS ESENCIALES PARA VOZ HUMANA (TTS):
         }
 
         if (candidatePart) {
-          // Si el modelo respondió directamente con texto (preguntas conceptuales, clima, consejos, hospedaje, etc.)
+          // Si el modelo respondió directamente con texto (preguntas conceptuales, clima, consejos, etc.)
           if (!candidatePart.functionCall && candidatePart.text) {
-            const cleanText = candidatePart.text.replace(/\*\*/g, '').replace(/^\s*[-*]\s+/gm, '').trim();
-            const normClean = normalize(cleanText);
-
-            const isAddStopIntent = (
-              normQuery.includes('agrega') || normQuery.includes('anad') || normQuery.includes('pon') || normQuery.includes('incluy') || normQuery.includes('si agregala')
-            ) && (
-              normQuery.includes('parada') || normQuery.includes('carga') || normQuery.includes('recarga') || normQuery.includes('estacion') || normQuery.includes('ambato')
-            ) || (
-              normClean.includes('esta planificada') || normClean.includes('he agregado') || normClean.includes('anadida') || normClean.includes('anadi') || normClean.includes('agregue') || normClean.includes('queda registrada') || normClean.includes('planificada justamente a tu regreso')
-            );
-
-            if (isAddStopIntent) {
-              const autoWaypoint = resolveBestChargingCandidate({
-                chargerArg: normQuery,
-                activeTrip,
-                context,
-                vehicleBrand,
-                prevTrip,
-                normQuery,
-                replyText: cleanText,
-              });
-
-              if (autoWaypoint) {
-                return NextResponse.json({
-                  reply: cleanText,
-                  action: 'add_waypoint',
-                  waypoint: autoWaypoint,
-                  provider: usedModel,
-                });
-              }
-            }
-
             return NextResponse.json({
-              reply: cleanText,
+              reply: candidatePart.text.trim(),
               provider: usedModel,
             });
           }
@@ -2185,8 +2159,16 @@ REGLAS ESENCIALES PARA VOZ HUMANA (TTS):
                 toolResponseData = { error: `No se encontraron coordenadas para ${destArg} en Ecuador` };
               }
             } else if (call.name === 'search_chargers') {
-              const locArg = call.args?.location || 'Quito';
+              const locArg = (call.args?.location || '').trim();
+              const connArg = normalize(call.args?.connectorType || '');
               const normLoc = normalize(locArg);
+              const isNational = !locArg || ['nacional', 'ecuador', 'pais', 'todo el pais', 'todo', 'nacion'].includes(normLoc) || /en el pais|en ecuador|a nivel nacional|en todo ecuador/i.test(normQuery);
+
+              const isFastRequested = Boolean(
+                call.args?.fastOnly ||
+                /r[aá]pid[oa]|dc|alta potencia|fast|50\s*kw|90\s*kw/i.test(normQuery) ||
+                /r[aá]pid[oa]|dc|alta potencia|fast|50\s*kw|90\s*kw/i.test(query)
+              );
 
               const isMultibrandRequested = Boolean(
                 call.args?.multibrandOnly ||
@@ -2194,202 +2176,120 @@ REGLAS ESENCIALES PARA VOZ HUMANA (TTS):
                 /multi\s*marca|universal|todas las marcas|cualquier marca|public/i.test(query)
               );
 
-              const wasRecentFastQuery = historyList.slice(-2).some(m =>
-                /r[aá]pid[oa]|dc|alta potencia|fast|50\s*kw/i.test(normalize(m.content || ''))
-              );
+              // 1. Consultar la base de datos oficial completa de 332 puntos de recarga
+              const allChargers = await fetchAllEcuadorChargers();
 
-              const isFastRequested = Boolean(
-                call.args?.fastOnly ||
-                /r[aá]pid[oa]|dc|alta potencia|fast|50\s*kw|electrolinera/i.test(normQuery) ||
-                /r[aá]pid[oa]|dc|alta potencia|fast|50\s*kw|electrolinera/i.test(query) ||
-                (isMultibrandRequested && wasRecentFastQuery)
-              );
+              let filtered = allChargers;
 
-              // Catálogo de sectores, barrios e hitos urbanos frecuentes en Ecuador para máxima precisión geográfica
-              const ECUADOR_SECTORS: Record<string, { lat: number; lng: number; name: string }> = {
-                // Sur de Quito (San Bartolo / Quitumbe / El Recreo / Guajaló)
-                'al sur de quito': { lat: -0.2750, lng: -78.5400, name: 'el Sur de Quito' },
-                'sur de quito': { lat: -0.2750, lng: -78.5400, name: 'el Sur de Quito' },
-                'quito sur': { lat: -0.2750, lng: -78.5400, name: 'el Sur de Quito' },
-                'en el sur': { lat: -0.2750, lng: -78.5400, name: 'el Sur de Quito' },
-                'guajalo': { lat: -0.2690, lng: -78.5340, name: 'Puente de Guajaló' },
-                'puente de guajalo': { lat: -0.2690, lng: -78.5340, name: 'Puente de Guajaló' },
-                'el recreo': { lat: -0.2443, lng: -78.5204, name: 'C.C. El Recreo' },
-                'recreo': { lat: -0.2443, lng: -78.5204, name: 'C.C. El Recreo' },
-                'quicentro sur': { lat: -0.2858, lng: -78.5471, name: 'Quicentro Sur' },
-                'villaflora': { lat: -0.2380, lng: -78.5180, name: 'Villaflora' },
-                'solanda': { lat: -0.2700, lng: -78.5400, name: 'Solanda' },
-                'quitumbe': { lat: -0.2890, lng: -78.5530, name: 'Quitumbe' },
-                'san bartolo': { lat: -0.2736, lng: -78.5479, name: 'San Bartolo' },
-                'guamani': { lat: -0.3150, lng: -78.5520, name: 'Guamaní' },
-                'chillogallo': { lat: -0.2850, lng: -78.5580, name: 'Chillogallo' },
+              // 2. Filtrado preciso por tipo de conector
+              const isGbtQuery = connArg.includes('gbt') || connArg.includes('gb/t') || /gbt|gb\/t|gb-t/i.test(normQuery);
+              const isCcsQuery = connArg.includes('ccs') || connArg.includes('cs2') || /ccs2|combo/i.test(normQuery);
+              const isTipo2Query = connArg.includes('tipo2') || connArg.includes('tipo 2') || /tipo 2|mennekes|wallbox/i.test(normQuery);
+              const isChademoQuery = connArg.includes('chademo') || /chademo/i.test(normQuery);
 
-                // Norte de Quito (Carcelén / Condado / Carolina / Batan)
-                'al norte de quito': { lat: -0.1350, lng: -78.4850, name: 'el Norte de Quito' },
-                'norte de quito': { lat: -0.1350, lng: -78.4850, name: 'el Norte de Quito' },
-                'quito norte': { lat: -0.1350, lng: -78.4850, name: 'el Norte de Quito' },
-                'carcelen': { lat: -0.0980, lng: -78.4830, name: 'Carcelén' },
-                'calderon': { lat: -0.0930, lng: -78.4320, name: 'Calderón' },
-                'el condado': { lat: -0.1030, lng: -78.4980, name: 'El Condado' },
-                'condado': { lat: -0.1030, lng: -78.4980, name: 'El Condado' },
-                'la carolina': { lat: -0.1807, lng: -78.4678, name: 'La Carolina' },
-                'carolina': { lat: -0.1807, lng: -78.4678, name: 'La Carolina' },
-                'el batan': { lat: -0.1750, lng: -78.4720, name: 'El Batán' },
-                'iñaquito': { lat: -0.1810, lng: -78.4850, name: 'Iñaquito' },
+              if (isGbtQuery) {
+                filtered = filtered.filter(c => {
+                  const s = ((c.tipo_cargador || '') + ' ' + (c.nombre || '')).toLowerCase();
+                  return s.includes('gbt') || s.includes('gb/t') || s.includes('gb-t') || s.includes('byd');
+                });
+              } else if (isCcsQuery) {
+                filtered = filtered.filter(c => {
+                  const s = ((c.tipo_cargador || '') + ' ' + (c.nombre || '')).toLowerCase();
+                  return s.includes('ccs2') || s.includes('cs2') || s.includes('combo');
+                });
+              } else if (isTipo2Query) {
+                filtered = filtered.filter(c => {
+                  const s = ((c.tipo_cargador || '') + ' ' + (c.nombre || '')).toLowerCase();
+                  return s.includes('tipo 2') || s.includes('mennekes') || s.includes('wallbox');
+                });
+              } else if (isChademoQuery) {
+                filtered = filtered.filter(c => {
+                  const s = ((c.tipo_cargador || '') + ' ' + (c.nombre || '')).toLowerCase();
+                  return s.includes('chademo');
+                });
+              }
 
-                // Centro de Quito
-                'centro de quito': { lat: -0.2200, lng: -78.5120, name: 'el Centro de Quito' },
-                'centro historico': { lat: -0.2200, lng: -78.5120, name: 'el Centro Histórico de Quito' },
+              // 3. Filtrado multimarca vs exclusividad de marca
+              if (isMultibrandRequested) {
+                filtered = filtered.filter(c => isChargerMultibrand(c));
+              } else if (vehicleBrand && !isGbtQuery) {
+                filtered = filtered.filter(c => isChargerBrandCompatible(c, vehicleBrand));
+              }
 
-                // Valles
-                'cumbaya': { lat: -0.2010, lng: -78.4350, name: 'Cumbayá' },
-                'tumbaco': { lat: -0.2130, lng: -78.4020, name: 'Tumbaco' },
-                'valle de los chillos': { lat: -0.3047, lng: -78.4519, name: 'el Valle de los Chillos' },
-                'los chillos': { lat: -0.3047, lng: -78.4519, name: 'el Valle de los Chillos' },
-                'san rafael': { lat: -0.3047, lng: -78.4519, name: 'San Rafael' },
-                'san luis shopping': { lat: -0.3150, lng: -78.4500, name: 'San Luis Shopping' },
-                'aeropuerto quito': { lat: -0.1260, lng: -78.3580, name: 'el Aeropuerto Tababela' },
-                'tababela': { lat: -0.1260, lng: -78.3580, name: 'Tababela' },
-
-                // Guayaquil
-                'norte de guayaquil': { lat: -2.1400, lng: -79.8950, name: 'el Norte de Guayaquil' },
-                'sur de guayaquil': { lat: -2.2350, lng: -79.9050, name: 'el Sur de Guayaquil' },
-                'centro de guayaquil': { lat: -2.1950, lng: -79.8850, name: 'el Centro de Guayaquil' },
-                'samborondon': { lat: -2.1450, lng: -79.8650, name: 'Samborondón' },
-                'via a la costa': { lat: -2.1850, lng: -80.0200, name: 'la Vía a la Costa' },
-                'via daule': { lat: -2.1150, lng: -79.9350, name: 'la Vía a Daule' },
-              };
-
-              let searchCoords: { lat: number; lng: number } | undefined = undefined;
-              let resolvedLocationName: string | undefined = undefined;
-
-              // 1. Priorizar coincidencia en sectores específicos (en query o en location)
-              for (const [secKey, secData] of Object.entries(ECUADOR_SECTORS)) {
-                if (normQuery.includes(secKey) || normLoc.includes(secKey)) {
-                  searchCoords = { lat: secData.lat, lng: secData.lng };
-                  resolvedLocationName = secData.name;
-                  break;
+              // 4. Filtrado de carga rápida
+              if (isFastRequested) {
+                const fastList = filtered.filter(c => {
+                  const p = (c.potencia || '').match(/(\d+)/);
+                  const kw = p ? parseInt(p[1], 10) : 0;
+                  const s = normalize(c.velocidad || '');
+                  return kw >= 40 || s.includes('rap');
+                });
+                if (fastList.length > 0) {
+                  filtered = fastList;
                 }
               }
 
-              // 2. Si no es sector conocido, buscar en rutas o destinos enciclopédicos
-              const targetRoute = !searchCoords ? findEcuadorRoute(locArg) : undefined;
-              const targetDest = !searchCoords ? findEcuadorDestination(locArg) : undefined;
-              if (!searchCoords) {
-                searchCoords = targetRoute?.coords || targetDest?.coords;
-                if (searchCoords) resolvedLocationName = targetRoute?.name || targetDest?.name;
-              }
-
-              // 3. Si locArg es específico y aún no hay coordenadas, geocodificar dinámicamente con Mapbox
-              if (!searchCoords && locArg && locArg.length >= 3 && !['quito', 'guayaquil', 'cuenca'].includes(normLoc)) {
-                try {
-                  const queryToGeocode = locArg.toLowerCase().includes('ecuador')
-                    ? locArg
-                    : `${locArg}, Ecuador`;
-                  const geo = await geocodePlace(queryToGeocode);
-                  if (geo) {
-                    searchCoords = geo;
-                    resolvedLocationName = locArg;
-                  }
-                } catch (_) {}
-              }
-
-              // 4. Si la consulta es relativa a la posición actual (ej. 'cerca de mi', 'aqui') o no se resolvió, usar GPS
-              if (!searchCoords && effectiveOriginCoords) {
-                searchCoords = { lat: effectiveOriginCoords[1], lng: effectiveOriginCoords[0] };
-                resolvedLocationName = 'tu ubicación actual';
-              }
-
-              // 5. Fallback por defecto a Quito centro si no hay ninguna coordenada
-              if (!searchCoords) {
-                searchCoords = { lat: -0.1807, lng: -78.4678 };
-                resolvedLocationName = 'Quito';
-              }
-
-              const corridor = targetRoute?.corridor || targetDest?.corridor || 'local';
-
-              // 6. Obtener cargadores de Supabase ordenados por cercanía real a searchCoords
-              const supabaseChargers = await getRouteChargersFromSupabase(corridor, searchCoords);
-              const localCorridorList = (CORRIDOR_CHARGERS.local?.list || []);
-
-              const candidates = [
-                ...(targetRoute?.chargers || []),
-                ...localCorridorList,
-                ...supabaseChargers.map(c => ({ name: c.name, lat: c.location.lat, lng: c.location.lng, power: c.power, speed: c.speed, operator: c.operator })),
-              ];
-
-              // Deduplicar estaciones por nombre normalizado
-              const seenNames = new Set<string>();
-              const uniqueCandidates = candidates.filter(c => {
-                const normN = normalize(c.name);
-                if (seenNames.has(normN)) return false;
-                seenNames.add(normN);
-                return true;
-              });
-
-              // 7. Filtrar estrictamente por compatibilidad de marca, multimarca y potencia requerida
-              const brandPrioritized = prioritizeChargersByBrand(uniqueCandidates, vehicleBrand, {
-                multibrandOnly: isMultibrandRequested,
-                fastOnly: isFastRequested,
-              });
-
-              // 8. Calcular distancia exacta a searchCoords y ordenar estrictamente por proximidad física
-              const withDistance: CopilotChargerInfo[] = brandPrioritized.list.map(c => {
-                const dist = searchCoords
-                  ? Math.round(Math.hypot((c.lat - searchCoords.lat) * 111, (c.lng - searchCoords.lng) * 111) * 10) / 10
-                  : undefined;
-                return { ...c, distKm: dist };
-              });
-
-              withDistance.sort((a, b) => (a.distKm ?? 999) - (b.distKm ?? 999));
-
-              // 9. Limitar a las 4 estaciones más cercanas (radio urbano útil de hasta 20 km) para no saturar la pantalla
-              const maxRadiusKm = (withDistance[0]?.distKm && withDistance[0].distKm < 15) ? 20 : 50;
-              const withinRadius = withDistance.filter(c => c.distKm === undefined || c.distKm <= maxRadiusKm);
-              returnChargers = withinRadius.slice(0, 4);
-
-              const topCharger = returnChargers[0];
-              const distKm = topCharger?.distKm;
-              let distText = '';
-              if (distKm !== undefined) {
-                if (distKm < 0.3) {
-                  distText = ' en el sector céntrico';
-                } else {
-                  distText = ` a unos ${distKm} km`;
+              // 5. Filtrado por ubicación si la consulta es local a una ciudad o sector
+              if (!isNational && locArg) {
+                const localMatch = filtered.filter(c => {
+                  const p = normalize(c.provincia || '');
+                  const ct = normalize(c.canton || '');
+                  const n = normalize(c.nombre || '');
+                  return p.includes(normLoc) || ct.includes(normLoc) || n.includes(normLoc);
+                });
+                if (localMatch.length > 0) {
+                  filtered = localMatch;
                 }
               }
+
+              // Desglose por provincias
+              const provCounts: Record<string, number> = {};
+              for (const c of filtered) {
+                const prov = c.provincia || 'Otras';
+                provCounts[prov] = (provCounts[prov] || 0) + 1;
+              }
+
+              const fastCount = filtered.filter(c => {
+                const p = (c.potencia || '').match(/(\d+)/);
+                const kw = p ? parseInt(p[1], 10) : 0;
+                return kw >= 40 || normalize(c.velocidad || '').includes('rap');
+              }).length;
+
+              // Estaciones destacadas para el copiloto
+              const sampleStations = filtered.slice(0, 6).map(c => ({
+                name: c.nombre,
+                canton: c.canton,
+                provincia: c.provincia,
+                power: c.potencia || 'Normal',
+                speed: c.velocidad,
+                charger_type: c.tipo_cargador,
+                cost: c.costo,
+                lat: c.location.lat,
+                lng: c.location.lng,
+              }));
+
+              // Estaciones para pintar en el mapa y tarjetas interactivas del frontend
+              returnChargers = filtered
+                .filter(c => c.location.lat !== 0 && c.location.lng !== 0)
+                .slice(0, 6)
+                .map(c => ({
+                  name: c.nombre,
+                  lat: c.location.lat,
+                  lng: c.location.lng,
+                  power: c.potencia,
+                  speed: c.velocidad,
+                  operator: c.fuente || c.provincia,
+                  connector: c.tipo_cargador,
+                }));
 
               toolResponseData = {
-                location: resolvedLocationName || targetRoute?.name || targetDest?.name || locArg,
-                hasFastCharger: returnChargers.some((c: CopilotChargerInfo) => (c.power && parseInt(c.power) >= 50) || (c.speed && c.speed.toLowerCase().includes('rápida'))),
-                chargersCount: returnChargers.length,
-                topChargers: returnChargers.slice(0, 4).map((c: CopilotChargerInfo) => `${c.name} (${c.power || 'Rápido'})`),
-                closestChargerName: topCharger ? topCharger.name : undefined,
-                closestChargerDistText: distText,
-                isMultibrand: isMultibrandRequested,
-                isFast: isFastRequested,
+                totalFound: filtered.length,
+                scope: isNational ? 'Ecuador (Nacional)' : (locArg || 'Zona consultada'),
+                connectorType: isGbtQuery ? 'GB/T' : isCcsQuery ? 'CCS2' : isTipo2Query ? 'Tipo 2' : 'Todos',
+                fastStationsCount: fastCount,
+                provincesBreakdown: provCounts,
+                notableStations: sampleStations,
               };
-
-              const isAddStopIntent = (
-                normQuery.includes('agrega') || normQuery.includes('anad') || normQuery.includes('pon') || normQuery.includes('incluy') || normQuery.includes('si agregala')
-              ) && (
-                normQuery.includes('parada') || normQuery.includes('carga') || normQuery.includes('recarga') || normQuery.includes('estacion') || normQuery.includes('ambato')
-              );
-
-              if (isAddStopIntent) {
-                const autoWp = resolveBestChargingCandidate({
-                  chargerArg: locArg,
-                  activeTrip,
-                  context,
-                  vehicleBrand,
-                  prevTrip,
-                  normQuery,
-                });
-                if (autoWp) {
-                  returnAction = 'add_waypoint';
-                  returnWaypoint = autoWp;
-                }
-              }
             } else if (call.name === 'add_charging_stop') {
               const chargerArg = call.args?.chargerName || '';
               const resolvedWaypoint = resolveBestChargingCandidate({
@@ -2439,49 +2339,58 @@ REGLAS ESENCIALES PARA VOZ HUMANA (TTS):
               };
             }
 
-            // Generación instantánea de respuesta hablada estructurada (0ms en vez de 2.5s de 2º llamada a Gemini)
-            let spokenReply = `He procesado tu solicitud para ${vehicle}.`;
-            if (toolResponseData.destination) {
-              const dest = toolResponseData.destination;
-              const km = toolResponseData.distanceKm;
-              const arrivalSoc = toolResponseData.estimatedArrivalSoc;
-              const isRound = toolResponseData.isRoundTrip;
-              const canReach = toolResponseData.canReachWithoutRecharge;
-              const recStop = toolResponseData.recommendedStopsSummary || toolResponseData.recommendedStop;
+            // ─── C) Segundo Turno de IA Generativa: El LLM Genera la Respuesta Experta ───
+            let spokenReply = '';
+            try {
+              const turn2Messages = [
+                ...messages,
+                candidateContent,
+                {
+                  role: 'user',
+                  parts: [{
+                    functionResponse: {
+                      name: call.name,
+                      response: toolResponseData,
+                    },
+                  }],
+                },
+              ];
 
-              if (canReach) {
-                spokenReply = `Ruta trazada a ${dest}${isRound ? ' de ida y vuelta' : ''} (${km} km). Llegarás con aproximadamente ${arrivalSoc}% de batería sin necesidad de recargar.`;
-              } else {
-                const stopText = (recStop.startsWith('recargar') || recStop.startsWith('Para completar'))
-                  ? recStop
-                  : `recargar en ${recStop}`;
-                spokenReply = `Ruta trazada a ${dest}${isRound ? ' de ida y vuelta' : ''} (${km} km). Para completar el recorrido se recomienda ${stopText}.`;
-              }
-            } else if (returnAction === 'add_waypoint' && returnWaypoint) {
-              spokenReply = `Listo, agregué la parada de carga en ${returnWaypoint.name} a tu ruta. Tu plan de viaje se ha actualizado.`;
-            } else if (returnChargers && returnChargers.length > 0) {
-              const topOne = returnChargers[0];
-              const placeLabel = toolResponseData?.location ? `en ${toolResponseData.location}` : 'en la zona';
-              const distNote = toolResponseData?.closestChargerDistText || '';
-              const isFollowUp = /^(y|ademas|tambien|pero|o)\b/i.test(normQuery.trim());
-              const powerNote = topOne.power ? ` (${topOne.power})` : '';
+              const turn2Res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${usedModel}:generateContent?key=${geminiKey}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  contents: turn2Messages,
+                  systemInstruction: { parts: [{ text: systemInstructionText }] },
+                }),
+                signal: AbortSignal.timeout(5000),
+              });
 
-              if (toolResponseData?.isMultibrand) {
-                spokenReply = `${isFollowUp ? 'En cuanto a opciones' : 'Para carga'} multimarca abierta a todo público ${placeLabel}, la estación recomendada es ${topOne.name}${distNote}${powerNote}. Encontré ${returnChargers.length} opciones disponibles.`;
-              } else if (toolResponseData?.isFast) {
-                spokenReply = `El punto de carga rápida más cercano ${placeLabel} compatible con tu ${vehicleBrand || 'auto'} es ${topOne.name}${distNote}${powerNote}. Encontré ${returnChargers.length} opciones disponibles.`;
-              } else {
-                spokenReply = `La estación más cercana ${placeLabel} compatible con tu ${vehicleBrand || 'auto'} es ${topOne.name}${distNote}. Encontré ${returnChargers.length} opciones disponibles.`;
+              if (turn2Res.ok) {
+                const turn2Data = await turn2Res.json();
+                const textReply = turn2Data.candidates?.[0]?.content?.parts?.[0]?.text;
+                if (textReply && textReply.trim()) {
+                  spokenReply = textReply.trim();
+                }
               }
-            } else if (returnPlaces && returnPlaces.length > 0) {
-              const topP = returnPlaces
-                .slice(0, 2)
-                .map((p: any) => (typeof p === 'string' ? p : p.name || 'un lugar recomendado'))
-                .filter(Boolean)
-                .join(' y ');
-              const activeStop = activeTrip?.suggestedStop || activeTrip?.suggestedStops?.[0] || prevTrip?.suggestedStop;
-              const timeNote = activeStop?.estMinutes ? `El tiempo estimado de recarga es de unos ${activeStop.estMinutes} minutos (~${activeStop.kwhToCharge || 20} kWh). ` : '';
-              spokenReply = `${timeNote}Cerca del punto de recarga en ${activeStop?.name || 'la zona'} encontré buenas opciones: ${topP}.`;
+            } catch (t2Error) {
+              console.warn('Turn 2 Gemini response error, using structured fallback:', t2Error);
+            }
+
+            // Fallback elegante solo si el segundo turno de Gemini falla o expira
+            if (!spokenReply) {
+              if (toolResponseData.destination) {
+                const dest = toolResponseData.destination;
+                const km = toolResponseData.distanceKm;
+                const arrivalSoc = toolResponseData.estimatedArrivalSoc;
+                spokenReply = `Ruta calculada a ${dest} (${km} km). Llegarás con aproximadamente un ${arrivalSoc}% de batería.`;
+              } else if (returnAction === 'add_waypoint' && returnWaypoint) {
+                spokenReply = `He añadido la parada en ${returnWaypoint.name} a tu ruta activa.`;
+              } else if (toolResponseData.totalFound !== undefined) {
+                spokenReply = `Encontré ${toolResponseData.totalFound} puntos de recarga ${toolResponseData.connectorType ? `con conector ${toolResponseData.connectorType}` : ''} en ${toolResponseData.scope}. Puedes ver las opciones principales en el mapa.`;
+              } else {
+                spokenReply = `He procesado tu consulta sobre la red de recarga en Ecuador.`;
+              }
             }
 
             return NextResponse.json({
@@ -2491,7 +2400,7 @@ REGLAS ESENCIALES PARA VOZ HUMANA (TTS):
               action: returnAction,
               waypoint: returnWaypoint,
               places: returnPlaces,
-              provider: `${usedModel}-fast`,
+              provider: `${usedModel}-agent`,
             });
           }
         }
