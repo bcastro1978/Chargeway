@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="100%" height="100%" fill="none">
+  <defs>
+    <!-- Patrón Cuadrícula Base -->
+    <pattern id="grid-pattern-sm" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255, 255, 255, 0.03)" stroke-width="1" />
+    </pattern>
+
+    <pattern id="grid-pattern-lg" width="200" height="200" patternUnits="userSpaceOnUse">
+      <path d="M 200 0 L 0 0 0 200" fill="none" stroke="rgba(0, 210, 255, 0.08)" stroke-width="1.5" />
+      <circle cx="0" cy="0" r="3" fill="#00D2FF" opacity="0.3" />
+      <circle cx="200" cy="0" r="3" fill="#00D2FF" opacity="0.3" />
+      <circle cx="0" cy="200" r="3" fill="#00D2FF" opacity="0.3" />
+      <circle cx="200" cy="200" r="3" fill="#00D2FF" opacity="0.3" />
+    </pattern>
+
+    <!-- Gradientes de Iluminación y Viñeta -->
+    <radialGradient id="vignette" cx="50%" cy="50%" r="65%">
+      <stop offset="0%" stop-color="#0E1726" stop-opacity="0.3" />
+      <stop offset="60%" stop-color="#070B12" stop-opacity="0.85" />
+      <stop offset="100%" stop-color="#030508" stop-opacity="0.98" />
+    </radialGradient>
+
+    <radialGradient id="top-left-glow" cx="15%" cy="20%" r="50%">
+      <stop offset="0%" stop-color="#00D2FF" stop-opacity="0.18" />
+      <stop offset="100%" stop-color="#070B12" stop-opacity="0" />
+    </radialGradient>
+
+    <radialGradient id="bottom-right-glow" cx="85%" cy="80%" r="50%">
+      <stop offset="0%" stop-color="#00F5A0" stop-opacity="0.14" />
+      <stop offset="100%" stop-color="#070B12" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- 1. Fondo Oscuro Principal -->
+  <rect width="100%" height="100%" fill="#070B12" />
+
+  <!-- 2. Capas de Resplandor Neón en Esquinas -->
+  <rect width="100%" height="100%" fill="url(#top-left-glow)" />
+  <rect width="100%" height="100%" fill="url(#bottom-right-glow)" />
+
+  <!-- 3. Capas de Cuadrícula HUD -->
+  <rect width="100%" height="100%" fill="url(#grid-pattern-sm)" />
+  <rect width="100%" height="100%" fill="url(#grid-pattern-lg)" />
+
+  <!-- 4. Elementos Vectoriales HUD de Telemetría -->
+  <!-- Coordenadas Ecuador (0°00'00" / -78°29'00") -->
+  <g font-family="'Space Mono', monospace" font-size="12" fill="rgba(148, 163, 184, 0.4)" letter-spacing="2">
+    <text x="60" y="80">SYSTEM: CHARGEWAY CORE ENGINE // TELEMETRY HUD ACTIVE</text>
+    <text x="60" y="105">CORREDOR E35 PANAMERICANA: SYNCED 99.8%</text>
+    <text x="1600" y="80">LAT: 0° 13' 24" S</text>
+    <text x="1600" y="105">LON: 78° 30' 45" W</text>
+    <text x="1600" y="130">ALT: 2,850 M.S.N.M.</text>
+  </g>
+
+  <!-- Retículas de Escaneo Esquinas -->
+  <g stroke="rgba(0, 210, 255, 0.3)" stroke-width="2" fill="none">
+    <!-- Superior Izquierda -->
+    <path d="M 50 70 L 50 50 L 70 50" />
+    <!-- Superior Derecha -->
+    <path d="M 1870 70 L 1870 50 L 1850 50" />
+    <!-- Inferior Izquierda -->
+    <path d="M 50 1010 L 50 1030 L 70 1030" />
+    <!-- Inferior Derecha -->
+    <path d="M 1870 1010 L 1870 1030 L 1850 1030" />
+  </g>
+
+  <!-- Línea de Energía Central -->
+  <path d="M 0 540 L 400 540 L 460 480 L 1460 480 L 1520 540 L 1920 540" fill="none" stroke="rgba(0, 245, 160, 0.15)" stroke-width="2" stroke-dasharray="10 15" />
+
+  <!-- 5. Viñeta Oscura Envolvente -->
+  <rect width="100%" height="100%" fill="url(#vignette)" pointer-events="none" />
+</svg>

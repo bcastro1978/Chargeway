@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%" fill="none">
+  <defs>
+    <!-- Filtros de Sombra y Brillo Neón -->
+    <filter id="badge-shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="24" stdDeviation="30" flood-color="#000000" flood-opacity="0.8" />
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#00D2FF" flood-opacity="0.25" />
+    </filter>
+
+    <filter id="icon-neon" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <!-- Gradiente del Fondo del Squircle App -->
+    <radialGradient id="app-bg" cx="50%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#1B263B" />
+      <stop offset="60%" stop-color="#0D131F" />
+      <stop offset="100%" stop-color="#060A12" />
+    </radialGradient>
+
+    <!-- Bisel de Borde Neón Sutil -->
+    <linearGradient id="badge-border" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00D2FF" stop-opacity="0.8" />
+      <stop offset="35%" stop-color="#FFFFFF" stop-opacity="0.3" />
+      <stop offset="70%" stop-color="#00F5A0" stop-opacity="0.6" />
+      <stop offset="100%" stop-color="#030712" stop-opacity="0.9" />
+    </linearGradient>
+
+    <!-- Gradiente Metálico para el Pin -->
+    <linearGradient id="pin-metal" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F1F5F9" />
+      <stop offset="20%" stop-color="#94A3B8" />
+      <stop offset="50%" stop-color="#E2E8F0" />
+      <stop offset="80%" stop-color="#475569" />
+      <stop offset="100%" stop-color="#1E293B" />
+    </linearGradient>
+
+    <!-- Gradiente Eléctrico Rayo -->
+    <linearGradient id="rayo-neon" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00F5A0" />
+      <stop offset="60%" stop-color="#00D2FF" />
+      <stop offset="100%" stop-color="#38BDF8" />
+    </linearGradient>
+
+    <!-- Trazado de Carretera -->
+    <linearGradient id="asfalto" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E293B" />
+      <stop offset="100%" stop-color="#090E17" />
+    </linearGradient>
+  </defs>
+
+  <!-- Squircle Base con Relieve y Borde Neón -->
+  <rect x="36" y="36" width="440" height="440" rx="96" ry="96" 
+        fill="url(#app-bg)" 
+        stroke="url(#badge-border)" 
+        stroke-width="3.5" 
+        filter="url(#badge-shadow)" />
+
+  <!-- Líneas de Malla Cibernética de Fondo Sutil en el Icono -->
+  <g opacity="0.08" stroke="#00D2FF" stroke-width="1.5">
+    <line x1="80" y1="180" x2="432" y2="180" />
+    <line x1="80" y1="332" x2="432" y2="332" />
+    <line x1="180" y1="80" x2="180" y2="432" />
+    <line x1="332" y1="80" x2="332" y2="432" />
+    <circle cx="256" cy="245" r="160" fill="none" stroke-dasharray="6 6" />
+  </g>
+
+  <!-- Resplandor Central -->
+  <circle cx="256" cy="245" r="130" fill="url(#rayo-neon)" opacity="0.16" filter="url(#icon-neon)" />
+
+  <!-- Símbolo Central Escalado al 75% centrado en el Squircle -->
+  <g transform="translate(64, 40) scale(0.75)">
+    <!-- 1. Arco Exterior Metálico Izquierdo -->
+    <path d="M 256 60 C 150 60 76 142 76 242 C 76 312 136 386 216 452 L 256 488 C 240 450 200 380 180 340 C 146 276 136 240 136 216 C 136 150 186 112 256 112 C 302 112 340 132 366 166 L 406 130 C 370 86 318 60 256 60 Z" 
+          fill="url(#pin-metal)" 
+          stroke="#00F5A0" 
+          stroke-width="3" 
+          stroke-opacity="0.7" 
+          filter="url(#icon-neon)" />
+
+    <!-- Bisel Interior Reflejo Luz -->
+    <path d="M 256 75 C 165 75 96 148 96 236 C 96 295 142 360 216 430 C 160 365 148 290 148 226 C 148 160 192 124 256 124 C 292 124 326 140 350 168 L 372 144 C 342 100 300 75 256 75 Z" 
+          fill="#FFFFFF" 
+          opacity="0.3" />
+
+    <!-- 2. Sector Carretera Winding Highway -->
+    <path d="M 374 168 C 410 214 424 266 414 316 C 400 386 338 440 256 488 C 290 440 340 376 356 320 C 370 270 358 224 330 188 L 374 168 Z" 
+          fill="url(#asfalto)" 
+          stroke="#00D2FF" 
+          stroke-width="5" 
+          filter="url(#icon-neon)" />
+
+    <!-- Línea Punteada Central Neón -->
+    <path d="M 346 198 C 370 240 374 285 362 334 C 346 390 298 446 260 482" 
+          fill="none" 
+          stroke="#00F5A0" 
+          stroke-width="7" 
+          stroke-linecap="round" 
+          stroke-dasharray="14 18" 
+          filter="url(#icon-neon)" />
+    <path d="M 346 198 C 370 240 374 285 362 334 C 346 390 298 446 260 482" 
+          fill="none" 
+          stroke="#FFFFFF" 
+          stroke-width="3" 
+          stroke-linecap="round" 
+          stroke-dasharray="14 18" />
+
+    <!-- 3. Rayo Central Neón -->
+    <polygon points="280,100 196,248 266,248 226,376 332,224 260,224" 
+             fill="url(#rayo-neon)" 
+             filter="url(#icon-neon)" />
+    <polygon points="280,100 196,248 266,248 226,376 332,224 260,224" 
+             fill="url(#rayo-neon)" 
+             stroke="#FFFFFF" 
+             stroke-width="3.5" 
+             stroke-linejoin="round" />
+    <polygon points="276,118 208,244 264,244 236,346 314,228 258,228" 
+             fill="#FFFFFF" 
+             opacity="0.8" />
+
+    <!-- Faro / Vértice Inferior -->
+    <circle cx="256" cy="488" r="14" fill="#00F5A0" filter="url(#icon-neon)" />
+  </g>
+</svg>

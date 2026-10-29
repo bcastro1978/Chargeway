@@ -521,7 +521,7 @@ export const ECUADOR_ROUTES: CityRouteInfo[] = [
   },
   {
     name: 'Aeropuerto Internacional Mariscal Sucre (Tababela)',
-    aliases: ['aeropuerto de quito', 'aeropuerto quito', 'aeropuerto', 'tababela', 'aeropuerto mariscal sucre', 'uio', 'puembo', 'pifo', 'conector alpachaca'],
+    aliases: ['aeropuerto de quito', 'aeropuerto quito', 'aeropuerto uio', 'tababela', 'aeropuerto mariscal sucre', 'uio', 'puembo', 'pifo', 'conector alpachaca'],
     distKm: 42,
     kwhEstimated: 7,
     corridor: 'local',
@@ -535,6 +535,20 @@ export const ECUADOR_ROUTES: CityRouteInfo[] = [
       { name: 'Scala Shopping Cumbayá (22 kW)', lat: -0.2050, lng: -78.4380, power: '22 kW', speed: 'Semirrápida' },
       { name: 'KIA - C.C. Granados Plaza (50 kW)', lat: -0.1650, lng: -78.4720, power: '50 kW', speed: 'Rápida', operator: 'KIA' },
       { name: 'EPMMOP Av. Amazonas (50 kW)', lat: -0.1807, lng: -78.4870, power: '50 kW', speed: 'Rápida' },
+    ],
+  },
+  {
+    name: 'Aeropuerto Internacional José Joaquín de Olmedo (Guayaquil)',
+    aliases: ['aeropuerto de guayaquil', 'aeropuerto guayaquil', 'aeropuerto jose joaquin de olmedo', 'aeropuerto olmedo', 'aeropuerto gye'],
+    distKm: 418,
+    kwhEstimated: 65,
+    corridor: 'costa',
+    coords: { lat: -2.1575, lng: -79.8836 },
+    recommendedStop: 'Paseo Shopping Quevedo o Santo Domingo',
+    chargerNotes: 'hacia el Aeropuerto de Guayaquil cuentas con cargadores en Mall del Sol y Terminal Terrestre adyacente.',
+    chargers: [
+      { name: 'Mall del Sol Guayaquil (50 kW)', lat: -2.1540, lng: -79.8920, power: '50 kW', speed: 'Rápida' },
+      { name: 'BYD Mall del Sol (50 kW)', lat: -2.1540, lng: -79.8920, power: '50 kW', speed: 'Rápida', operator: 'BYD' },
     ],
   },
   {
@@ -592,6 +606,33 @@ export const ECUADOR_ROUTES: CityRouteInfo[] = [
       { name: 'Megamaxi Multiplaza — CONDOR CHARGE (60 kW)', lat: -1.6635, lng: -78.6543, power: '60 kW', speed: 'Rápida' },
       { name: 'Paseo Shopping Riobamba (50 kW)', lat: -1.6550, lng: -78.6650, power: '50 kW', speed: 'Rápida' },
       { name: 'BYD - Mall de los Andes (50 kW)', lat: -1.2580, lng: -78.6250, power: '50 kW', speed: 'Rápida', operator: 'BYD' },
+    ],
+  },
+  {
+    name: 'Valle de los Chillos',
+    aliases: ['valle de los chillos', 'los chillos', 'sangolqui', 'sangolquí', 'san rafael', 'el triangulo'],
+    distKm: 24,
+    kwhEstimated: 4,
+    corridor: 'local',
+    coords: { lat: -0.3150, lng: -78.4500 },
+    recommendedStop: 'San Luis Shopping',
+    chargerNotes: 'hacia el Valle de los Chillos cuentas con cargadores en San Luis Shopping y San Rafael.',
+    chargers: [
+      { name: 'San Luis Shopping — Valle de los Chillos (22 kW)', lat: -0.3150, lng: -78.4500, power: '22 kW', speed: 'Semirrápida' },
+      { name: 'BYD en Valle de los Chillos — San Rafael (50 kW)', lat: -0.3040, lng: -78.4510, power: '50 kW', speed: 'Rápida', operator: 'BYD' },
+    ],
+  },
+  {
+    name: 'Puerto Quito',
+    aliases: ['puerto quito', 'pto quito'],
+    distKm: 140,
+    kwhEstimated: 22,
+    corridor: 'costa',
+    coords: { lat: 0.1264, lng: -79.2558 },
+    recommendedStop: 'Calacalí o Nanegalito',
+    chargerNotes: 'en la vía a Puerto Quito por Calacalí-La Independencia cruzas el subtrópico.',
+    chargers: [
+      { name: 'Estación Nanegalito (22 kW)', lat: 0.0600, lng: -78.6800, power: '22 kW', speed: 'Semirrápida' },
     ],
   },
 ];

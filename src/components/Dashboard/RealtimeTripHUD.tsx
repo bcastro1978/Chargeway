@@ -1,8 +1,24 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { useTripStore } from '@/lib/store/useTripStore';
+import { useTripStore, ProactiveAlert } from '@/lib/store/useTripStore';
 import { calculateDynamicArrival, DynamicArrivalEstimation } from '@/lib/realtime-energy';
+import { Zap, AlertTriangle, BatteryCharging, X } from 'lucide-react';
+
+function playCopilotVoiceAlert(text: string, voice = 'es-EC-AndreaNeural') {
+  if (typeof window === 'undefined') return;
+  try {
+    const audioUrl = `/api/tts?voice=${encodeURIComponent(voice)}&text=${encodeURIComponent(text)}`;
+    const audio = new Audio(audioUrl);
+    audio.play().catch(() => {
+      if ('speechSynthesis' in window) {
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = 'es-EC';
+        window.speechSynthesis.speak(u);
+      }
+    });
+  } catch (_) {}
+}
 
 export const RealtimeTripHUD: React.FC = () => {
   const isNavigating = useTripStore(state => state.isNavigating);
@@ -17,12 +33,18 @@ export const RealtimeTripHUD: React.FC = () => {
   const setDynamicArrivalInStore = useTripStore(state => state.setDynamicArrival);
   const routePoints = useTripStore(state => state.routePoints);
   const isRerouting = useTripStore(state => state.isRerouting);
+  const preferences = useTripStore(state => state.preferences);
+  const activeProactiveAlert = useTripStore(state => state.activeProactiveAlert);
+  const setActiveProactiveAlert = useTripStore(state => state.setActiveProactiveAlert);
+  const dismissProactiveAlert = useTripStore(state => state.dismissProactiveAlert);
 
   const [estimation, setEstimation] = useState<DynamicArrivalEstimation | null>(null);
   const [hudArrivalSoc, setHudArrivalSoc] = useState<number | null>(null);
 
   const lastCheckpointKmRef = useRef<number>(0);
   const speedSamplesRef = useRef<number[]>([]);
+  const lastDeviationAlertKmRef = useRef<number>(-99);
+  const announcedChargerStopsRef = useRef<Set<string>>(new Set());
 
   // 1. Initial setup upon navigation start
   useEffect(() => {
@@ -31,7 +53,10 @@ export const RealtimeTripHUD: React.FC = () => {
       setHudArrivalSoc(null);
       lastCheckpointKmRef.current = 0;
       speedSamplesRef.current = [];
+      lastDeviationAlertKmRef.current = -99;
+      announcedChargerStopsRef.current.clear();
       setDynamicArrivalInStore(null, null);
+      dismissProactiveAlert();
       return;
     }
 
@@ -86,6 +111,33 @@ export const RealtimeTripHUD: React.FC = () => {
       setHudArrivalSoc(est.estimatedArrivalSoc);
       setDynamicArrivalInStore(est.estimatedArrivalSoc, est.estimatedArrivalRangeKm);
 
+      // Feature 1: Check for Consumption Deviation
+      const minMargin = preferences?.minArrivalSocSafetyMargin ?? 0.15;
+      const plannedArrival = tripPlan.arrivalSoc;
+      const dynamicArrival = est.estimatedArrivalSoc;
+      const deficit = plannedArrival - dynamicArrival;
+
+      const isCriticalDeficit = deficit >= 0.08 || dynamicArrival < minMargin;
+      const hasDrivenFarEnough = (currentDistance - lastDeviationAlertKmRef.current) >= 7.0;
+
+      if (isCriticalDeficit && hasDrivenFarEnough && currentDistance >= 4.0) {
+        lastDeviationAlertKmRef.current = currentDistance;
+        const projectedPct = Math.round(dynamicArrival * 100);
+        const alertMsg = `Atención de Copiloto: tu consumo actual reducirá la batería a ${projectedPct}% al llegar. Te sugiero reducir velocidad o agregar una recarga.`;
+
+        setActiveProactiveAlert({
+          id: `dev_${Date.now()}`,
+          type: 'consumption_warning',
+          title: 'Alerta de Consumo Elevado',
+          message: `Llegada estimada al ${projectedPct}%. Se sugiere moderar velocidad.`,
+          timestamp: Date.now(),
+        });
+
+        if (preferences?.voiceAlertsEnabled !== false) {
+          playCopilotVoiceAlert(alertMsg);
+        }
+      }
+
       // Advance checkpoint by 5 km and reset speed samples
       lastCheckpointKmRef.current = currentDistance;
       speedSamplesRef.current = [];
@@ -101,6 +153,55 @@ export const RealtimeTripHUD: React.FC = () => {
       );
       setEstimation(est);
     }
+
+    // Feature 2: Proximity Check for Required Charging Stops
+    const rawStops = tripPlan.suggestedChargingStops && tripPlan.suggestedChargingStops.length > 0
+      ? tripPlan.suggestedChargingStops
+      : (tripPlan.suggestedChargingStop ? [tripPlan.suggestedChargingStop] : (tripPlan.chargers || []));
+
+    rawStops.forEach((stop: any, idx: number) => {
+      const posKm = stop.posKm ?? (totalDistKm * (idx + 1) / (rawStops.length + 1));
+      const distToStop = posKm - currentDistance;
+      const stopName = stop.nombre || stop.name || 'Estación de Carga';
+      const stopKey = `${stopName}_${idx}`;
+
+      // Aviso a ~5 km (entre 3.5 km y 5.2 km)
+      if (distToStop <= 5.2 && distToStop >= 3.5 && !announcedChargerStopsRef.current.has(`${stopKey}_5km`)) {
+        announcedChargerStopsRef.current.add(`${stopKey}_5km`);
+        const powerText = stop.potencia || stop.power || '50 kW';
+        const msg = `Te aproximas a la estación de recarga ${stopName} en 5 kilómetros. Potencia ${powerText}.`;
+
+        setActiveProactiveAlert({
+          id: `prox_${Date.now()}`,
+          type: 'charger_proximity',
+          title: 'Próxima Parada en 5 km',
+          message: `${stopName} (${powerText})`,
+          timestamp: Date.now(),
+        });
+
+        if (preferences?.voiceAlertsEnabled !== false) {
+          playCopilotVoiceAlert(msg);
+        }
+      }
+
+      // Aviso de llegada a estación (menos de 0.8 km)
+      if (distToStop <= 0.8 && distToStop >= -0.5 && !announcedChargerStopsRef.current.has(`${stopKey}_arrived`)) {
+        announcedChargerStopsRef.current.add(`${stopKey}_arrived`);
+        const msg = `Llegada a estación de recarga ${stopName}.`;
+
+        setActiveProactiveAlert({
+          id: `arr_${Date.now()}`,
+          type: 'charger_proximity',
+          title: 'Llegada a Estación',
+          message: stopName,
+          timestamp: Date.now(),
+        });
+
+        if (preferences?.voiceAlertsEnabled !== false) {
+          playCopilotVoiceAlert(msg);
+        }
+      }
+    });
   }, [
     isNavigating,
     tripPlan,
@@ -109,7 +210,9 @@ export const RealtimeTripHUD: React.FC = () => {
     currentDistance,
     currentSpeedKmH,
     simulatedSpeedKmH,
-    isSimulating
+    isSimulating,
+    preferences,
+    setActiveProactiveAlert
   ]);
 
   if (!isNavigating || !tripPlan || !selectedVehicle) return null;
@@ -215,6 +318,41 @@ export const RealtimeTripHUD: React.FC = () => {
             <span className="text-[8.5px] font-extrabold text-emerald-300 uppercase tracking-wider">
               🔄 Recalculando ruta...
             </span>
+          </div>
+        )}
+
+        {/* 6. Proactive Copilot Alert Banner */}
+        {activeProactiveAlert && (
+          <div className={`w-full mt-2 rounded-xl p-2 border transition-all animate-fade-in shadow-lg ${
+            activeProactiveAlert.type === 'consumption_warning'
+              ? 'bg-amber-950/95 border-amber-500/70 text-amber-200 shadow-[0_0_12px_rgba(245,158,11,0.25)]'
+              : 'bg-emerald-950/95 border-emerald-400 text-emerald-200 shadow-[0_0_15px_rgba(16,185,129,0.3)]'
+          }`}>
+            <div className="flex items-start justify-between gap-1.5">
+              <div className="flex items-center gap-1.5 min-w-0">
+                {activeProactiveAlert.type === 'consumption_warning' ? (
+                  <AlertTriangle size={13} className="text-amber-400 shrink-0 mt-0.5 animate-bounce" />
+                ) : (
+                  <BatteryCharging size={13} className="text-emerald-400 shrink-0 mt-0.5 animate-pulse" />
+                )}
+                <div className="min-w-0">
+                  <span className="text-[8px] font-black uppercase tracking-wider block truncate">
+                    {activeProactiveAlert.title}
+                  </span>
+                  <p className="text-[7.5px] font-mono leading-tight opacity-90 line-clamp-2">
+                    {activeProactiveAlert.message}
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => dismissProactiveAlert()}
+                className="text-neutral-400 hover:text-white p-0.5 shrink-0"
+                title="Cerrar alerta"
+              >
+                <X size={11} />
+              </button>
+            </div>
           </div>
         )}
       </div>

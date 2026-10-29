@@ -591,7 +591,7 @@ export async function generateTripPlan(
 
   if (!simulation.isDirectReachable) {
     const selectedVehicle = useTripStore.getState().selectedVehicle;
-    const userBrand = selectedVehicle?.brand?.toLowerCase().trim();
+    const userBrand = vehicleBrand?.toLowerCase().trim() || selectedVehicle?.brand?.toLowerCase().trim();
 
     suggestedChargingStops = pickAllChargingStopsByPhysics(
       chargers,

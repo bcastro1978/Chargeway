@@ -56,6 +56,13 @@ export interface CopilotContext {
   currentLocationName?: string;
   ambientTempC?: number;
   activeTrip?: CopilotActiveTrip;
+  preferences?: {
+    minArrivalSocSafetyMargin?: number;
+    preferredBrands?: string[];
+    drivingStyle?: 'eco' | 'normal' | 'sport';
+    voiceAlertsEnabled?: boolean;
+    minPowerFilterKw?: number;
+  };
   routeChargers?: Array<{
     id: string;
     name: string;
@@ -72,6 +79,18 @@ export interface CopilotContext {
     estMinutes?: number;
   }>;
 }
+
+export type CopilotActionType =
+  | 'set_destination'
+  | 'add_waypoint'
+  | 'plan_route'
+  | 'filter_chargers'
+  | 'change_vehicle'
+  | 'remove_waypoint'
+  | 'toggle_theme'
+  | 'toggle_elevation'
+  | 'report_charger'
+  | 'update_preferences';
 
 export interface CopilotDestination {
   name: string;
@@ -101,6 +120,7 @@ export interface CopilotCharger {
   posKm?: number;
   isInbound?: boolean;
   distKm?: number;
+  statusBadge?: string;
 }
 
 export interface CopilotPlace {
@@ -118,7 +138,8 @@ export interface CopilotMessage {
   destination?: CopilotDestination;
   chargers?: CopilotCharger[];
   places?: CopilotPlace[];
-  action?: 'set_destination' | 'add_waypoint';
+  action?: CopilotActionType;
+  actionPayload?: Record<string, any>;
   waypoint?: {
     name: string;
     lat: number;
@@ -133,7 +154,8 @@ export interface CopilotResponse {
   destination?: CopilotDestination;
   chargers?: CopilotCharger[];
   places?: CopilotPlace[];
-  action?: 'set_destination' | 'add_waypoint';
+  action?: CopilotActionType;
+  actionPayload?: Record<string, any>;
   waypoint?: {
     name: string;
     lat: number;

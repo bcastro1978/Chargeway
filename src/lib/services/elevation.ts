@@ -54,6 +54,12 @@ export async function fetchElevationForCoords(
       sampledCoords.push(coords[idx]);
     }
 
+    // Direct server-side execution without HTTP self-request
+    if (typeof window === 'undefined') {
+      const { lookupElevationPoints } = await import('./elevation-lookup');
+      return await lookupElevationPoints(sampledCoords);
+    }
+
     const locationsString = sampledCoords.map(c => `${c.lat},${c.lng}`).join('|');
     const url = `/api/elevation?locations=${locationsString}`;
 

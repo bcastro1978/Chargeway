@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Charger, getChargerExclusiveBrands } from '@/lib/services/charging';
 import { fetchNearbyAmenities, NearbyPlace } from '@/lib/services/places';
+import { useTripStore } from '@/lib/store/useTripStore';
 import { X, MapPin, Zap, Clock, Navigation, CheckCircle2, AlertCircle, ExternalLink, DollarSign, Coffee, Utensils, ShoppingBag, Store, Sparkles, ChevronDown, ChevronUp, Star, ShieldAlert } from 'lucide-react';
 
 interface ChargerInfoPanelProps {
@@ -12,7 +13,20 @@ interface ChargerInfoPanelProps {
 }
 
 export const ChargerInfoPanel: React.FC<ChargerInfoPanelProps> = ({ charger, onClose, onNavigateToCharger }) => {
+  const chargerStatusReports = useTripStore(state => state.chargerStatusReports);
+  const reportChargerStatus = useTripStore(state => state.reportChargerStatus);
+  const [reportSubmitting, setReportSubmitting] = useState(false);
+
   if (!charger) return null;
+
+  const chKey = (charger.nombre || charger.operator || charger.id || '').toLowerCase().trim();
+  const liveReport = chargerStatusReports[chKey];
+
+  const handleReport = async (status: 'available' | 'busy' | 'broken') => {
+    setReportSubmitting(true);
+    await reportChargerStatus(charger.nombre || charger.operator || 'Cargador', status, undefined, charger.id);
+    setReportSubmitting(false);
+  };
 
   // Determine colors based on charging speed (velocidad)
   const isFast = charger.velocidad.toLowerCase().includes('rápid');
@@ -135,6 +149,91 @@ export const ChargerInfoPanel: React.FC<ChargerInfoPanelProps> = ({ charger, onC
             </div>
           );
         })()}
+
+        {/* Community Live Status Banner & Quick Report */}
+        <div style={{
+          background: liveReport?.status === 'broken'
+            ? 'rgba(239, 68, 68, 0.15)'
+            : liveReport?.status === 'busy'
+            ? 'rgba(245, 158, 11, 0.15)'
+            : 'rgba(16, 185, 129, 0.08)',
+          border: `1px solid ${
+            liveReport?.status === 'broken'
+              ? 'rgba(239, 68, 68, 0.35)'
+              : liveReport?.status === 'busy'
+              ? 'rgba(245, 158, 11, 0.35)'
+              : 'rgba(16, 185, 129, 0.25)'
+          }`,
+          borderRadius: '10px',
+          padding: '10px 12px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '8px',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              Estado Comunitario
+            </span>
+            {liveReport && (
+              <span style={{
+                fontSize: '0.7rem',
+                fontWeight: 700,
+                color: liveReport.status === 'broken' ? '#f87171' : (liveReport.status === 'busy' ? '#fbbf24' : '#34d399'),
+              }}>
+                {liveReport.status === 'broken' ? '🔴 Fuera de Servicio' : (liveReport.status === 'busy' ? '🟡 Reportado Ocupado' : '🟢 Operativo')}
+              </span>
+            )}
+          </div>
+
+          <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+            <span style={{ fontSize: '0.68rem', color: '#64748b' }}>Reportar:</span>
+            <button
+              onClick={() => handleReport('available')}
+              disabled={reportSubmitting}
+              style={{
+                fontSize: '0.68rem',
+                padding: '3px 8px',
+                borderRadius: '6px',
+                background: 'rgba(16, 185, 129, 0.15)',
+                border: '1px solid rgba(16, 185, 129, 0.4)',
+                color: '#34d399',
+                cursor: 'pointer',
+              }}
+            >
+              🟢 Libre
+            </button>
+            <button
+              onClick={() => handleReport('busy')}
+              disabled={reportSubmitting}
+              style={{
+                fontSize: '0.68rem',
+                padding: '3px 8px',
+                borderRadius: '6px',
+                background: 'rgba(245, 158, 11, 0.15)',
+                border: '1px solid rgba(245, 158, 11, 0.4)',
+                color: '#fbbf24',
+                cursor: 'pointer',
+              }}
+            >
+              🟡 Ocupado
+            </button>
+            <button
+              onClick={() => handleReport('broken')}
+              disabled={reportSubmitting}
+              style={{
+                fontSize: '0.68rem',
+                padding: '3px 8px',
+                borderRadius: '6px',
+                background: 'rgba(239, 68, 68, 0.15)',
+                border: '1px solid rgba(239, 68, 68, 0.4)',
+                color: '#f87171',
+                cursor: 'pointer',
+              }}
+            >
+              🔴 Averiado
+            </button>
+          </div>
+        </div>
 
         {/* Connector Details */}
         <div>

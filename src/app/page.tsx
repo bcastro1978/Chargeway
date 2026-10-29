@@ -51,6 +51,7 @@ export default function Home() {
     loginWithGoogle,
     needsConsent,
     saveConsent,
+    preferences,
   } = useTripStore(
     useShallow((state) => ({
       selectedVehicle: state.selectedVehicle,
@@ -76,6 +77,7 @@ export default function Home() {
       loginWithGoogle: state.loginWithGoogle,
       needsConsent: state.needsConsent,
       saveConsent: state.saveConsent,
+      preferences: state.preferences,
     }))
   );
 
@@ -218,6 +220,7 @@ export default function Home() {
   useEffect(() => {
     fetchAllEcuadorChargers().then(setAllChargers).catch(console.error);
     checkSession();
+    useTripStore.getState().fetchChargerStatusReports().catch(console.error);
   }, []);
 
   // Debounce planRoute: Trigger whenever there are at least 2 named points, or clear stale tripPlan if < 2
@@ -743,6 +746,13 @@ export default function Home() {
     destinationCity: primaryDestinationPoint?.name,
     estimatedRangeKm: selectedVehicle ? Math.round(selectedVehicle.specs.wltp_range_km * soc) : undefined,
     wltpRangeKm: selectedVehicle?.specs?.wltp_range_km,
+    preferences: preferences ? {
+      minArrivalSocSafetyMargin: preferences.minArrivalSocSafetyMargin,
+      preferredBrands: preferences.preferredBrands,
+      drivingStyle: preferences.drivingStyle,
+      voiceAlertsEnabled: preferences.voiceAlertsEnabled,
+      minPowerFilterKw: preferences.minPowerFilterKw,
+    } : undefined,
     activeTrip: tripPlan ? {
       originName: routePoints[0]?.name || 'Origen',
       originLat: routePoints[0]?.lat,
@@ -830,6 +840,7 @@ export default function Home() {
     totalConsumptionKwh,
     Math.round((liveStats?.arrivalSoc ?? tripPlan?.arrivalSoc ?? 0) * 100),
     staticChargerProjections,
+    preferences,
   ]);
 
   if (isLoadingUser) {

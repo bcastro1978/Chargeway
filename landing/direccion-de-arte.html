@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="es" class="no-js">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChargeWay Ecuador — Hoja de Dirección de Arte</title>
+  <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+  
+  <style>
+    /* -------------------------------------------------------------
+       TOKENS DEL SISTEMA DE DISEÑO CHARGEWAY ECUADOR
+       ------------------------------------------------------------- */
+    :root {
+      /* Colores con roles semánticos de marca */
+      --brand: #00D2FF;
+      --brand-press: #0284C7;
+      --brand-soft: rgba(0, 210, 255, 0.12);
+      --brand-on-dark: #38BDF8;
+      
+      --energy: #00F5A0;
+      --energy-press: #059669;
+      --energy-soft: rgba(0, 245, 160, 0.12);
+      
+      --cta: #00D2FF;
+      --cta-ink: #070B12;
+      
+      --ink: #FFFFFF;
+      --bg: #070B12;
+      --surface: #0F172A;
+      --surface-elevated: rgba(15, 23, 42, 0.85);
+      --line: rgba(255, 255, 255, 0.1);
+      --line-active: rgba(0, 210, 255, 0.35);
+      --muted: #94A3B8;
+      --muted-light: #CBD5E1;
+      
+      --partner: #10B981;
+      --caution: #F59E0B;
+      --critical: #EF4444;
+      
+      /* Tipografías oficiales */
+      --font-display: 'Syne', system-ui, -apple-system, sans-serif;
+      --font-body: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+      --font-mono: 'Space Mono', SFMono-Regular, Consolas, monospace;
+      
+      /* Formas y radios derivados del logotipo */
+      --r-sm: 8px;
+      --r-md: 14px;
+      --r-lg: 20px;
+      --r-xl: 28px;
+      --r-full: 9999px;
+      
+      /* Sombras y resplandores neón */
+      --glow-cyan: 0 0 25px -4px rgba(0, 210, 255, 0.5);
+      --glow-lime: 0 0 25px -4px rgba(0, 245, 160, 0.5);
+      --glow-combined: 0 0 35px -5px rgba(0, 210, 255, 0.35), 0 0 15px rgba(0, 245, 160, 0.25);
+      --shadow-hud: 0 20px 40px -10px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+      
+      /* Movimiento y ritmo */
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-io: cubic-bezier(0.76, 0, 0.24, 1);
+      --ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --dur: 0.85s;
+      --dist: 24px;
+      --t-hover: 0.35s;
+      
+      --gutter: clamp(16px, 4vw, 36px);
+      --maxw: 1200px;
+      --section-y: clamp(56px, 8vw, 96px);
+    }
+
+    /* -------------------------------------------------------------
+       RESETEO BASE Y TIPOGRAFÍA
+       ------------------------------------------------------------- */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      background-color: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.5;
+      -webkit-text-size-adjust: 100%;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      overflow-x: clip;
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(0, 210, 255, 0.12) 0%, transparent 70%),
+        radial-gradient(circle at 90% 40%, rgba(0, 245, 160, 0.05) 0%, transparent 60%);
+      background-attachment: fixed;
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    img, svg {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    /* Aviso de hoja de muestra en barra superior */
+    .muestra-aviso-top {
+      background: rgba(15, 23, 42, 0.95);
+      border-bottom: 1px solid var(--line);
+      padding: 8px var(--gutter);
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      color: var(--brand);
+      text-transform: uppercase;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+    }
+    .muestra-aviso-top span {
+      color: var(--muted);
+      margin-left: 8px;
+    }
+
+    /* Contenedor central */
+    .contenedor {
+      width: 100%;
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding-left: var(--gutter);
+      padding-right: var(--gutter);
+    }
+
+    /* -------------------------------------------------------------
+       1. PORTADA REAL (HERO ACTIVO CON FIRMA)
+       ------------------------------------------------------------- */
+    .portada-hero {
+      position: relative;
+      padding-top: clamp(12px, 2.5vw, 24px);
+      padding-bottom: clamp(36px, 5vw, 60px);
+      overflow: hidden;
+      border-bottom: 1px solid var(--line);
+    }
+
+    /* Barra de navegación de la portada */
+    .portada-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: clamp(16px, 3vw, 28px);
+      padding: 10px 18px;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--line);
+      border-radius: var(--r-full);
+    }
+
+    .nav-marca {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .nav-logo-svg {
+      height: 28px;
+      width: auto;
+    }
+
+    .nav-telemetria {
+      display: none;
+      align-items: center;
+      gap: 14px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--muted);
+    }
+    @media (min-width: 768px) {
+      .nav-telemetria { display: flex; }
+    }
+
+    .telemetria-dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      background: var(--energy);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--energy);
+      animation: pulsoRadar 2s infinite ease-in-out;
+    }
+
+    .btn-nav {
+      padding: 7px 16px;
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--cta-ink);
+      background: var(--cta);
+      border-radius: var(--r-full);
+      text-decoration: none;
+      white-space: nowrap;
+      box-shadow: var(--glow-cyan);
+      transition: transform var(--t-hover) var(--ease), box-shadow var(--t-hover) var(--ease);
+    }
+    .btn-nav:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 25px rgba(0, 210, 255, 0.7);
+    }
+
+    /* Grid principal del Hero */
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: clamp(20px, 4vw, 48px);
+      align-items: center;
+    }
+    @media (min-width: 960px) {
+      .hero-grid {
+        grid-template-columns: 1.1fr 0.9fr;
+      }
+    }
+
+    /* Ceja de categoría */
+    .hero-ceja {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(0, 210, 255, 0.08);
+      border: 1px solid rgba(0, 210, 255, 0.3);
+      border-radius: var(--r-full);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: var(--brand);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    /* Titular Principal */
+    .hero-titulo {
+      font-family: var(--font-display);
+      font-size: clamp(1.85rem, 4.2vw, 3.2rem);
+      font-weight: 900;
+      line-height: 1.08;
+      letter-spacing: -0.035em;
+      margin-bottom: 12px;
+      color: #FFFFFF;
+    }
+    .hero-titulo .destaque-cyan {
+      color: var(--brand);
+      text-shadow: 0 0 30px rgba(0, 210, 255, 0.45);
+    }
+    .hero-titulo .destaque-lime {
+      color: var(--energy);
+      text-shadow: 0 0 30px rgba(0, 245, 160, 0.45);
+    }
+
+    /* Párrafo descriptivo */
+    .hero-bajada {
+      font-size: clamp(0.9rem, 1.4vw, 1.05rem);
+      color: var(--muted-light);
+      line-height: 1.5;
+      margin-bottom: 18px;
+      max-width: 540px;
+    }
+
+    /* Widget Interactivo de Planificación */
+    .hero-widget-selector {
+      background: var(--surface-elevated);
+      backdrop-filter: blur(24px);
+      border: 1px solid var(--line);
+      border-radius: var(--r-lg);
+      padding: 16px;
+      box-shadow: var(--shadow-hud);
+      margin-bottom: 20px;
+      position: relative;
+    }
+    .hero-widget-selector::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 10%;
+      right: 10%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--brand), var(--energy), transparent);
+    }
+
+    .widget-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+    .widget-header span.live-badge {
+      color: var(--energy);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .selector-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    @media (min-width: 600px) {
+      .selector-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .selector-item {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .selector-label {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .selector-input-box {
+      background: rgba(7, 11, 18, 0.7);
+      border: 1px solid var(--line);
+      border-radius: var(--r-sm);
+      padding: 7px 9px;
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 600;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: border-color var(--t-hover) var(--ease);
+    }
+    .selector-input-box:hover {
+      border-color: var(--brand);
+    }
+
+    /* Botón de Acción Principal (CTA) */
+    .btn-cta-primario {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 12px 20px;
+      background: linear-gradient(135deg, var(--energy) 0%, var(--brand) 100%);
+      color: var(--cta-ink);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 700;
+      border: none;
+      border-radius: var(--r-md);
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow: var(--glow-combined);
+      transition: transform var(--t-hover) var(--ease), box-shadow var(--t-hover) var(--ease);
+    }
+    .btn-cta-primario:hover {
+      transform: translateY(-2px) scale(1.01);
+      box-shadow: 0 0 35px rgba(0, 210, 255, 0.7);
+    }
+    .btn-cta-primario svg {
+      width: 16px;
+      height: 16px;
+      transition: transform var(--t-hover) var(--ease);
+    }
+    .btn-cta-primario:hover svg {
+      transform: translateX(4px);
+    }
+
+    /* Composición Visual Protagonista (Derecha) */
+    .hero-visual-card {
+      position: relative;
+      background: radial-gradient(120% 120% at 50% 10%, rgba(30, 41, 59, 0.6) 0%, rgba(7, 11, 18, 0.95) 100%);
+      border: 1px solid var(--line);
+      border-radius: var(--r-xl);
+      padding: 24px;
+      box-shadow: var(--shadow-hud);
+      overflow: hidden;
+    }
+
+    /* Fondo de curvas de nivel y malla */
+    .hero-topo-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('img/bg_topografia_curvas_nivel.svg');
+      background-size: cover;
+      opacity: 0.25;
+      pointer-events: none;
+    }
+
+    /* Imagen vehículo / cabina */
+    .hero-car-wrapper {
+      position: relative;
+      z-index: 2;
+      margin: 10px 0 20px;
+    }
+    .hero-car-img {
+      width: 100%;
+      height: auto;
+      border-radius: var(--r-md);
+      filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.8));
+    }
+
+    /* Panel de Telemetría HUD superpuesto */
+    .hud-overlay-strip {
+      position: relative;
+      z-index: 3;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      background: rgba(7, 11, 18, 0.85);
+      border: 1px solid var(--line-active);
+      border-radius: var(--r-md);
+      padding: 12px;
+      backdrop-filter: blur(16px);
+    }
+    .hud-metric {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .hud-label {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .hud-val {
+      font-family: var(--font-mono);
+      font-size: 15px;
+      font-weight: 700;
+      color: #FFFFFF;
+    }
+    .hud-val.energy-text {
+      color: var(--energy);
+      text-shadow: 0 0 10px rgba(0, 245, 160, 0.5);
+    }
+    .hud-val.cyan-text {
+      color: var(--brand);
+      text-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
+    }
+
+    /* Cintillo de insignias rápidas (Inspirado en los círculos de la referencia) */
+    .badges-strip {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 36px;
+    }
+    @media (min-width: 640px) {
+      .badges-strip {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .badge-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--line);
+      border-radius: var(--r-md);
+      padding: 12px 14px;
+      transition: border-color var(--t-hover) var(--ease), transform var(--t-hover) var(--ease);
+    }
+    .badge-card:hover {
+      border-color: var(--brand);
+      transform: translateY(-2px);
+    }
+    .badge-icon-box {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--r-sm);
+      background: rgba(0, 210, 255, 0.1);
+      border: 1px solid rgba(0, 210, 255, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--brand);
+      flex-shrink: 0;
+    }
+    .badge-text-title {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 700;
+      color: #FFFFFF;
+      line-height: 1.2;
+    }
+    .badge-text-sub {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    /* -------------------------------------------------------------
+       CONTROLES DE LA HOJA DE MUESTRA (VER DE NUEVO)
+       ------------------------------------------------------------- */
+    .muestra-controles {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 24px var(--gutter);
+      background: rgba(15, 23, 42, 0.5);
+      border-bottom: 1px solid var(--line);
+      text-align: center;
+    }
+    .btn-ver-de-nuevo {
+      padding: 10px 24px;
+      background: transparent;
+      border: 1px solid var(--brand);
+      border-radius: var(--r-full);
+      color: var(--brand);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all var(--t-hover) var(--ease);
+    }
+    .btn-ver-de-nuevo:hover {
+      background: var(--brand);
+      color: var(--cta-ink);
+      box-shadow: var(--glow-cyan);
+    }
+    .muestra-aviso-rm {
+      font-size: 12px;
+      color: var(--caution);
+      max-width: 480px;
+    }
+
+    /* -------------------------------------------------------------
+       2. MUESTRA DE LA PALETA CROMÁTICA
+       ------------------------------------------------------------- */
+    .seccion-muestra {
+      padding: var(--section-y) 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .seccion-header {
+      margin-bottom: 36px;
+    }
+    .seccion-ceja {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--brand);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .seccion-titulo {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: #FFFFFF;
+      margin-bottom: 12px;
+    }
+    .seccion-descripcion {
+      font-size: 15px;
+      color: var(--muted);
+      max-width: 640px;
+    }
+
+    .paleta-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    @media (min-width: 768px) {
+      .paleta-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .swatch-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--r-md);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .swatch-color {
+      height: 90px;
+      width: 100%;
+      position: relative;
+    }
+    .swatch-color.border-top {
+      border-bottom: 1px solid var(--line);
+    }
+    .swatch-info {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .swatch-nombre {
+      font-weight: 700;
+      font-size: 14px;
+      color: #FFFFFF;
+    }
+    .swatch-hex {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--brand);
+    }
+    .swatch-rol {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.4;
+      margin-top: 4px;
+    }
+
+    /* -------------------------------------------------------------
+       3. MUESTRA DE TIPOGRAFÍA
+       ------------------------------------------------------------- */
+    .tipo-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+    @media (min-width: 800px) {
+      .tipo-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .tipo-box {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--r-lg);
+      padding: 24px;
+    }
+    .tipo-etiqueta {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--brand);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 12px;
+    }
+    .tipo-muestra-display {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -0.04em;
+      color: #FFFFFF;
+      margin-bottom: 12px;
+    }
+    .tipo-muestra-body {
+      font-family: var(--font-body);
+      font-size: 15px;
+      color: var(--muted-light);
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+    .tipo-muestra-mono {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--energy);
+      background: rgba(0, 0, 0, 0.4);
+      padding: 12px;
+      border-radius: var(--r-sm);
+      border-left: 2px solid var(--energy);
+      line-height: 1.6;
+    }
+
+    /* -------------------------------------------------------------
+       4. ELEMENTOS GRÁFICOS PROPIOS DERIVADOS DE LA MARCA
+       ------------------------------------------------------------- */
+    .elementos-grid {
+      display: grid;
+      grid-template-columns: repeat(1, 1fr);
+      gap: 20px;
+    }
+    @media (min-width: 600px) {
+      .elementos-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .elemento-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--r-md);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .elemento-preview {
+      height: 130px;
+      background: rgba(7, 11, 18, 0.8);
+      border-radius: var(--r-sm);
+      border: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .elemento-nombre {
+      font-size: 14px;
+      font-weight: 700;
+      color: #FFFFFF;
+    }
+    .elemento-origen {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    /* Animación del radar pulsante */
+    @keyframes pulsoRadar {
+      0% { transform: scale(0.95); opacity: 0.9; }
+      50% { transform: scale(1.15); opacity: 0.4; }
+      100% { transform: scale(0.95); opacity: 0.9; }
+    }
+    .radar-pulse-anim {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(0, 245, 160, 0.2);
+      border: 2px solid var(--energy);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 20px var(--energy);
+      animation: pulsoRadar 2s infinite ease-in-out;
+    }
+    .radar-pulse-anim::after {
+      content: "";
+      width: 14px;
+      height: 14px;
+      background: var(--energy);
+      border-radius: 50%;
+    }
+
+    /* Cinta curva Panamericana E35 */
+    .cinta-curva-preview {
+      width: 90%;
+      height: 60px;
+    }
+
+    /* -------------------------------------------------------------
+       5. COMPONENTES: BOTÓN INTERACTIVO Y TARJETA HUD
+       ------------------------------------------------------------- */
+    .componentes-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+    @media (min-width: 768px) {
+      .componentes-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .comp-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--r-lg);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .estacion-hud-card {
+      background: var(--surface-elevated);
+      border: 1px solid var(--line-active);
+      border-radius: var(--r-md);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: var(--shadow-hud);
+      transition: all var(--t-hover) var(--ease);
+    }
+    .estacion-hud-card:hover {
+      border-color: var(--brand);
+      box-shadow: var(--glow-cyan);
+      transform: translateY(-2px);
+    }
+    .estacion-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .estacion-tag {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--energy);
+      background: rgba(0, 245, 160, 0.12);
+      border: 1px solid rgba(0, 245, 160, 0.3);
+      padding: 3px 8px;
+      border-radius: var(--r-full);
+      text-transform: uppercase;
+    }
+    .estacion-titulo {
+      font-size: 16px;
+      font-weight: 700;
+      color: #FFFFFF;
+    }
+    .estacion-datos {
+      display: flex;
+      gap: 16px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .estacion-datos span strong {
+      color: #FFFFFF;
+    }
+
+    /* Pie de la hoja de muestra */
+    .muestra-footer {
+      padding: 40px var(--gutter);
+      text-align: center;
+      border-top: 1px solid var(--line);
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .muestra-footer strong {
+      color: var(--ink);
+    }
+
+    /* -------------------------------------------------------------
+       ACCESIBILIDAD Y REDUCCIÓN DE MOVIMIENTO
+       ------------------------------------------------------------- */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Barra de aviso superior -->
+  <div class="muestra-aviso-top">
+    HOJA DE DIRECCIÓN DE ARTE <span>• CHARGEWAY ECUADOR • MUESTRA DE DISEÑO Y MOVIMIENTO</span>
+  </div>
+
+  <!-- 1. PORTADA REAL (HERO CON COMPOSICIÓN Y ACCIÓN) -->
+  <section class="portada-hero" data-portada>
+    <div class="contenedor">
+      
+      <!-- Navegación de portada -->
+      <header class="portada-nav" data-pieza>
+        <a href="https://chargeway.vercel.app/" class="nav-marca" target="_blank" rel="noopener">
+          <img src="img/logo_original.png" alt="ChargeWay EV Navigation" class="nav-logo-svg" style="height:36px; border-radius:8px;">
+          <span style="font-family:var(--font-display); font-weight:900; font-size:16px; letter-spacing:-0.02em; color:#FFFFFF;">Charge<span style="color:var(--brand)">Way</span></span>
+        </a>
+        <div class="nav-telemetria">
+          <span><i class="telemetria-dot"></i> +300 ESTACIONES EN ECUADOR</span>
+          <span>E35 PANAMERICANA: 100% OPERATIVA</span>
+        </div>
+        <a href="https://chargeway.vercel.app/" target="_blank" rel="noopener" class="btn-nav">PLANIFICAR RUTA</a>
+      </header>
+
+      <!-- Grid de Portada -->
+      <div class="hero-grid">
+        
+        <!-- Columna Izquierda: Mensaje y Selector -->
+        <div class="hero-contenido">
+          <div class="hero-ceja" data-pieza>
+            <span>⚡ NAVEGACIÓN INTELIGENTE Y RECARGA EV EN ECUADOR</span>
+          </div>
+
+          <h1 class="hero-titulo" data-pieza>
+            Conquista los Andes.<br>
+            Planifica tu viaje con<br>
+            <span class="destaque-cyan">total tranquilidad</span> <span class="destaque-lime">y certeza.</span>
+          </h1>
+
+          <p class="hero-bajada" data-pieza>
+            En Ecuador las montañas no son un obstáculo: son una fuente de energía. Más de 300 estaciones de carga a nivel nacional en una sola plataforma, con cálculo de altitud y la tranquilidad de saber con qué batería llegarás antes de encender el motor.
+          </p>
+
+          <!-- Selector de Ruta Inspirado en la Referencia (Widget de Alta Fidelidad) -->
+          <div class="hero-widget-selector" data-pieza>
+            <div class="widget-header">
+              <span>PLANIFICADOR INTELIGENTE DE RUTA</span>
+              <span class="live-badge"><i class="telemetria-dot"></i> TELEMETRÍA EN VIVO</span>
+            </div>
+
+            <div class="selector-grid">
+              <div class="selector-item">
+                <span class="selector-label">Origen</span>
+                <div class="selector-input-box">
+                  <span>Quito (2,850m)</span>
+                  <small style="color:var(--brand)">📍</small>
+                </div>
+              </div>
+              <div class="selector-item">
+                <span class="selector-label">Destino</span>
+                <div class="selector-input-box">
+                  <span>Cuenca (2,560m)</span>
+                  <small style="color:var(--energy)">🏁</small>
+                </div>
+              </div>
+              <div class="selector-item">
+                <span class="selector-label">Vehículo EV</span>
+                <div class="selector-input-box">
+                  <span>BYD Seagull</span>
+                  <small style="color:var(--muted)">▼</small>
+                </div>
+              </div>
+              <div class="selector-item">
+                <span class="selector-label">Carga Inicial</span>
+                <div class="selector-input-box">
+                  <span style="color:var(--energy)">85% SoC</span>
+                  <small style="color:var(--energy)">🔋</small>
+                </div>
+              </div>
+            </div>
+
+            <a href="https://chargeway.vercel.app/" target="_blank" rel="noopener" class="btn-cta-primario">
+              <span>CALCULAR RUTA CON FÍSICA ANDINA</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Columna Derecha: Composición Protagonista (Carro + HUD + Curvas de Nivel) -->
+        <div class="hero-visual-card" data-pieza>
+          <div class="hero-topo-bg"></div>
+
+          <div class="widget-header" style="position:relative; z-index:3;">
+            <span style="color:var(--brand)">CHARGEWAY HUD // CABINA ACTIVA</span>
+            <span style="color:var(--energy); font-family:var(--font-mono); font-size:10px;">TOPOGRAFÍA E35</span>
+          </div>
+
+          <div class="hero-car-wrapper">
+            <img src="img/foto_hero_porsche_taycan.png" alt="Conducción Eléctrica en los Andes" class="hero-car-img">
+          </div>
+
+          <!-- Banda HUD con datos reales -->
+          <div class="hud-overlay-strip">
+            <div class="hud-metric">
+              <span class="hud-label">Altitud Max</span>
+              <span class="hud-val cyan-text">3,680 m</span>
+            </div>
+            <div class="hud-metric">
+              <span class="hud-label">Regeneración</span>
+              <span class="hud-val energy-text">+14.2 kWh</span>
+            </div>
+            <div class="hud-metric">
+              <span class="hud-label">Llegada SoC</span>
+              <span class="hud-val">38% Reserva</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Insignias de Beneficios Rápidos (Inspiradas en los círculos/squircle de la referencia) -->
+      <div class="badges-strip" data-pieza>
+        <div class="badge-card">
+          <div class="badge-icon-box">🏔️</div>
+          <div>
+            <div class="badge-text-title">Física Andina</div>
+            <div class="badge-text-sub">Altitud y pendientes</div>
+          </div>
+        </div>
+
+        <div class="badge-card">
+          <div class="badge-icon-box">⚡</div>
+          <div>
+            <div class="badge-text-title">+300 Estaciones</div>
+            <div class="badge-text-sub">En una sola plataforma</div>
+          </div>
+        </div>
+
+        <div class="badge-card">
+          <div class="badge-icon-box">🎙️</div>
+          <div>
+            <div class="badge-text-title">Andrea Copiloto</div>
+            <div class="badge-text-sub">IA por voz manos libres</div>
+          </div>
+        </div>
+
+        <div class="badge-card">
+          <div class="badge-icon-box">📶</div>
+          <div>
+            <div class="badge-text-title">PWA Offline</div>
+            <div class="badge-text-sub">Opera sin señal móvil</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Controles de repetición de la muestra -->
+  <div class="muestra-controles">
+    <button type="button" class="btn-ver-de-nuevo" data-ver-de-nuevo>Ver de nuevo la animación</button>
+    <span class="muestra-aviso-rm" data-aviso-rm hidden>Tienes activado "Reducir movimiento": aquí ves una versión sin desplazamientos. Apágalo en tu sistema operativo para ver la animación completa.</span>
+  </div>
+
+  <!-- 2. LA PALETA DE COLOR -->
+  <section class="seccion-muestra">
+    <div class="contenedor">
+      <div class="seccion-header">
+        <div class="seccion-ceja">SISTEMA CROMÁTICO</div>
+        <h2 class="seccion-titulo">Tus colores y su papel</h2>
+        <p class="seccion-descripcion">
+          Cada tono cumple una función exacta: los neones señalan energía y acción, mientras la base oscura evoca el cielo andino y garantiza máxima legibilidad en cabina.
+        </p>
+      </div>
+
+      <div class="paleta-grid">
+        <div class="swatch-card">
+          <div class="swatch-color" style="background:#00D2FF"></div>
+          <div class="swatch-info">
+            <span class="swatch-nombre">Electric Cyan</span>
+            <span class="swatch-hex">#00D2FF</span>
+            <p class="swatch-rol">El color de acción: botones primarios, iluminación de rutas y halos neón activos.</p>
+          </div>
+        </div>
+
+        <div class="swatch-card">
+          <div class="swatch-color" style="background:#00F5A0"></div>
+          <div class="swatch-info">
+            <span class="swatch-nombre">Cyber Lime</span>
+            <span class="swatch-hex">#00F5A0</span>
+            <p class="swatch-rol">Energía viva: batería óptima, regeneración en bajadas y estado saludable de la red.</p>
+          </div>
+        </div>
+
+        <div class="swatch-card">
+          <div class="swatch-color border-top" style="background:#070B12"></div>
+          <div class="swatch-info">
+            <span class="swatch-nombre">Deep Midnight</span>
+            <span class="swatch-hex">#070B12</span>
+            <p class="swatch-rol">Fondo institucional: el cielo nocturno de la serranía andina y base de las pantallas OLED.</p>
+          </div>
+        </div>
+
+        <div class="swatch-card">
+          <div class="swatch-color border-top" style="background:#0F172A"></div>
+          <div class="swatch-info">
+            <span class="swatch-nombre">Slate Surface</span>
+            <span class="swatch-hex">#0F172A</span>
+            <p class="swatch-rol">Superficie de paneles HUD, tarjetas interactivas y formularios de viaje.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. TIPOGRAFÍAS CON TEXTOS REALES -->
+  <section class="seccion-muestra">
+    <div class="contenedor">
+      <div class="seccion-header">
+        <div class="seccion-ceja">JERARQUÍA EDITORIAL</div>
+        <h2 class="seccion-titulo">Tus letras con textos reales</h2>
+        <p class="seccion-descripcion">
+          La audacia geométrica de los titulares se equilibra con la claridad técnica del texto en pantalla y la precisión telemétrica de cabina.
+        </p>
+      </div>
+
+      <div class="tipo-grid">
+        <div class="tipo-box">
+          <div class="tipo-etiqueta">Titular Display (Syne Black)</div>
+          <div class="tipo-muestra-display">
+            Conquista los Andes en tu auto eléctrico.
+          </div>
+          <p class="swatch-rol">Interletraje cerrado y gran peso visual para transmitir seguridad contundente.</p>
+        </div>
+
+        <div class="tipo-box">
+          <div class="tipo-etiqueta">Lectura y UI (Space Grotesk)</div>
+          <p class="tipo-muestra-body">
+            ChargeWay elimina por completo la ansiedad de autonomía. A diferencia de mapas planos tradicionales, nuestro motor simula las pendientes de la cordillera y suma los kilovatios hora recuperados en los descensos.
+          </p>
+          <div class="tipo-etiqueta" style="margin-top:16px;">Telemetría HUD (Space Mono)</div>
+          <div class="tipo-muestra-mono">
+            &gt; SOC_ACTUAL: 79% [272 KM REALES]<br>
+            &gt; CARGADOR_PRÓXIMO: TERPEL CALDERÓN DC 60kW (+14 MIN)<br>
+            &gt; TARIFA_ARCONEL: REGULADA $0.18/kWh
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. ELEMENTOS GRÁFICOS PROPIOS -->
+  <section class="seccion-muestra">
+    <div class="contenedor">
+      <div class="seccion-header">
+        <div class="seccion-ceja">RECURSOS DE IDENTIDAD</div>
+        <h2 class="seccion-titulo">Elementos gráficos propios</h2>
+        <p class="seccion-descripcion">
+          Derivados directamente del logotipo y la orografía del Ecuador para que el diseño no pueda ser de ninguna otra marca.
+        </p>
+      </div>
+
+      <div class="elementos-grid">
+        <div class="elemento-card">
+          <div class="elemento-preview">
+            <div class="radar-pulse-anim"></div>
+          </div>
+          <div class="elemento-nombre">Baliza de Radar Concentrico</div>
+          <p class="elemento-origen">Sale del punto GPS del logotipo. Indica electrolineras activas y operativas en tiempo real sobre el mapa.</p>
+        </div>
+
+        <div class="elemento-card">
+          <div class="elemento-preview">
+            <svg class="cinta-curva-preview" viewBox="0 0 200 60" fill="none">
+              <path d="M 10 50 C 60 10, 140 60, 190 20" stroke="#00D2FF" stroke-width="4" stroke-linecap="round" />
+              <path d="M 10 50 C 60 10, 140 60, 190 20" stroke="#00F5A0" stroke-width="6" stroke-linecap="round" stroke-dasharray="8 12" opacity="0.8" />
+            </svg>
+          </div>
+          <div class="elemento-nombre">Cinta Ribbon Panamericana E35</div>
+          <p class="elemento-origen">Sale de la carretera curva del logo. Conecta secciones y divide bloques guiando la mirada hacia la acción.</p>
+        </div>
+
+        <div class="elemento-card">
+          <div class="elemento-preview">
+            <div style="background:rgba(15,23,42,0.9); border:1px solid rgba(0,210,255,0.4); border-radius:8px; padding:8px 16px; font-family:var(--font-mono); font-size:11px; color:#00D2FF; box-shadow:0 0 15px rgba(0,210,255,0.3)">
+              TRANQUILITY: 88/100
+            </div>
+          </div>
+          <div class="elemento-nombre">Tarjeta HUD Glassmorphism</div>
+          <p class="elemento-origen">Cristal líquido oscuro con borde luminoso inspirado en el instrumental digital de los autos eléctricos.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. COMPONENTES VIVOS: BOTÓN Y TARJETA -->
+  <section class="seccion-muestra">
+    <div class="contenedor">
+      <div class="seccion-header">
+        <div class="seccion-ceja">COMPONENTES DE INTERACCIÓN</div>
+        <h2 class="seccion-titulo">Botón interactivo y tarjeta de estación</h2>
+        <p class="seccion-descripcion">
+          Comprueba la respuesta táctil del botón principal y la distribución visual de una tarjeta de punto de recarga.
+        </p>
+      </div>
+
+      <div class="componentes-grid">
+        <div class="comp-card">
+          <span style="font-family:var(--font-mono); font-size:11px; color:var(--muted); text-transform:uppercase;">Botón de Acción Primario (Hover y Tacto)</span>
+          <button type="button" class="btn-cta-primario" style="margin-top:12px;">
+            <span>ABRIR PLANIFICADOR GRATUITO</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+          <p style="font-size:12px; color:var(--muted); line-height:1.4;">
+            El botón combina el gradiente de energía y acción con letra oscura contrastada para superar los estándares de accesibilidad visual.
+          </p>
+        </div>
+
+        <div class="comp-card">
+          <span style="font-family:var(--font-mono); font-size:11px; color:var(--muted); text-transform:uppercase;">Tarjeta de Estación Verificada</span>
+          
+          <div class="estacion-hud-card">
+            <div class="estacion-top">
+              <span class="estacion-tag">60 kW DC RÁPIDA</span>
+              <span style="font-family:var(--font-mono); font-size:11px; color:var(--brand)">CCS2 / GB/T</span>
+            </div>
+            <div class="estacion-titulo">Terpel Calderón — Panamericana Norte</div>
+            <div class="estacion-datos">
+              <span>Km: <strong>24.5</strong></span>
+              <span>Tiempo de carga: <strong>18 min</strong></span>
+              <span>Disponibilidad: <strong style="color:var(--energy)">Libre</strong></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pie de la muestra -->
+  <footer class="muestra-footer">
+    <p><strong>ChargeWay Ecuador</strong> • Hoja de Muestra para Aprobación de Dirección de Arte.</p>
+    <p style="margin-top:6px; font-size:12px;">Esta página es solo para revisión interna del equipo y no se publica.</p>
+  </footer>
+
+  <!-- Scripts: Librerías GSAP y Lenis locales -->
+  <script src="vendor/gsap.min.js" defer></script>
+  <script src="vendor/ScrollTrigger.min.js" defer></script>
+  <script src="vendor/lenis.min.js" defer></script>
+
+  <!-- Script de Movimiento Seguro -->
+  <script>
+    document.documentElement.classList.remove('no-js');
+    document.documentElement.classList.add('js');
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const $ = (sel) => document.querySelector(sel);
+      const RM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const hasGSAP = typeof window.gsap !== 'undefined';
+
+      const repetirBtn = $('[data-ver-de-nuevo]');
+      const avisoRM = $('[data-aviso-rm]');
+
+      if (!hasGSAP) {
+        if (repetirBtn) repetirBtn.hidden = true;
+        return;
+      }
+
+      // Animación firma de la portada
+      function firmaPortada() {
+        const tl = gsap.timeline();
+
+        if (RM) {
+          gsap.set('[data-portada] [data-pieza]', { autoAlpha: 1 });
+          return tl;
+        }
+
+        // Estado inicial de entrada
+        gsap.set('[data-portada] [data-pieza]', { autoAlpha: 0, y: 24 });
+
+        // Secuencia en cascada limpia y precisa
+        tl.to('[data-portada] .portada-nav', {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.7,
+          ease: 'power3.out'
+        })
+        .to('[data-portada] .hero-ceja', {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.6,
+          ease: 'power3.out'
+        }, '-=0.4')
+        .to('[data-portada] .hero-titulo', {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.85,
+          ease: 'power3.out'
+        }, '-=0.4')
+        .to('[data-portada] .hero-bajada', {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.75,
+          ease: 'power3.out'
+        }, '-=0.5')
+        .to('[data-portada] .hero-widget-selector', {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.85,
+          ease: 'power3.out'
+        }, '-=0.5')
+        .to('[data-portada] .hero-visual-card', {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.9,
+          ease: 'power3.out'
+        }, '-=0.6')
+        .to('[data-portada] .badges-strip', {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.7,
+          ease: 'power3.out'
+        }, '-=0.4');
+
+        return tl;
+      }
+
+      let timelineActiva = null;
+
+      // Esperar fuentes antes de disparar animación inicial
+      Promise.race([
+        document.fonts ? document.fonts.ready : Promise.resolve(),
+        new Promise((r) => setTimeout(r, 600))
+      ]).then(() => {
+        timelineActiva = firmaPortada();
+      });
+
+      // Manejo de reducción de movimiento
+      if (RM && avisoRM) {
+        avisoRM.hidden = false;
+      }
+
+      if (repetirBtn) {
+        repetirBtn.addEventListener('click', () => {
+          if (RM) {
+            gsap.fromTo('[data-portada] [data-pieza]', 
+              { autoAlpha: 0 }, 
+              { autoAlpha: 1, duration: 0.4, stagger: 0.08, ease: 'none' }
+            );
+          } else if (timelineActiva) {
+            timelineActiva.restart();
+          }
+        });
+      }
+
+      // Inicialización opcional de Lenis para scroll suave
+      if (typeof window.Lenis !== 'undefined' && !RM) {
+        const lenis = new Lenis({
+          duration: 1.1,
+          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+          smoothWheel: true
+        });
+        function raf(time) {
+          lenis.raf(time);
+          requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+      }
+    });
+  </script>
+</body>
+</html>

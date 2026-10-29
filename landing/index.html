@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="es" class="no-js">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChargeWay Ecuador — Navegación Inteligente y Red de Carga para Autos Eléctricos</title>
+  <meta name="description" content="La primera plataforma de navegación inteligente y ecosistema de recarga EV adaptada a la geografía andina. Más de 300 estaciones verificadas en Ecuador, cálculo de altitud y Copiloto AI.">
+  
+  <!-- Open Graph / Redes Sociales -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://chargeway.vercel.app/">
+  <meta property="og:title" content="ChargeWay Ecuador — Planifica tu viaje en auto eléctrico con total tranquilidad">
+  <meta property="og:description" content="Modelado de pendientes andinas, regeneración gravitatoria de batería y más de 300 electrolineras activas en Ecuador.">
+  <meta property="og:image" content="img/foto_hero_porsche_taycan.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
+  <link rel="apple-touch-icon" href="img/logo_original.png">
+
+  <!-- Fuentes Oficiales de Marca (Google Fonts con preconnect) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Hojas de Estilos -->
+  <link rel="stylesheet" href="css/estilos.css?v=20261017a">
+</head>
+<body>
+
+  <!-- ========================================================================
+       1. CABECERA INSTITUCIONAL Y NAVEGACIÓN
+       ======================================================================== -->
+  <header class="cabecera" id="inicio">
+    <div class="contenedor cabecera-inner">
+      <a href="https://chargeway.vercel.app/" class="marca-logo" target="_blank" rel="noopener" aria-label="ChargeWay Ecuador - Inicio">
+        <img src="img/logo_original.png" alt="Logotipo ChargeWay EV Navigation" width="38" height="38">
+        <div class="marca-texto">Charge<span>Way</span></div>
+      </a>
+
+      <nav class="nav-links" aria-label="Navegación principal">
+        <a href="#motor-fisico">Física Andina</a>
+        <a href="#funcionalidades">Tecnología</a>
+        <a href="#comparativa">Diferenciales</a>
+        <a href="#anfitriones">Anfitriones B2B</a>
+        <a href="#faq">Preguntas</a>
+      </nav>
+
+      <div class="nav-acciones">
+        <div class="telemetria-pill">
+          <i class="telemetria-dot"></i>
+          <span>+300 ESTACIONES EN ECUADOR</span>
+        </div>
+        <a href="https://chargeway.vercel.app/" target="_blank" rel="noopener" class="btn-cta-nav">
+          <span class="texto-desktop">PLANIFICA TU VIAJE GRATIS</span>
+          <span class="texto-movil">PLANIFICAR</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ========================================================================
+         2. HERO / PORTADA REAL CON WIDGET DE VIAJE Y COMPOSICIÓN HUD
+         ======================================================================== -->
+    <section class="hero" aria-label="Portada Principal ChargeWay">
+      <div class="contenedor">
+        <div class="hero-grid">
+          
+          <!-- Columna Izquierda: Mensaje y Selector -->
+          <div class="hero-col-texto">
+            <div class="hero-ceja" data-hero-item data-hero-ceja>
+              <span>⚡ NAVEGACIÓN INTELIGENTE Y RECARGA EV EN ECUADOR</span>
+            </div>
+
+            <h1 class="hero-titulo" data-hero-item data-hero-titulo>
+              Conquista los Andes.<br>
+              Planifica tu viaje con<br>
+              <span class="destaque-cyan">total tranquilidad</span> <span class="destaque-lime">y certeza.</span>
+            </h1>
+
+            <p class="hero-bajada" data-hero-item data-hero-bajada>
+              En Ecuador las montañas no son un obstáculo: son una fuente de energía. Más de 300 estaciones de carga a nivel nacional en una sola plataforma, con cálculo de altitud y la tranquilidad de saber con qué porcentaje exacto de batería llegarás antes de encender el motor.
+            </p>
+
+            <!-- Widget Interactivo de Planificación -->
+            <div class="widget-planificador" data-hero-item data-hero-widget>
+              <div class="widget-top-info">
+                <span>SIMULADOR DE RUTA ANDINA</span>
+                <span class="live-tag"><i class="telemetria-dot"></i> RED E35 OPERATIVA</span>
+              </div>
+
+              <div class="widget-inputs-grid">
+                <div class="input-box-unit">
+                  <span class="input-label">Origen</span>
+                  <div class="input-field-visual" role="button" tabindex="0">
+                    <span>Quito (2,850m)</span>
+                    <small style="color:var(--brand)">📍</small>
+                  </div>
+                </div>
+
+                <div class="input-box-unit">
+                  <span class="input-label">Destino</span>
+                  <div class="input-field-visual" role="button" tabindex="0">
+                    <span>Cuenca (2,560m)</span>
+                    <small style="color:var(--energy)">🏁</small>
+                  </div>
+                </div>
+
+                <div class="input-box-unit">
+                  <span class="input-label">Modelo EV</span>
+                  <div class="input-field-visual" role="button" tabindex="0">
+                    <span>BYD Seagull</span>
+                    <small style="color:var(--muted)">▼</small>
+                  </div>
+                </div>
+
+                <div class="input-box-unit">
+                  <span class="input-label">Carga Inicial</span>
+                  <div class="input-field-visual" role="button" tabindex="0">
+                    <span style="color:var(--energy)">85% SoC</span>
+                    <small style="color:var(--energy)">🔋</small>
+                  </div>
+                </div>
+              </div>
+
+              <a href="https://chargeway.vercel.app/" target="_blank" rel="noopener" class="btn-cta-primario">
+                <span>CALCULAR RUTA CON FÍSICA ANDINA</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          <!-- Columna Derecha: Composición Protagonista (Taycan en Andes + HUD) -->
+          <div class="hero-visual" data-hero-item data-hero-visual>
+            <div class="hero-curvas-bg"></div>
+
+            <div class="hero-hud-header">
+              <span style="color:var(--brand); font-weight:700;">TELEMETRÍA CABINA // E35</span>
+              <span style="color:var(--energy);">CORDILLERA DE LOS ANDES</span>
+            </div>
+
+            <div class="hero-car-frame">
+              <img src="img/foto_hero_porsche_taycan.png" alt="Vehículo eléctrico recorriendo curva de montaña en Ecuador" width="600" height="400">
+            </div>
+
+            <div class="hud-telemetria-strip">
+              <div class="hud-data-unit">
+                <span class="hud-data-label">Altitud Max</span>
+                <span class="hud-data-val cyan">3,680 msnm</span>
+              </div>
+              <div class="hud-data-unit">
+                <span class="hud-data-label">Regeneración</span>
+                <span class="hud-data-val lime">+14.2 kWh</span>
+              </div>
+              <div class="hud-data-unit">
+                <span class="hud-data-label">Llegada Estimada</span>
+                <span class="hud-data-val">38% Reserva</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         3. CINTILLO DE MÉTRICAS Y COBERTURA NACIONAL
+         ======================================================================== -->
+    <section class="metricas-strip" aria-label="Métricas de Cobertura en Ecuador">
+      <div class="contenedor">
+        <div class="metricas-grid">
+          
+          <div class="metrica-card">
+            <div class="metrica-cifra destaque-cyan">+300</div>
+            <div class="metrica-titulo">Estaciones Verificadas</div>
+            <div class="metrica-desc">Red unificada de cargadores públicos y privados en Ecuador.</div>
+          </div>
+
+          <div class="metrica-card">
+            <div class="metrica-cifra destaque-lime">24</div>
+            <div class="metrica-titulo">Provincias Conectadas</div>
+            <div class="metrica-desc">Cobertura interprovincial en Costa, Sierra y Amazonía.</div>
+          </div>
+
+          <div class="metrica-card">
+            <div class="metrica-cifra">3,600m</div>
+            <div class="metrica-titulo">Física de Altitud Real</div>
+            <div class="metrica-desc">Cálculo de consumo y regeneración en páramos y descensos.</div>
+          </div>
+
+          <div class="metrica-card">
+            <div class="metrica-cifra destaque-cyan">100%</div>
+            <div class="metrica-titulo">Marco Legal ARCONEL</div>
+            <div class="metrica-desc">Operación blindada bajo normativa oficial y tarifas justas.</div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         4. SECCIÓN: MOTOR FÍSICO ANDINO & REGENERACIÓN GRAVITATORIA
+         ======================================================================== -->
+    <section class="seccion-generica" id="motor-fisico" aria-label="Motor Físico Andino">
+      <div class="contenedor">
+        <div class="seccion-header" data-reveal>
+          <div class="seccion-ceja">MODELADO TOPOGRÁFICO REAL</div>
+          <h2 class="seccion-titulo">En bajada, tu batería se recarga sola.</h2>
+          <p class="seccion-bajada">
+            Los navegadores tradicionales asumen carreteras planas. ChargeWay analiza el perfil altimétrico metro a metro, calculando el esfuerzo en pendientes y sumando los kilovatios hora que tu vehículo recupera automáticamente por gravedad al descender.
+          </p>
+        </div>
+
+        <div class="fisica-grid">
+          
+          <!-- Gráfico Interactivo de Altimetría -->
+          <div class="perfil-altimetrico-box" data-reveal>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-family:var(--font-mono); font-size:11px; color:var(--brand); text-transform:uppercase;">PERFIL ALTIMÉTRICO: QUITO ➔ CUENCA (E35)</span>
+              <span style="font-family:var(--font-mono); font-size:10px; color:var(--energy);">FÍSICA GRAVITATORIA</span>
+            </div>
+
+            <!-- Gráfico SVG con animación de trazado -->
+            <svg class="altimetria-grafico-svg" viewBox="0 0 500 200" fill="none">
+              <!-- Gradiente de área bajo la curva -->
+              <defs>
+                <linearGradient id="area-grad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#00D2FF" stop-opacity="0.25"/>
+                  <stop offset="100%" stop-color="#070B12" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+
+              <path d="M 20 120 Q 100 40, 180 30 T 320 140 T 480 90 L 480 190 L 20 190 Z" fill="url(#area-grad)"/>
+              
+              <!-- Curva altimétrica trazada por JS -->
+              <path id="curva-altitud" d="M 20 120 Q 100 40, 180 30 T 320 140 T 480 90" stroke="#00D2FF" stroke-width="3.5" stroke-linecap="round"/>
+
+              <!-- Puntos de regeneración en bajada (Cyber Lime) -->
+              <circle cx="180" cy="30" r="5" fill="#00D2FF" />
+              <circle cx="320" cy="140" r="6" fill="#00F5A0" />
+              <text x="330" y="145" font-family="'Space Mono', monospace" font-size="10" fill="#00F5A0">+14.2 kWh RECUPERADOS</text>
+            </svg>
+
+            <div class="altimetria-hitos">
+              <span>Quito: <strong>2,850m</strong></span>
+              <span>Páramo Cotopaxi: <strong>3,680m</strong></span>
+              <span>Descenso Baños: <strong>1,820m</strong></span>
+              <span>Cuenca: <strong>2,560m</strong></span>
+            </div>
+          </div>
+
+          <!-- Puntos Clave de la Física Andina -->
+          <div class="fisica-puntos-lista" data-reveal>
+            
+            <div class="punto-item">
+              <div class="punto-icono">🏔️</div>
+              <div class="punto-contenido">
+                <h3>Cálculo Topográfico Metro a Metro</h3>
+                <p>Modelamos la gravedad, masa y aerodinámica real según el modelo específico de tu vehículo, evitando sorpresas al cruzar cordilleras.</p>
+              </div>
+            </div>
+
+            <div class="punto-item">
+              <div class="punto-icono">⚡</div>
+              <div class="punto-contenido">
+                <h3>Frenada Regenerativa Cuantificada</h3>
+                <p>Descensos pronunciados hacia la Costa o Amazonía inyectan energía directa a tus celdas. Sabrás exactamente cuánta autonomía ganas en cada bajada.</p>
+              </div>
+            </div>
+
+            <div class="punto-item">
+              <div class="punto-icono">🛡️</div>
+              <div class="punto-contenido">
+                <h3>Margen de Reserva Garantizado</h3>
+                <p>El sistema proyecta un colchón de seguridad del 15% al 20% en tu destino final para que viajes con absoluta serenidad.</p>
+              </div>
+            </div>
+
+            <div style="margin-top:10px;">
+              <a href="https://chargeway.vercel.app/" target="_blank" rel="noopener" class="btn-cta-primario" style="max-width:320px;">
+                <span>PROBAR SIMULACIÓN EN VIVO</span>
+              </a>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         5. SUITE TECNOLÓGICA (BENTO GRID: 6 MÓDULOS)
+         ======================================================================== -->
+    <section class="seccion-generica" id="funcionalidades" aria-label="Suite Tecnológica">
+      <div class="contenedor">
+        <div class="seccion-header" data-reveal>
+          <div class="seccion-ceja">SUITE TECNOLÓGICA CHARGEWAY</div>
+          <h2 class="seccion-titulo">Las 6 herramientas creadas para tu viaje.</h2>
+          <p class="seccion-bajada">
+            Todo lo necesario para eliminar la incertidumbre en carretera y disfrutar la movilidad eléctrica en Ecuador.
+          </p>
+        </div>
+
+        <div class="bento-grid">
+          
+          <!-- Módulo 1: Motor Físico Andino -->
+          <div class="bento-card destacada" data-reveal>
+            <div>
+              <div class="bento-icon-wrapper">🏔️</div>
+              <div class="bento-tag">FÍSICA TOPOGRÁFICA</div>
+              <h3 class="bento-titulo">Motor Físico Andino Real</h3>
+              <p class="bento-desc">
+                Modela peso, química de celdas (LFP, NMC) y la pendiente exacta. No proyecta estimaciones planas: calcula la física real de la cordillera.
+              </p>
+            </div>
+            <div class="bento-badge-footer">
+              <span>Impacto: <strong>Predicción exacta de llegada</strong></span>
+            </div>
+          </div>
+
+          <!-- Módulo 2: Red Unificada de +300 Estaciones -->
+          <div class="bento-card" data-reveal>
+            <div>
+              <div class="bento-icon-wrapper">🗺️</div>
+              <div class="bento-tag">COBERTURA NACIONAL</div>
+              <h3 class="bento-titulo">+300 Estaciones Verificadas</h3>
+              <p class="bento-desc">
+                Filtra por conectores (CCS2, GB/T, Tipo 2, Tipo 1), velocidad rápida DC (&ge;40 kW) y distingue cargadores multimarca públicos de puntos privados.
+              </p>
+            </div>
+            <div class="bento-badge-footer">
+              <span>Filtro: <strong>Acceso público garantizado</strong></span>
+            </div>
+          </div>
+
+          <!-- Módulo 3: Copiloto AI -->
+          <div class="bento-card" data-reveal>
+            <div>
+              <div class="bento-icon-wrapper">🎙️</div>
+              <div class="bento-tag">ASISTENCIA INTELIGENTE</div>
+              <h3 class="bento-titulo">Copiloto AI por Voz</h3>
+              <p class="bento-desc">
+                Interacción por voz natural mientras conduces. Pregunta por el cargador más cercano o consulta si alcanzas tu destino sin apartar la vista del camino.
+              </p>
+            </div>
+            <div class="bento-badge-footer">
+              <span>Seguridad: <strong>100% manos libres</strong></span>
+            </div>
+          </div>
+
+          <!-- Módulo 4: Tranquility Index -->
+          <div class="bento-card" data-reveal>
+            <div>
+              <div class="bento-icon-wrapper">🛡️</div>
+              <div class="bento-tag">PROTECCIÓN ACTIVA</div>
+              <h3 class="bento-titulo">Tranquility Index</h3>
+              <p class="bento-desc">
+                Monitorea el balance energético en tiempo real. Si la ruta excede la batería, inserta automáticamente la parada de carga con los minutos exactos necesarios.
+              </p>
+            </div>
+            <div class="bento-badge-footer">
+              <span>Garantía: <strong>Colchón 15% - 20% reserva</strong></span>
+            </div>
+          </div>
+
+          <!-- Módulo 5: Modo PWA Offline -->
+          <div class="bento-card destacada" data-reveal>
+            <div>
+              <div class="bento-icon-wrapper">📶</div>
+              <div class="bento-tag">ARQUITECTURA RESILIENTE</div>
+              <h3 class="bento-titulo">Modo PWA Offline</h3>
+              <p class="bento-desc">
+                Diseñada para operar en zonas de sombra sin señal celular en páramos o reservas naturales. Las rutas calculadas y el mapa de cargadores siguen funcionando.
+              </p>
+            </div>
+            <div class="bento-badge-footer">
+              <span>Disponibilidad: <strong>Sin señal interprovincial</strong></span>
+            </div>
+          </div>
+
+          <!-- Módulo 6: Ecosistema Host Partner -->
+          <div class="bento-card" data-reveal>
+            <div>
+              <div class="bento-icon-wrapper">🏢</div>
+              <div class="bento-tag">OPORTUNIDAD COMERCIAL</div>
+              <h3 class="bento-titulo">ChargeWay Host Partner</h3>
+              <p class="bento-desc">
+                Permite a hoteles, restaurantes y parqueaderos convertir sus espacios en puntos de recarga oficiales y monetizables bajo la normativa ARCONEL.
+              </p>
+            </div>
+            <div class="bento-badge-footer">
+              <span>Marco Legal: <strong>Exención LOSPEE</strong></span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         6. TABLA COMPARATIVA DIFERENCIAL
+         ======================================================================== -->
+    <section class="seccion-generica" id="comparativa" aria-label="Comparativa Diferencial">
+      <div class="contenedor">
+        <div class="seccion-header" data-reveal>
+          <div class="seccion-ceja">POR QUÉ CHARGEWAY</div>
+          <h2 class="seccion-titulo">Diseñado para la geografía del Ecuador.</h2>
+          <p class="seccion-bajada">
+            Compara por qué las aplicaciones de mapas tradicionales no están preparadas para la movilidad eléctrica en los Andes.
+          </p>
+        </div>
+
+        <div class="tabla-comparativa-wrapper" data-reveal>
+          <table class="tabla-comparativa">
+            <thead>
+              <tr>
+                <th>Característica Técnica</th>
+                <th>Google Maps / Waze</th>
+                <th>Apps Genéricas de Carga</th>
+                <th class="col-chargeway">ChargeWay AI</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Topografía y Altimetría Andina</td>
+                <td class="cross-no">❌ No (Cálculo plano)</td>
+                <td class="cross-no">❌ No</td>
+                <td class="col-chargeway"><span class="check-si">✅ Sí</span> (Física real de pendientes)</td>
+              </tr>
+              <tr>
+                <td>Cálculo de Regeneración de Batería</td>
+                <td class="cross-no">❌ No</td>
+                <td class="cross-no">❌ No</td>
+                <td class="col-chargeway"><span class="check-si">✅ Sí</span> (kWh recuperados en descensos)</td>
+              </tr>
+              <tr>
+                <td>Filtros por Marca y Exclusividad</td>
+                <td class="cross-no">❌ No</td>
+                <td class="alert-parcial">⚠️ Parcial</td>
+                <td class="col-chargeway"><span class="check-si">✅ Sí</span> (Distingue multimarca / concesionario)</td>
+              </tr>
+              <tr>
+                <td>Copiloto AI por Voz en Marcha</td>
+                <td class="alert-parcial">⚠️ Básico</td>
+                <td class="cross-no">❌ No</td>
+                <td class="col-chargeway"><span class="check-si">✅ Sí</span> (IA conversacional manos libres)</td>
+              </tr>
+              <tr>
+                <td>Monetización Legal para Hoteles/Parqueos</td>
+                <td class="cross-no">❌ No</td>
+                <td class="cross-no">❌ No</td>
+                <td class="col-chargeway"><span class="check-si">✅ Sí</span> (Modelo Partner bajo ARCONEL)</td>
+              </tr>
+              <tr>
+                <td>Funcionamiento Offline en Páramos</td>
+                <td class="alert-parcial">⚠️ Parcial</td>
+                <td class="cross-no">❌ No</td>
+                <td class="col-chargeway"><span class="check-si">✅ Sí</span> (PWA descargable sin señal)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         7. SECCIÓN ANFITRIONES COMERCIALES B2B
+         ======================================================================== -->
+    <section class="seccion-generica" id="anfitriones" aria-label="Red de Anfitriones">
+      <div class="contenedor">
+        <div class="partner-box" data-reveal>
+          <div class="partner-grid">
+            
+            <div class="partner-info">
+              <div class="partner-ceja">PROGRAMA B2B CHARGEWAY PARTNER</div>
+              <h2 class="partner-titulo">Convierte tu parqueadero en un punto de recarga oficial.</h2>
+              <p class="partner-bajada">
+                El parque automotor eléctrico en Ecuador crece a doble dígito. Los conductores buscan activamente hoteles, restaurantes y centros comerciales donde almorzar o descansar mientras recargan.
+              </p>
+
+              <div class="partner-features">
+                <div class="partner-feat-item">
+                  <span class="icon">✓</span>
+                  <span>Operación blindada con exención legal LOSPEE (sin requerir comercializador).</span>
+                </div>
+                <div class="partner-feat-item">
+                  <span class="icon">✓</span>
+                  <span>Control automatizado de tarifas transparentes bajo márgenes ARCONEL.</span>
+                </div>
+                <div class="partner-feat-item">
+                  <span class="icon">✓</span>
+                  <span>Visibilidad prioritaria en el mapa nacional de más de 300 cargadores.</span>
+                </div>
+              </div>
+
+              <a href="https://chargeway.vercel.app/" target="_blank" rel="noopener" class="btn-partner">
+                <span>SIMULAR RENTABILIDAD DE ANFITRIÓN</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </a>
+            </div>
+
+            <div class="partner-visual-card">
+              <div style="font-family:var(--font-mono); font-size:11px; color:var(--partner); text-transform:uppercase;">MODELO FINANCIERO ESTIMADO</div>
+              
+              <div class="partner-stat-row">
+                <span class="label">Puntos de Carga AC/DC:</span>
+                <span class="val">2 a 4 Plazas</span>
+              </div>
+              <div class="partner-stat-row">
+                <span class="label">Ocupación Promedio:</span>
+                <span class="val">5.5 horas / día</span>
+              </div>
+              <div class="partner-stat-row">
+                <span class="label">Retorno Proyectado:</span>
+                <span class="val" style="color:var(--energy);">8 a 14 Meses</span>
+              </div>
+              <div class="partner-stat-row">
+                <span class="label">Cumplimiento Legal:</span>
+                <span class="val" style="color:var(--brand);">100% Certificado</span>
+              </div>
+
+              <p style="font-size:11px; color:var(--muted); line-height:1.4; margin-top:6px;">
+                Calculado bajo la estructura de arriendo de espacio con infraestructura de recarga conforme a la regulación del Ministerio de Energía y ARCONEL.
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         8. COMPATIBILIDAD MULTIMARCA
+         ======================================================================== -->
+    <section class="marcas-strip" aria-label="Marcas Compatibles">
+      <div class="contenedor">
+        <div class="marcas-titulo">COMPATIBLE CON TODAS LAS MARCAS DE VEHÍCULOS ELÉCTRICOS EN ECUADOR</div>
+        <div class="marcas-grid">
+          <div class="marca-badge">BYD</div>
+          <div class="marca-badge">KIA EV</div>
+          <div class="marca-badge">HYUNDAI IONIQ</div>
+          <div class="marca-badge">TESLA</div>
+          <div class="marca-badge">NETA AUTO</div>
+          <div class="marca-badge">AUDI E-TRON</div>
+          <div class="marca-badge">BMW I</div>
+          <div class="marca-badge">GEELY GEOMETRY</div>
+          <div class="marca-badge">MAXUS</div>
+          <div class="marca-badge">DONGFENG</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         9. PREGUNTAS FRECUENTES (FAQ ACORDEÓN)
+         ======================================================================== -->
+    <section class="seccion-generica" id="faq" aria-label="Preguntas Frecuentes">
+      <div class="contenedor">
+        <div class="seccion-header" data-reveal style="text-align:center; margin-left:auto; margin-right:auto;">
+          <div class="seccion-ceja">RESPUESTAS DIRECTAS</div>
+          <h2 class="seccion-titulo">Preguntas Frecuentes</h2>
+          <p class="seccion-bajada">
+            Todo lo que necesitas saber para viajar con tranquilidad en tu auto eléctrico por el Ecuador.
+          </p>
+        </div>
+
+        <div class="faq-lista" data-reveal>
+          
+          <details class="faq-item" open>
+            <summary class="faq-pregunta">¿Por qué ChargeWay es más preciso que Google Maps o Waze en Ecuador?</summary>
+            <div class="faq-respuesta">
+              Google Maps y Waze calculan rutas asumiendo un consumo plano y no distinguen la masa ni la química de batería de un auto eléctrico. ChargeWay incorpora un motor de física topográfica que modela el perfil de elevación real de los Andes, sumando los kWh que recuperas por frenado regenerativo en los descensos.
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-pregunta">¿Cómo sé si los cargadores de la ruta son compatibles con mi conector?</summary>
+            <div class="faq-respuesta">
+              La plataforma incluye filtros específicos por normas de conexión presentes en Ecuador (CCS2, GB/T chino, Tipo 2 europeo y Tipo 1 americano). Además, diferencia estaciones multimarca públicas de cargadores exclusivos de concesionarios para evitar paradas fallidas.
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-pregunta">¿Cómo funciona el Copiloto AI mientras conduzco?</summary>
+            <div class="faq-respuesta">
+              El Copiloto AI es un asistente conversacional manos libres. Puedes preguntarle por voz natural en marcha cosas como "¿Dónde está el cargador rápido más cercano?" o "¿Llego a Baños con el 45% actual?". El asistente responde al instante con síntesis de voz contextualizada a tu batería.
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-pregunta">¿Puedo usar la aplicación si me quedo sin cobertura celular en un páramo?</summary>
+            <div class="faq-respuesta">
+              Sí. ChargeWay está construida sobre una arquitectura PWA Offline-First. Si pierdes la señal en zonas de sombra interprovinciales (como el cruce de Papallacta o Cajas), las rutas calculadas, el mapa descargado y los perfiles de elevación permanecen completamente operativos sin internet.
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-pregunta">¿Es legal cobrar por recarga si soy un hotel o restaurante?</summary>
+            <div class="faq-respuesta">
+              Sí. ChargeWay Host Partner opera bajo la figura jurídica de arriendo de espacio de estacionamiento con servicio de infraestructura de carga, avalada por las directrices de ARCONEL y la Ley Orgánica del Servicio Público de Energía Eléctrica (LOSPEE), sin requerir título de comercializador eléctrico.
+            </div>
+          </details>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         10. CIERRE Y LLAMADO A LA ACCIÓN FINAL
+         ======================================================================== -->
+    <section class="cierre-cta" aria-label="Cierre de Viaje">
+      <div class="contenedor cierre-inner" data-reveal>
+        <div class="hero-ceja" style="margin-bottom:16px;">
+          <span>⚡ CERO ANSIEDAD • LIBERTAD ELÉCTRICA PURA</span>
+        </div>
+        <h2 class="cierre-titulo">
+          Empieza a recorrer el Ecuador con total tranquilidad.
+        </h2>
+        <p class="cierre-bajada">
+          Planifica tu próximo viaje entre Quito, Guayaquil, Cuenca o la Costa. Conecta con más de 300 cargadores y viaja con la certeza de la física andina.
+        </p>
+        <a href="https://chargeway.vercel.app/" target="_blank" rel="noopener" class="btn-cta-primario" style="max-width:360px; margin:0 auto; padding:16px 32px; font-size:16px;">
+          <span>PLANIFICA TU VIAJE GRATIS</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- ========================================================================
+       11. PIE DE PÁGINA (FOOTER)
+       ======================================================================== -->
+  <footer class="footer">
+    <div class="contenedor">
+      <div class="footer-grid">
+        
+        <div class="footer-col-marca">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <img src="img/logo_original.png" alt="ChargeWay" width="38" height="38">
+            <span style="font-family:var(--font-display); font-size:1.3rem; font-weight:900; color:#FFFFFF;">Charge<span style="color:var(--brand)">Way</span></span>
+          </div>
+          <p style="color:var(--muted); line-height:1.6; max-width:360px;">
+            La primera plataforma de navegación inteligente y ecosistema de recarga para vehículos eléctricos adaptada a la geografía andina del Ecuador.
+          </p>
+        </div>
+
+        <div class="footer-nav-col">
+          <h4>Plataforma</h4>
+          <ul>
+            <li><a href="https://chargeway.vercel.app/" target="_blank" rel="noopener">Planificador de Viaje</a></li>
+            <li><a href="#motor-fisico">Física Andina</a></li>
+            <li><a href="#funcionalidades">Copiloto AI</a></li>
+            <li><a href="#anfitriones">Red de Anfitriones</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-nav-col">
+          <h4>Regulación</h4>
+          <ul>
+            <li><a href="#anfitriones">Normativa ARCONEL</a></li>
+            <li><a href="#anfitriones">Exención LOSPEE</a></li>
+            <li><a href="#faq">Preguntas Frecuentes</a></li>
+            <li><a href="#inicio">Volver arriba ↑</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <div>
+          © 2026 ChargeWay Ecuador. Todos los derechos reservados.
+        </div>
+        <div style="color:var(--muted); font-family:var(--font-mono); font-size:11px;">
+          ECUADOR // PANAMERICANA E35 // SOBERANÍA ENERGÉTICA
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================================================
+       12. BARRA FIJA EN CELULAR (ACCESO RÁPIDO)
+       ======================================================================== -->
+  <div class="barra-fija-movil oculta" aria-label="Acceso Rápido Móvil">
+    <div class="barra-movil-status">
+      <i class="telemetria-dot"></i>
+      <span>+300 ESTACIONES</span>
+    </div>
+    <a href="https://chargeway.vercel.app/" target="_blank" rel="noopener" class="btn-barra-movil">
+      PLANIFICA TU VIAJE
+    </a>
+  </div>
+
+  <!-- ========================================================================
+       SCRIPTS: LIBRERÍAS Y SCRIPT MAESTRO DE MOVIMIENTO
+       ======================================================================== -->
+  <script src="vendor/gsap.min.js" defer></script>
+  <script src="vendor/ScrollTrigger.min.js" defer></script>
+  <script src="vendor/lenis.min.js" defer></script>
+  <script src="js/main.js?v=20261017a" defer></script>
+
+</body>
+</html>

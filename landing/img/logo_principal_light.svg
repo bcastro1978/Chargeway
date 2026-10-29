@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 260" width="100%" height="100%" fill="none">
+  <defs>
+    <!-- Gradiente Metálico Oscuro para contraste en blanco -->
+    <linearGradient id="light-metal" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#334155" />
+      <stop offset="35%" stop-color="#1E293B" />
+      <stop offset="70%" stop-color="#475569" />
+      <stop offset="100%" stop-color="#0F172A" />
+    </linearGradient>
+
+    <!-- Gradiente Eléctrico con alto contraste -->
+    <linearGradient id="light-electric" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#059669" />
+      <stop offset="40%" stop-color="#0284C7" />
+      <stop offset="100%" stop-color="#0369A1" />
+    </linearGradient>
+  </defs>
+
+  <!-- SÍMBOLO ICONOGRÁFICO IZQUIERDA -->
+  <g transform="translate(20, 20) scale(0.43)">
+    <!-- Arco Exterior Metálico -->
+    <path d="M 256 60 C 150 60 76 142 76 242 C 76 312 136 386 216 452 L 256 488 C 240 450 200 380 180 340 C 146 276 136 240 136 216 C 136 150 186 112 256 112 C 302 112 340 132 366 166 L 406 130 C 370 86 318 60 256 60 Z" 
+          fill="url(#light-metal)" 
+          stroke="#0284C7" 
+          stroke-width="3" />
+
+    <!-- Carretera Lado Derecho -->
+    <path d="M 374 168 C 410 214 424 266 414 316 C 400 386 338 440 256 488 C 290 440 340 376 356 320 C 370 270 358 224 330 188 L 374 168 Z" 
+          fill="#0F172A" 
+          stroke="#0284C7" 
+          stroke-width="4" />
+
+    <!-- Línea Central Punteada -->
+    <path d="M 346 198 C 370 240 374 285 362 334 C 346 390 298 446 260 482" 
+          fill="none" 
+          stroke="#10B981" 
+          stroke-width="8" 
+          stroke-linecap="round" 
+          stroke-dasharray="14 18" />
+
+    <!-- Rayo Central Eléctrico -->
+    <polygon points="280,100 196,248 266,248 226,376 332,224 260,224" 
+             fill="url(#light-electric)" 
+             stroke="#0284C7" 
+             stroke-width="2" 
+             stroke-linejoin="round" />
+    <polygon points="276,118 208,244 264,244 236,346 314,228 258,228" 
+             fill="#FFFFFF" 
+             opacity="0.85" />
+
+    <!-- Punto GPS -->
+    <circle cx="256" cy="488" r="14" fill="#0284C7" />
+  </g>
+
+  <!-- LOGOTIPO TIPOGRÁFICO: CHARGEWAY -->
+  <g transform="translate(255, 135)">
+    <!-- Letras "Charge" -->
+    <text x="0" y="0" font-family="'Syne', 'Space Grotesk', system-ui, -apple-system, sans-serif" font-size="82" font-weight="900" fill="#0F172A" letter-spacing="-1">
+      Charge<tspan fill="#0284C7">Way</tspan>
+    </text>
+
+    <!-- Badge País "ECUADOR" -->
+    <g transform="translate(470, -68)">
+      <rect x="0" y="0" width="105" height="26" rx="6" ry="6" fill="#0284C7" fill-opacity="0.1" stroke="#0284C7" stroke-width="1.5" />
+      <text x="52" y="18" font-family="'Space Mono', monospace" font-size="12" font-weight="700" fill="#0369A1" text-anchor="middle" letter-spacing="2.5">
+        ECUADOR
+      </text>
+    </g>
+
+    <!-- Subtítulo Descriptor de Marca -->
+    <text x="5" y="44" font-family="'Space Mono', monospace" font-size="16" font-weight="700" fill="#475569" letter-spacing="5.5">
+      RED NACIONAL ULTRA-FAST EV
+    </text>
+
+    <!-- Línea Acento Eléctrico Inferior -->
+    <line x1="5" y1="62" x2="570" y2="62" stroke="url(#light-electric)" stroke-width="2.5" opacity="0.8" stroke-linecap="round" />
+  </g>
+</svg>

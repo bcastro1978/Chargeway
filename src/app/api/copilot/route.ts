@@ -1,6 +1,8 @@
 import { withTiming } from '@/lib/server-timing';
 import { NextResponse } from 'next/server';
 import vehiclesData from '@/lib/vehicles.json';
+import { generateTripPlan } from '@/lib/route-orchestrator';
+import { VehicleSpecs } from '@/lib/energy-core';
 import {
   findEcuadorDestination,
   getRouteChargersFromSupabase,
@@ -80,7 +82,10 @@ function isFuzzyWordMatch(target: string, candidate: string): boolean {
   if (t.includes(' ') || c.includes(' ')) return false;
   // La primera letra debe coincidir para evitar falsos positivos con rimas (ej. santa vs manta)
   if (!t || !c || t[0] !== c[0]) return false;
-  const maxDist = t.length >= 7 ? 2 : (t.length >= 5 ? 1 : 0);
+  // Longitudes no pueden diferir en más de 1 caracter para evitar falsos positivos
+  if (Math.abs(t.length - c.length) > 1) return false;
+  // Distancia máxima de edición 1 para evitar falsos positivos en vocabulario común
+  const maxDist = 1;
   return levenshtein(t, c) <= maxDist;
 }
 
@@ -500,7 +505,7 @@ const ECUADOR_CITIES_CATALOG = [
   { name: 'Loja', aliases: ['loja'], lat: -3.9931, lng: -79.2042, corridor: 'sur' },
   { name: 'Santo Domingo', aliases: ['santo domingo', 'tsachilas', 'santo domingo de los tsachilas'], lat: -0.2528, lng: -79.1724, corridor: 'costa' },
   { name: 'Quevedo', aliases: ['quevedo', 'los rios'], lat: -1.0286, lng: -79.4635, corridor: 'costa' },
-  { name: 'Guayaquil', aliases: ['guayaquil', 'gye', 'samborondon'], lat: -2.1894, lng: -79.8891, corridor: 'costa' },
+  { name: 'Guayaquil', aliases: ['guayaquil', 'gye', 'samborondon', 'aeropuerto de guayaquil', 'aeropuerto guayaquil', 'aeropuerto jose joaquin de olmedo', 'aeropuerto olmedo'], lat: -2.1894, lng: -79.8891, corridor: 'costa' },
   { name: 'Manta', aliases: ['manta', 'tarqui', 'murcielago'], lat: -0.9677, lng: -80.7089, corridor: 'costa' },
   { name: 'Portoviejo', aliases: ['portoviejo', 'manabi'], lat: -1.0544, lng: -80.4545, corridor: 'costa' },
   { name: 'Esmeraldas', aliases: ['esmeraldas'], lat: 0.9682, lng: -79.6517, corridor: 'costa' },
@@ -520,9 +525,15 @@ const ECUADOR_CITIES_CATALOG = [
   { name: 'Macas', aliases: ['macas', 'morona santiago', 'morona'], lat: -2.3087, lng: -78.1114, corridor: 'sur' },
   { name: 'Lago Agrio', aliases: ['lago agrio', 'nueva loja'], lat: 0.0847, lng: -76.8828, corridor: 'oriente' },
   { name: 'Coca', aliases: ['coca', 'el coca', 'orellana'], lat: -0.4664, lng: -76.9878, corridor: 'oriente' },
+  { name: 'Puerto Quito', aliases: ['puerto quito', 'pto quito'], lat: 0.1264, lng: -79.2558, corridor: 'costa' },
+  { name: 'Valle de los Chillos', aliases: ['valle de los chillos', 'los chillos', 'sangolqui', 'sangolquí', 'san rafael chillos', 'chillos'], lat: -0.3150, lng: -78.4500, corridor: 'local' },
 ];
 
 const HIGHWAY_DISTANCE_CACHE: Record<string, number> = {
+  'puertoquito-valledeloschillos': 148,
+  'valledeloschillos-puertoquito': 148,
+  'puertoquito-quito': 130,
+  'quito-puertoquito': 130,
   'pelileo-volcan cotopaxi': 119,
   'volcan cotopaxi-pelileo': 119,
   'quito-volcan cotopaxi': 75,
@@ -913,10 +924,17 @@ async function detectMultiStopItinerary(
       }
     }
     if (!matched) {
-      // Búsqueda difusa por palabras en la consulta
+      // Búsqueda difusa por palabras en la consulta excluyendo términos comunes de conducción
+      const TRAVEL_WORDS_BLACKLIST = [
+        'saliendo', 'salida', 'partiendo', 'pasando', 'llegando', 'llegar',
+        'salgo', 'parto', 'viajar', 'viaje', 'yendo', 'vamos', 'exactamente',
+        'aeropuerto', 'terminal', 'puerto', 'bateria', 'autonomia', 'redondo',
+        'sola', 'carga', 'cargas', 'hora', 'horas', 'km', 'kilometros',
+        'cuenta', 'cuento', 'donde', 'puedo', 'cuanto', 'cuanta', 'tiempo'
+      ];
       const tokens = normQuery.split(/[\s,.-]+/);
       for (const token of tokens) {
-        if (token.length >= 4 && !['quiero', 'hasta', 'desde', 'para', 'volver', 'regresar', 'carga'].includes(token)) {
+        if (token.length >= 4 && !['quiero', 'hasta', 'desde', 'para', 'volver', 'regresar', 'carga', ...TRAVEL_WORDS_BLACKLIST].includes(token)) {
           if (isFuzzyWordMatch(city.name, token) || city.aliases.some(a => isFuzzyWordMatch(a, token))) {
             const matchIndex = normQuery.indexOf(token);
             const existing = foundCities.find(c => c.city.name === city.name);
@@ -976,27 +994,47 @@ async function detectMultiStopItinerary(
     normQuery.includes('almorz') ||
     normQuery.includes('itinerario');
 
-  // 1. Detectar si el usuario especificó un origen explícito (ej: "desde pelileo", "partiendo de ambato", "saliendo de riobamba", "iniciando en...")
-  const originRegex = /(?:desde|partiendo de|saliendo de|arrancando en|iniciando en|salgo de|parto de)\s+([a-záéíóúñ\s]+?)(?:\s+(?:hasta|hacia|al?|para ir a|con destino a|a la|al)|$)/i;
-  const originMatch = normQuery.match(originRegex);
+  // 1. Detectar si el usuario especificó un origen o destino explícito analizando preposiciones
   let explicitOriginCity: typeof ECUADOR_CITIES_CATALOG[0] | null = null;
-  if (originMatch && originMatch[1]) {
+  let explicitDestCity: typeof ECUADOR_CITIES_CATALOG[0] | null = null;
+
+  for (const item of foundCitiesFinal) {
+    const precedingText = normQuery.substring(Math.max(0, item.index - 45), item.index).trim();
+    const isOriginPreceded = /(?:desde|partiendo de|saliendo de|salgo de|iniciando en|arrancando en|origen)\s*$/i.test(precedingText) ||
+                             /(?:desde|partiendo de|saliendo de|salgo de|iniciando en)\s+[a-z0-9%,\s]*$/i.test(precedingText);
+    const isDestPreceded = /(?:hasta|hacia|con destino a|para ir a|llegar a|llegando a|destino)\s*$/i.test(precedingText) ||
+                           /(?:hasta|hacia|con destino a)\s+[a-z0-9%,\s]*$/i.test(precedingText);
+
+    if (isOriginPreceded && !explicitOriginCity) {
+      explicitOriginCity = item.city;
+    } else if (isDestPreceded && !explicitDestCity) {
+      explicitDestCity = item.city;
+    }
+  }
+
+  // Respaldo por expresiones regulares
+  const originRegex = /(?:desde|partiendo de|saliendo de|arrancando en|iniciando en|salgo de|parto de)\s+([^,]+?)(?:\s+(?:hasta|hacia|al?|para ir a|con destino a|a la|al)|$)/i;
+  const originMatch = normQuery.match(originRegex);
+  if (!explicitOriginCity && originMatch && originMatch[1]) {
     const rawOrigin = normalize(originMatch[1]);
     explicitOriginCity = ECUADOR_CITIES_CATALOG.find(c =>
       c.aliases.some(a => rawOrigin.includes(normalize(a)) || normalize(a).includes(rawOrigin))
     ) || null;
   }
 
-  // 2. Detectar si el usuario especificó un destino explícito (ej: "hasta el volcan cotopaxio", "hacia banos", "con destino a...")
-  const explicitDestRegex = /(?:hasta|hacia|con destino a|para ir a)\s+([a-záéíóúñ\s]+?)(?:\s+(?:ida y vuelta|redondo|de ida|y vuelta|y volver|y regresar|en un|en una)|$)/i;
+  const explicitDestRegex = /(?:hasta|hacia|con destino a|para ir a)\s+([^,]+?)(?:\s+(?:ida y vuelta|redondo|de ida|y vuelta|y volver|y regresar|en un|en una)|$)/i;
   const explicitDestMatch = normQuery.match(explicitDestRegex);
-  let explicitDestCity: typeof ECUADOR_CITIES_CATALOG[0] | null = null;
-  if (explicitDestMatch && explicitDestMatch[1]) {
+  if (!explicitDestCity && explicitDestMatch && explicitDestMatch[1]) {
     const rawDest = normalize(explicitDestMatch[1]);
     explicitDestCity = ECUADOR_CITIES_CATALOG.find(c =>
       c.aliases.some(a => rawDest.includes(normalize(a)) || normalize(a).includes(rawDest))
     ) || null;
   }
+
+  // Extraer SoC inicial si fue especificado en la consulta (ej. "saliendo con el 100%", "al 90%")
+  const querySocRegex = /(?:saliendo\s+con\s+(?:el\s+)?|con\s+(?:el\s+)?|al\s+|bateria\s+(?:al\s+|en\s+))(\d{1,3})\s*%/i;
+  const querySocMatch = normQuery.match(querySocRegex);
+  const effectiveStartingSoc = querySocMatch ? Math.min(100, Math.max(5, parseInt(querySocMatch[1], 10))) : soc;
 
   // 3. Detectar si se especificó modelo de auto eléctrico en la consulta (ej. "en un yuan pro")
   const detectedVehicle = detectVehicleFromQuery(normQuery);
@@ -1097,7 +1135,7 @@ async function detectMultiStopItinerary(
   const usableBatteryKwh = detectedVehicle
     ? detectedVehicle.batteryKwh
     : Math.max(20, Number(context?.batteryCapacityKwh) || 60);
-  const startSocRatio = Math.max(0.05, Math.min(1.0, soc / 100));
+  const startSocRatio = Math.max(0.05, Math.min(1.0, effectiveStartingSoc / 100));
   const effectiveRangeKm = detectedVehicle
     ? detectedVehicle.wltpRangeKm
     : Math.max(120, baseRangeKm || (usableBatteryKwh * 5.8));
@@ -1367,7 +1405,7 @@ async function resolveDestinationFromQuery(
       isRoundTrip,
       chargers: routeInfo?.chargers || [],
       corridor: ecGuideDest.corridor,
-      recommendedStop: routeInfo?.recommendedStop || 'Riobamba (Megamaxi Multiplaza)',
+      recommendedStop: routeInfo?.recommendedStop || '',
     };
   }
 
@@ -1669,6 +1707,159 @@ async function handlePOST(request: Request) {
     const historyList: MessageHistoryItem[] = Array.isArray(history) ? history : [];
     const prevTrip = extractConversationState(historyList, activeTrip, context);
 
+    // Detección directa de comando para sincronización o mapeo de la ruta previamente consultada
+    const isMappingCommand = /^(?:mapea|traza|trazar|poner?|coloca|activar?|iniciar?)\s+(?:la\s+)?(?:ruta|navegaci[oó]n|el\s+mapa|en\s+el\s+mapa|mapa|viaje)\b/i.test(query.trim()) ||
+      /^(?:mapea|traza|mapeala|trazala|mapealo|trazalo|ponla en el mapa|traza la ruta|mapea la ruta|activa la navegacion)\b/i.test(query.trim());
+
+    if (isMappingCommand) {
+      let lastDest: any = null;
+      let lastChargers: any = null;
+      for (let i = historyList.length - 1; i >= 0; i--) {
+        const m = historyList[i] as any;
+        if (m.destination && m.destination.lat && m.destination.lng) {
+          lastDest = m.destination;
+          lastChargers = m.chargers;
+          break;
+        }
+      }
+
+      if (lastDest) {
+        const fromTxt = lastDest.origin?.name ? ` desde ${lastDest.origin.name}` : '';
+        const stopNotice = lastChargers && lastChargers.length > 0
+          ? ` Incluye ${lastChargers.length === 1 ? 'la parada necesaria' : `${lastChargers.length} paradas necesarias`} de recarga.`
+          : ' Llegas directo sin recargas obligatorias.';
+        return NextResponse.json({
+          reply: `Ruta trazada en el mapa${fromTxt} hacia ${lastDest.name}.${stopNotice}`,
+          destination: lastDest,
+          chargers: lastChargers,
+          action: 'plan_route',
+        });
+      }
+    }
+
+    // Detección directa de comandos de voz ampliados (Voice Actions para UI y Cabina)
+    if (/^(?:activar?\s+|cambiar?\s+a\s+|poner?\s+)?modo\s+(?:nocturno|oscuro|noche)\b/i.test(query.trim())) {
+      return NextResponse.json({
+        reply: 'Modo oscuro activado.',
+        action: 'toggle_theme',
+        actionPayload: { theme: 'dark' },
+      });
+    }
+
+    if (/^(?:activar?\s+|cambiar?\s+a\s+|poner?\s+)?modo\s+(?:claro|dia|diurno)\b/i.test(query.trim())) {
+      return NextResponse.json({
+        reply: 'Modo claro activado.',
+        action: 'toggle_theme',
+        actionPayload: { theme: 'light' },
+      });
+    }
+
+    if (/(?:mostrar|abrir|ver)\s+(?:el\s+)?(?:perfil|altimetr[ií]a|elevaci[oó]n|gr[aá]fico\s+de\s+elevaci[oó]n)/i.test(query.trim())) {
+      return NextResponse.json({
+        reply: 'Mostrando perfil topográfico y elevación de la ruta.',
+        action: 'toggle_elevation',
+        actionPayload: { visible: true },
+      });
+    }
+
+    if (/(?:ocultar|cerrar|quitar)\s+(?:el\s+)?(?:perfil|altimetr[ií]a|elevaci[oó]n|gr[aá]fico\s+de\s+elevaci[oó]n)/i.test(query.trim())) {
+      return NextResponse.json({
+        reply: 'Perfil de elevación ocultado.',
+        action: 'toggle_elevation',
+        actionPayload: { visible: false },
+      });
+    }
+
+    if (/(?:quitar|eliminar|borrar)\s+(?:la\s+)?[uú]ltima\s+parada/i.test(query.trim())) {
+      return NextResponse.json({
+        reply: 'He quitado la última parada de tu ruta.',
+        action: 'remove_waypoint',
+        actionPayload: { which: 'last' },
+      });
+    }
+
+    if (/(?:limpiar|quitar|eliminar|borrar)\s+(?:todas\s+las\s+|las\s+)?paradas/i.test(query.trim())) {
+      return NextResponse.json({
+        reply: 'He limpiado las paradas intermedias de tu ruta.',
+        action: 'remove_waypoint',
+        actionPayload: { which: 'all_stops' },
+      });
+    }
+
+    if (/(?:filtrar?|filtra|solo)\s+(?:cargadores\s+)?(?:r[aá]pidos|de\s+50\s*kw|dc)\b/i.test(query.trim())) {
+      return NextResponse.json({
+        reply: 'Filtro aplicado: mostrando solo cargadores rápidos de 50 kW o más.',
+        action: 'filter_chargers',
+        actionPayload: { minPowerKw: 50, fastOnly: true },
+      });
+    }
+
+    if (/(?:mostrar|ver)\s+todos\s+(?:los\s+)?cargadores\b/i.test(query.trim())) {
+      return NextResponse.json({
+        reply: 'Mostrando todas las estaciones de recarga disponibles.',
+        action: 'filter_chargers',
+        actionPayload: { minPowerKw: 0, all: true },
+      });
+    }
+
+    const changeVehicleMatch = query.match(/(?:cambiar?|cambia|seleccionar?|selecciona|poner?|usar?)\s+(?:el\s+)?(?:auto|veh[ií]culo|carro)\s+(?:a|al|por)?\s*([a-záéíóúñ0-9\s\-]+)/i);
+    if (changeVehicleMatch) {
+      const targetModelQuery = normalize(changeVehicleMatch[1].trim());
+      if (targetModelQuery && targetModelQuery.length > 2 && !targetModelQuery.includes('modo') && !targetModelQuery.includes('ruta')) {
+        const foundV = (vehiclesData as any[]).find(v => {
+          const mNorm = normalize(v.model);
+          const bNorm = normalize(v.brand);
+          return targetModelQuery.includes(mNorm) || mNorm.includes(targetModelQuery) || targetModelQuery.includes(`${bNorm} ${mNorm}`);
+        });
+        if (foundV) {
+          return NextResponse.json({
+            reply: `Vehículo cambiado a ${foundV.brand} ${foundV.model}. He actualizado tus parámetros de batería y autonomía.`,
+            action: 'change_vehicle',
+            actionPayload: { vehicleModel: foundV.model, vehicleBrand: foundV.brand },
+          });
+        }
+      }
+    }
+
+    const reportStatusMatch = query.match(/(?:reportar?|reporta|notificar?)\s+(?:que\s+el\s+cargador|la\s+estaci[oó]n|el\s+cargador)?\s*([a-záéíóúñ0-9\s\-]+?)\s+(?:est[aá]\s+|como\s+)?(ocupad[oa]|lleno|con fila|averiad[oa]|dañad[oa]|danad[oa]|no vale|fuera de servicio|disponible|libre|operativo)\b/i);
+    if (reportStatusMatch) {
+      const chName = reportStatusMatch[1].trim();
+      const rawStatus = reportStatusMatch[2].toLowerCase();
+      const status = /averiad|dañad|danad|no vale|fuera/i.test(rawStatus)
+        ? 'broken'
+        : (/ocupad|lleno|con fila/i.test(rawStatus) ? 'busy' : 'available');
+      const statusLabel = status === 'broken' ? 'fuera de servicio' : (status === 'busy' ? 'ocupado' : 'disponible y operativo');
+
+      return NextResponse.json({
+        reply: `He registrado tu reporte del cargador ${chName} como ${statusLabel}. Gracias por apoyar a la comunidad ChargeWay.`,
+        action: 'report_charger',
+        actionPayload: { chargerName: chName, status },
+      });
+    }
+
+    const marginMatch = query.match(/(?:prefiero\s+llegar\s+con|reserva\s+de|margen\s+de)\s*(\d{1,2})\s*%/i);
+    if (marginMatch) {
+      const pct = parseInt(marginMatch[1], 10);
+      if (pct >= 5 && pct <= 40) {
+        return NextResponse.json({
+          reply: `Margen de seguridad configurado al ${pct}%. Tus rutas ahora se planificarán garantizando este porcentaje mínimo al llegar.`,
+          action: 'update_preferences',
+          actionPayload: { minArrivalSocSafetyMargin: pct / 100 },
+        });
+      }
+    }
+
+    const styleMatch = query.match(/(?:estilo|modo)\s+(?:de\s+conducci[oó]n|de\s+manejo)\s+(eco|econ[oó]mico|sport|deportivo|normal)/i);
+    if (styleMatch) {
+      const raw = styleMatch[1].toLowerCase();
+      const style = raw.includes('eco') ? 'eco' : (raw.includes('sport') || raw.includes('depor') ? 'sport' : 'normal');
+      return NextResponse.json({
+        reply: `Estilo de conducción configurado en modo ${style.toUpperCase()}. Se han adaptado los cálculos de consumo para tus rutas.`,
+        action: 'update_preferences',
+        actionPayload: { drivingStyle: style },
+      });
+    }
+
     // =========================================================================
     // AGENTE INTELIGENTE GEMINI AI (ORQUESTADOR PRINCIPAL CON FUNCTION CALLING)
     // =========================================================================
@@ -1689,6 +1880,7 @@ async function handlePOST(request: Request) {
                     destination: { type: 'STRING', description: 'Nombre de la ciudad, pueblo o atractivo en Ecuador (ej. Volcán Cotopaxi, Baños, Ibarra, Riobamba, Manta, Cuenca)' },
                     isRoundTrip: { type: 'BOOLEAN', description: 'Indica si el conductor solicita viaje de ida y vuelta o ida y retorno' },
                     vehicleModel: { type: 'STRING', description: 'Modelo o nombre del vehículo eléctrico si el conductor lo menciona (ej. Yuan Pro, Dolphin, EV6)' },
+                    initialSoc: { type: 'NUMBER', description: 'Porcentaje inicial de batería (SoC, ej. 100) si el conductor lo menciona explícitamente' },
                     waypoints: {
                       type: 'ARRAY',
                       items: { type: 'STRING' },
@@ -1741,46 +1933,34 @@ async function handlePOST(request: Request) {
 
         const activePlannedStops = activeTrip?.suggestedStops || (activeTrip?.suggestedStop ? [activeTrip.suggestedStop] : (prevTrip?.suggestedStop ? [prevTrip.suggestedStop] : []));
         const plannedStopsPrompt = activePlannedStops.length > 0 ? `
-PARADAS DE RECARGA PLANIFICADAS EN LA RUTA:
-${activePlannedStops.map((s: any, idx: number) => `- Parada ${idx + 1}: ${s.name || s.nombre} (${s.power || '50 kW'}) en ${s.canton || 'la ruta'}.
-  * Tiempo de recarga estimado: ${s.estMinutes || 25} minutos
-  * Energía requerida a cargar: ~${s.kwhToCharge || 20} kWh
-  * Coordenadas: lat ${s.lat}, lng ${s.lng}
-  * Sentido: ${s.isInbound ? 'al regreso / retorno' : 'de ida'}`).join('\n')}
-` : '';
+PARADAS PLANIFICADAS: ${activePlannedStops.map((s: any, idx: number) => `P${idx + 1}: ${s.name || s.nombre} (${s.power || '50kW'}, ~${s.kwhToCharge || 20}kWh, ~${s.estMinutes || 25}min)`).join('; ')}` : '';
 
-        const systemInstructionText = `Eres el Copiloto Inteligente de ChargeWay, el asistente de voz y navegación para conductores de vehículos eléctricos en Ecuador. Eres un verdadero agente experto en movilidad eléctrica, topografía andina y la red nacional de recarga.
+        const systemInstructionText = `Eres el Copiloto Inteligente de ChargeWay, el asistente de voz y navegación para conductores de vehículos eléctricos en Ecuador.
 
-CONOCIMIENTO EXPERTO DE LA RED DE CARGA Y CONECTORES EN ECUADOR:
-1. Conectores en Ecuador:
-   - GB/T (Guobiao): Estándar nacional chino (DC y AC). Utilizado ampliamente por BYD (Yuan Pro, Dolphin, Tang, Han, Song Plus), JAC, Dongfeng, Leapmotor y marcas chinas. Existen cerca de 100 puntos en el país (red oficial BYD y estaciones multiconector en Pichincha, Guayas, Manabí, Azuay, Imbabura, etc.).
-   - CCS2 (Combo 2): Estándar europeo de carga rápida DC (Kia, Hyundai, Porsche, BMW, Mercedes, Tesla con adaptador, Audi). Redes: Condor Charge, centros comerciales y estaciones públicas.
-   - Tipo 2 (Mennekes / Wallbox): Corriente alterna AC de 7.4 kW a 22 kW ampliamente disponible en centros comerciales, hoteles, restaurantes y domicilios.
-   - CHAdeMO: Disponible en algunos puntos para Nissan Leaf o autos japoneses de importación.
-2. Topografía y Física Energética Andina:
-   - En ascensos andinos (Papallacta a 4,000 msnm, El Chasqui / Cotopaxi a 3,600 msnm), el consumo se eleva notablemente.
-   - En descensos hacia la Costa o Amazonía, la regeneración gravitatoria recupera energía útil para la batería.
-3. Consultas de Información vs. Órdenes de Navegación:
-   - Si el usuario formula preguntas informativas (ej: "¿cuáles son los puntos de carga...", "¿dónde puedo cargar...", "¿cuántos cargadores hay en...", "¿qué estaciones tienen conector GB/T?"), invoca OBLIGATORIAMENTE la herramienta 'search_chargers' para consultar la base de datos real y responder con datos precisos.
-   - NUNCA agregues paradas a la ruta ni invoques 'add_charging_stop' cuando el usuario solo hace una pregunta informativa. Solo invoca 'add_charging_stop' si el conductor dice explícitamente "agrega la parada", "añade esta estación a mi ruta" o "pon esta parada".
-4. Estilo de Comunicación:
-   - Sintetiza la información devuelta por la base de datos de manera clara, autoritativa, conversacional y experta, ideal para escuchar o leer en cabina.
+REGLAS DE COMUNICACIÓN EN CABINA Y EFICIENCIA DE TOKENS (MANDATORIAS):
+1. Brevedad Extrema: El conductor escucha por voz (TTS). Sé DIRECTO, ULTRA CONCISO y PRECISO.
+2. Longitud Máxima: 2 a 3 oraciones cortas (MÁXIMO 45 a 60 palabras en total). Prohibido escribir párrafos largos o ensayos.
+3. Cero Relleno ni Disculpas: Prohibido disculparse ("Disculpa la confusión..."), saludar extensamente o dar preámbulos ("Analizando el trayecto directo..."). Empieza de inmediato con la respuesta.
+4. Estructura Obligatoria:
+   - Oración 1: Respuesta directa e inequívoca a la pregunta (ej. "Sí, llegas con seguridad" o "No es seguro viajar con una sola carga").
+   - Oración 2: Dato clave y llegada (distancia en km, efecto del relieve/desnivel y porcentaje estimado de batería al llegar).
+   - Oración 3: Recomendación puntual o pregunta de acción corta (ej. "¿Añadimos parada de recarga rápida en Mitad del Mundo (conector GB/T)?").
 
-TELEMETRÍA REAL DEL VEHÍCULO ACTUAL:
-- Vehículo: ${vehicle} (${battery} kWh de batería)
-- Marca del vehículo: ${vehicleBrand || 'Genérica'}
-- Estado de carga actual (SoC): ${soc}% (~${availableKwh.toFixed(1)} kWh disponibles)
-- Autonomía disponible estimada: ${baseRangeKm} km (WLTP: ${context?.wltpRangeKm || 305} km)
-- Temperatura exterior: ${context?.ambientTempC ?? 17}°C
-- Origen de viaje: Quito, Ecuador
-${activeTrip ? `- Viaje activo en mapa: De ${activeTrip.originName} a ${activeTrip.destinationName} (${activeTrip.distanceKm} km, consumo estimado ${activeTrip.consumptionKwh} kWh, llegada con ${activeTrip.arrivalSoc}% / ${activeTrip.arrivalRangeKm} km de margen). ${activeTrip.isRoundTrip ? 'Es viaje de ida y vuelta.' : ''}` : '- No hay ruta activa en el mapa actualmente.'}
+CONOCIMIENTO TÉCNICO Y RED EN ECUADOR:
+- Conectores: GB/T (estándar chino/BYD), CCS2 (estándar europeo/Kia/Hyundai/Tesla), Tipo 2 (AC comercial/residencial), CHAdeMO.
+- Topografía Andina: Subidas andinas elevan el consumo drásticamente; descensos hacia Costa/Amazonía recuperan energía por regeneración.
+- Herramientas: Para consultar cargadores usa 'search_chargers'. Solo invoca 'add_charging_stop' si el conductor pide explícitamente agregar o poner la parada.
+- Guardrails: Si la pregunta no se relaciona con vehículos eléctricos, rutas o navegación en Ecuador, rechaza educadamente en una sola frase breve.
+
+TELEMETRÍA ACTUAL:
+- Auto: ${vehicle} (${battery} kWh, SoC: ${soc}%, disp: ~${availableKwh.toFixed(1)} kWh, aut est: ${baseRangeKm} km)
+${activeTrip ? `- Ruta previa en mapa: ${activeTrip.originName} ➔ ${activeTrip.destinationName}. (Nota: Si el conductor consulta o pide ir a otro destino o calcular un nuevo viaje, calcula la nueva ruta solicitada sin arrastrar datos del mapa previo).` : '- Sin ruta en mapa.'}
 ${plannedStopsPrompt}
 `;
 
-        // Limpiar y estructurar historial asegurando alternancia estricta user <-> model
-        // y eliminando duplicados de la consulta actual al final
+        // Historial optimizado a las últimas 4 intervenciones para ahorrar tokens
         const cleanHistory: Array<{ role: 'user' | 'model'; parts: [{ text: string }] }> = [];
-        for (const h of historyList.slice(-8)) {
+        for (const h of historyList.slice(-4)) {
           if (!h.content || !h.content.trim()) continue;
           const role: 'user' | 'model' = h.role === 'assistant' ? 'model' : 'user';
           if (cleanHistory.length > 0 && cleanHistory[cleanHistory.length - 1].role === role) {
@@ -1790,8 +1970,6 @@ ${plannedStopsPrompt}
           }
         }
 
-        // Si el último mensaje es del usuario (ej. si el frontend ya envió la consulta actual en history),
-        // quitarlo para que la consulta actual 'query' sea el único turno final de usuario
         if (cleanHistory.length > 0 && cleanHistory[cleanHistory.length - 1].role === 'user') {
           cleanHistory.pop();
         }
@@ -1801,10 +1979,10 @@ ${plannedStopsPrompt}
           { role: 'user', parts: [{ text: query }] },
         ];
 
-        const targetModels = ['gemini-3.8-flash', 'gemini-3.7-flash', 'gemini-flash-latest', 'gemini-3.5-flash-lite', 'gemini-3.5-flash'];
+        const targetModels = ['gemini-3.5-flash', 'gemini-3.5-flash-lite', 'gemini-3.8-flash', 'gemini-3.7-flash'];
         let candidateContent: any = null;
         let candidatePart: any = null;
-        let usedModel = 'gemini-3.8-flash';
+        let usedModel = 'gemini-3.5-flash';
 
         for (const modelName of targetModels) {
           try {
@@ -1815,6 +1993,10 @@ ${plannedStopsPrompt}
                 contents: messages,
                 tools,
                 systemInstruction: { parts: [{ text: systemInstructionText }] },
+                generationConfig: {
+                  maxOutputTokens: 180,
+                  temperature: 0.2,
+                },
               }),
               signal: AbortSignal.timeout(4500),
             });
@@ -1856,6 +2038,7 @@ ${plannedStopsPrompt}
             let returnDestination: any = undefined;
             let returnChargers: any = undefined;
             let returnAction: string | undefined = undefined;
+            let returnActionPayload: any = undefined;
             let returnWaypoint: any = undefined;
             let returnPlaces: any = undefined;
 
@@ -1863,248 +2046,164 @@ ${plannedStopsPrompt}
               const destArg = call.args?.destination || query;
               const isRoundArg = Boolean(call.args?.isRoundTrip || normQuery.includes('ida y vuelta') || normQuery.includes('regres'));
 
-              // Resolver UNA sola vez: la consulta completa si parece multi-parada (Gemini suele reducirla a un destino),
-              // si no, el destino extraído por Gemini. Solo se intenta la otra variante si la primera no resuelve.
-              const isMultiStopQuery = normQuery.includes('pasar') || normQuery.includes('previamente') || normQuery.includes('despues') || normQuery.includes('luego') || normQuery.includes('parada') || normQuery.includes('desde') || normQuery.split(/\s+/).length > 6;
-              const primaryQuery = isMultiStopQuery ? normQuery : destArg;
-              const secondaryQuery = isMultiStopQuery ? destArg : normQuery;
-              const resolved = await resolveDestinationFromQuery(primaryQuery, effectiveOriginCoords, context)
-                || (secondaryQuery !== primaryQuery ? await resolveDestinationFromQuery(secondaryQuery, effectiveOriginCoords, context) : null);
+              // 1. Extraer origen explícito si el conductor o Gemini lo especificaron
+              let tripOriginCoords = effectiveOriginCoords;
+              let explicitOriginObj: { name: string; lat: number; lng: number } | undefined = undefined;
+
+              if (call.args?.origin) {
+                const normOrigin = normalize(call.args.origin);
+                const foundOrigCity = ECUADOR_CITIES_CATALOG.find(c =>
+                  c.aliases.some(a => normOrigin.includes(normalize(a)) || normalize(a).includes(normOrigin)) ||
+                  normalize(c.name).includes(normOrigin)
+                );
+                if (foundOrigCity) {
+                  tripOriginCoords = [foundOrigCity.lng, foundOrigCity.lat];
+                  explicitOriginObj = { name: foundOrigCity.name, lat: foundOrigCity.lat, lng: foundOrigCity.lng };
+                }
+              }
+
+              // Extraer SoC inicial si fue indicado en la consulta o argumento (ej. "saliendo con el 100%")
+              const querySocMatch = normQuery.match(/(?:saliendo\s+con\s+(?:el\s+)?|con\s+(?:el\s+)?|al\s+|bateria\s+(?:al\s+|en\s+))(\d{1,3})\s*%/i);
+              const effectiveStartingSoc = (call.args as any)?.initialSoc ?? (querySocMatch ? parseInt(querySocMatch[1], 10) : soc);
+
+              // 2. Solo considerar multi-stop si hay múltiples paradas intermedias explícitas
+              const hasExplicitWaypoints = Array.isArray(call.args?.waypoints) && call.args.waypoints.length > 0;
+              const hasMultiStopText = (normQuery.includes('pasar por') || normQuery.includes('pasando por') || normQuery.includes('despues') || normQuery.includes('luego') || normQuery.includes('parada en'));
+              const primaryQuery = (hasExplicitWaypoints || hasMultiStopText) ? normQuery : destArg;
+              const secondaryQuery = primaryQuery !== normQuery ? normQuery : destArg;
+              let resolved = await resolveDestinationFromQuery(primaryQuery, tripOriginCoords, context);
+              if (!resolved && secondaryQuery !== primaryQuery) {
+                resolved = await resolveDestinationFromQuery(secondaryQuery, tripOriginCoords, context);
+              }
 
               if (resolved) {
-                const matchesActiveTrip = activeTrip && Number(activeTrip.distanceKm) > 0 && (
-                  normQuery.includes(normalize(activeTrip.destinationName || '')) ||
-                  normalize(resolved.name).includes(normalize(activeTrip.destinationName || '')) ||
-                  normalize(activeTrip.destinationName || '').includes(normalize(resolved.name)) ||
-                  (isRoundArg && Boolean(activeTrip.isRoundTrip)) ||
-                  (activeTrip.waypoints && activeTrip.waypoints.some((w: any) => normQuery.includes(normalize(w.name || '')))) ||
-                  normQuery.includes('ruta') || normQuery.includes('viaje') || normQuery.includes('llegar') || normQuery.includes('bateria') || normQuery.includes('autonomia')
-                );
+                if ((resolved as any).origin) {
+                  explicitOriginObj = (resolved as any).origin;
+                }
 
-                const totalKm = (matchesActiveTrip && Number(activeTrip.distanceKm) > 0)
-                  ? Math.round(Number(activeTrip.distanceKm))
-                  : ((isRoundArg && !resolved.isRoundTrip) ? resolved.distKm * 2 : resolved.distKm);
+                // Origen y destino geográficos
+                const startPt = explicitOriginObj
+                  ? { lat: explicitOriginObj.lat, lng: explicitOriginObj.lng }
+                  : (tripOriginCoords ? { lat: tripOriginCoords[1], lng: tripOriginCoords[0] } : { lat: -0.1807, lng: -78.4678 });
 
-                const effectiveBaseRange = Math.max(120, Number(context?.estimatedRangeKm || context?.wltpRangeKm || 344));
-                const kwhRequired = (matchesActiveTrip && activeTrip?.consumptionKwh !== undefined && Number(activeTrip.consumptionKwh) > 0)
-                  ? Math.round(Number(activeTrip.consumptionKwh) * 10) / 10
-                  : Math.round((totalKm * (battery / effectiveBaseRange) * 1.05) * 10) / 10;
+                const destPt = { lat: resolved.lat, lng: resolved.lng };
 
-                const rawArrivalSoc = (matchesActiveTrip && activeTrip?.arrivalSoc !== undefined) ? activeTrip.arrivalSoc : undefined;
-                const arrivalSoc = (rawArrivalSoc !== undefined && !isNaN(Number(rawArrivalSoc)))
-                  ? (Math.abs(Number(rawArrivalSoc)) <= 1.0 ? Math.round(Number(rawArrivalSoc) * 100) : Math.round(Number(rawArrivalSoc)))
-                  : Math.round(soc - (kwhRequired / battery) * 100);
+                const routeWaypoints = (resolved.waypoints && resolved.waypoints.length > 0)
+                  ? resolved.waypoints.map(w => ({ lng: w.lng, lat: w.lat }))
+                  : [];
 
-                const canReach = arrivalSoc >= 15;
+                const routeCoordsToPlan = [
+                  { lng: startPt.lng, lat: startPt.lat },
+                  ...routeWaypoints,
+                  { lng: destPt.lng, lat: destPt.lat },
+                ];
 
-                // 1. Obtener cargadores del contexto de ruta viva (calculados por simulación física) o de Supabase
+                if (isRoundArg) {
+                  routeCoordsToPlan.push({ lng: startPt.lng, lat: startPt.lat });
+                }
+
+                // 1. Resolver especificaciones físicas reales del vehículo
+                let vSpecs: VehicleSpecs = {
+                  usable_battery_kwh: battery,
+                  drag_coefficient: 0.29,
+                  frontal_area_m2: 2.1,
+                  weight_kg: 1350,
+                  peak_charging_kw: 50,
+                  wltp_range_km: baseRangeKm,
+                };
+
+                const vQueryNorm = normalize(`${vehicle} ${(call.args as any)?.vehicleModel || ''}`);
+                const foundV = (vehiclesData as any[]).find(v => {
+                  const mNorm = normalize(v.model);
+                  const bNorm = normalize(v.brand);
+                  return vQueryNorm.includes(mNorm) || mNorm.includes(vQueryNorm) || vQueryNorm.includes(`${bNorm} ${mNorm}`);
+                });
+
+                if (foundV?.specs) {
+                  vSpecs = {
+                    usable_battery_kwh: foundV.specs.usable_battery_kwh || battery,
+                    drag_coefficient: foundV.specs.drag_coefficient || 0.29,
+                    frontal_area_m2: foundV.specs.frontal_area_m2 || 2.1,
+                    weight_kg: foundV.specs.weight_kg || 1350,
+                    peak_charging_kw: foundV.specs.peak_charging_kw || 50,
+                    wltp_range_km: foundV.specs.wltp_range_km || baseRangeKm,
+                  };
+                }
+
+                // Preferencias del conductor aplicadas a la simulación
+                const minMarginSoc = Math.round((context?.preferences?.minArrivalSocSafetyMargin ?? 0.15) * 100);
+                const drivingStyle = context?.preferences?.drivingStyle || 'normal';
+                const styleFactor = drivingStyle === 'eco' ? 0.93 : (drivingStyle === 'sport' ? 1.12 : 1.0);
+
+                // Valores base de contingencia
+                let totalKm = (isRoundArg && !resolved.isRoundTrip) ? resolved.distKm * 2 : resolved.distKm;
+                let kwhRequired = Math.round((totalKm * (battery / baseRangeKm) * 1.05 * styleFactor) * 10) / 10;
+                let arrivalSoc = Math.round(effectiveStartingSoc - (kwhRequired / battery) * 100);
+                let canReach = arrivalSoc >= minMarginSoc;
                 let combinedChargers: CopilotChargerInfo[] = [];
 
-                if (context?.routeChargers && context.routeChargers.length > 0) {
-                  combinedChargers = context.routeChargers.map((c: any) => ({
-                    name: c.name,
-                    lat: c.lat,
-                    lng: c.lng,
-                    power: c.power || '50 kW',
-                    speed: c.speed || 'Rápida',
-                    operator: c.operator || undefined,
-                    isBrandMatch: isBrandMatch({ name: c.name, operator: c.operator }, vehicleBrand),
-
-                    isNecessaryStop: Boolean(c.isNecessaryStop),
-                  }));
-                } else {
-                  // Si no hay contexto de ruta viva y la batería no alcanza directo,
-                  // buscamos estaciones en el punto intermedio de la carretera antes de agotarse
-                  let searchCoords = { lat: resolved.lat, lng: resolved.lng };
-                  let isHighwayMidpoint = false;
-
-                  if (!canReach) {
-                    if ((resolved as any).midpointCoords) {
-                      // Punto medio real dinámico calculado a lo largo de la carretera Mapbox
-                      searchCoords = (resolved as any).midpointCoords;
-                      isHighwayMidpoint = true;
-                    } else {
-                      const normDest = normalize(resolved.name);
-                      if (resolved.lng < -78.8 || normDest.includes('same') || normDest.includes('mompiche') || normDest.includes('atacames') || normDest.includes('esmeraldas') || normDest.includes('pedernales') || normDest.includes('manta') || normDest.includes('guayaquil') || normDest.includes('quevedo')) {
-                        searchCoords = { lat: -0.2528, lng: -79.1724 }; // Santo Domingo de los Tsáchilas
-                        isHighwayMidpoint = true;
-                      } else if (normDest.includes('macas') || normDest.includes('morona') || resolved.lat < -1.8 || normDest.includes('cuenca') || normDest.includes('loja')) {
-                        // Hacia Macas (Morona Santiago) o el Sur profundo, la parada de recarga estratégica es Riobamba (Km 183, Megamaxi Multiplaza / Paseo Shopping)
-                        searchCoords = { lat: -1.6636, lng: -78.6546 }; // Riobamba
-                        isHighwayMidpoint = true;
-                      } else if (resolved.lat < -0.8 || normDest.includes('riobamba') || normDest.includes('ambato') || normDest.includes('banos')) {
-                        searchCoords = { lat: -1.2491, lng: -78.6168 }; // Ambato / Sierra Centro
-                        isHighwayMidpoint = true;
-                      } else if (normDest.includes('tulcan') || normDest.includes('carchi') || normDest.includes('san gabriel') || normDest.includes('bolivar')) {
-                        searchCoords = { lat: 0.3517, lng: -78.1223 }; // Ibarra centro
-                        isHighwayMidpoint = true;
-                      } else if (resolved.lng > -78.1 || normDest.includes('tena') || normDest.includes('puyo') || normDest.includes('coca')) {
-                        searchCoords = { lat: -0.46, lng: -77.89 }; // Baeza / Napo
-                        isHighwayMidpoint = true;
-                      }
-                    }
-                  }
-
-                  const supabaseChargers = await getRouteChargersFromSupabase(resolved.corridor || 'sur', searchCoords);
-                  const brandPrioritized = prioritizeChargersByBrand(
-                    supabaseChargers.length > 0 ? supabaseChargers.map(c => ({
-                      name: c.name,
-                      lat: c.location.lat,
-                      lng: c.location.lng,
-                      power: c.power,
-                      speed: c.speed,
-                      operator: c.operator,
-                      isNecessaryStop: isHighwayMidpoint,
-                    })) : (resolved.chargers || []),
+                // 2. Ejecución del orquestador físico completo de la arquitectura (Mapbox + Elevación + energy-core)
+                try {
+                  const tripPlanResult = await generateTripPlan(
+                    routeCoordsToPlan,
+                    vSpecs,
+                    effectiveStartingSoc / 100,
                     vehicleBrand
                   );
-                  combinedChargers = brandPrioritized.list;
-                  if (isHighwayMidpoint && combinedChargers.length > 0) {
-                    combinedChargers[0].isNecessaryStop = true;
+
+                  if (tripPlanResult && tripPlanResult.route) {
+                    totalKm = Math.round(tripPlanResult.route.distance / 1000);
+                    kwhRequired = Math.round(((tripPlanResult.totalConsumptionWh / 1000) * styleFactor) * 10) / 10;
+                    arrivalSoc = Math.round(tripPlanResult.arrivalSoc * 100);
+                    canReach = tripPlanResult.simulation
+                      ? (tripPlanResult.simulation.isDirectReachable && arrivalSoc >= minMarginSoc)
+                      : (arrivalSoc >= minMarginSoc);
+
+                    if (tripPlanResult.suggestedChargingStops && tripPlanResult.suggestedChargingStops.length > 0) {
+                      const stops = tripPlanResult.suggestedChargingStops;
+                      combinedChargers = stops.map((s: any, idx: number) => ({
+                        name: s.nombre || s.name,
+                        lat: s.location.lat,
+                        lng: s.location.lng,
+                        power: s.potencia || s.power || '50 kW',
+                        speed: s.velocidad || 'Rápida',
+                        operator: s.fuente || s.operador || s.operator || undefined,
+                        isBrandMatch: isBrandMatch({ name: s.nombre || s.name }, vehicleBrand),
+                        isNecessaryStop: true,
+                        legIndex: idx + 1,
+                        totalLegs: stops.length,
+                        kwhToCharge: s.recommendedCharge?.kwhToCharge || 15,
+                        estMinutes: s.recommendedCharge?.estMinutes || 20,
+                        posKm: s.posKm,
+                        isInbound: Boolean(s.isInbound),
+                      }));
+                    }
                   }
+                } catch (planErr) {
+                  console.warn('generateTripPlan in copilot plan_trip error, falling back:', planErr);
                 }
 
-                // 2. Comprobar si existen paradas necesarias calculadas físicamente (ej. multi-paradas para 1090 km)
-                const rawNecStops = (activeTrip as any)?.suggestedStops || (context?.activeTrip as any)?.suggestedStops || (activeTrip?.suggestedStop ? [activeTrip.suggestedStop] : context?.activeTrip?.suggestedStop ? [context.activeTrip.suggestedStop] : []);
-                const necessaryStopName = activeTrip?.recommendedChargerName || context?.activeTrip?.recommendedChargerName || resolved.recommendedStop;
-
-                if (rawNecStops.length > 0) {
-                  const brandCompatibleNecStops = rawNecStops.filter((s: any) =>
-                    isChargerBrandCompatible({ name: s.name, operator: s.operator }, vehicleBrand)
-                  );
-                  const necessaryItems: CopilotChargerInfo[] = (brandCompatibleNecStops.length > 0 ? brandCompatibleNecStops : rawNecStops).map((s: any, idx: number) => ({
-                    name: s.name,
-                    lat: s.lat,
-                    lng: s.lng,
-                    power: s.power || '50 kW',
-                    speed: 'Rápida',
-                    operator: s.operator || undefined,
-                    isBrandMatch: isBrandMatch({ name: s.name }, vehicleBrand),
-
-                    isNecessaryStop: true,
-                    legIndex: s.legIndex ?? (idx + 1),
-                    totalLegs: s.totalLegs ?? rawNecStops.length,
-                    kwhToCharge: s.kwhToCharge,
-                    estMinutes: s.estMinutes,
-                    posKm: s.posKm,
-                    isInbound: s.isInbound !== undefined ? s.isInbound : (isRoundArg ? (s.posKm ? s.posKm > (totalKm * 0.5) : idx > 0) : false),
-                  }));
-
-                  // El copiloto manos libres presenta ÚNICAMENTE las paradas necesarias calculadas.
-                  // El resto de cargadores en ruta se consultan en 'Cargadores en Tramo del Vehículo'.
-                  combinedChargers = necessaryItems;
-                } else if (!canReach) {
-                  // Si aún no hay paradas físicas calculadas en el mapa (ej. ruta nueva recién consultada):
-                  // Usamos los cargadores estratégicos disponibles respetando la compatibilidad de marca
-                  const rawCandidates: CopilotChargerInfo[] = (resolved.chargers && resolved.chargers.length > 0)
-                    ? resolved.chargers
-                    : combinedChargers;
-                  const candidateChargers: CopilotChargerInfo[] = prioritizeChargersByBrand(rawCandidates, vehicleBrand).list;
-
-                  if (candidateChargers.length > 0) {
-                    // CÁLCULO FÍSICO PURO BASADO EN EL DÉFICIT REAL DE ENERGÍA Y CAPACIDAD DEL VEHÍCULO
-                    const usableBatteryKwh = Math.max(20, battery);
-                    const currentKwhAtStart = usableBatteryKwh * (soc / 100);
-                    const safeReserveKwh = usableBatteryKwh * 0.12; // 12% reserva obligatoria de seguridad
-                    const availableKwh = Math.max(0, currentKwhAtStart - safeReserveKwh);
-                    const kwhDeficit = Math.max(0, kwhRequired - availableKwh);
-
-                    // Si no hay déficit físico real (batería grande o trayecto dentro de rango), 0 paradas necesarias
-                    let stopsNeeded = 0;
-                    if (kwhDeficit > 0) {
-                      // Cada recarga útil típica en ruta (al 80-85%) aporta ~60%-65% de la capacidad de la batería
-                      const kwhGainPerStop = Math.max(12, usableBatteryKwh * 0.65);
-                      stopsNeeded = Math.min(candidateChargers.length, Math.max(1, Math.ceil(kwhDeficit / kwhGainPerStop)));
-                    }
-
-                    // Evaluación física del tramo de ida
-                    const oneWayKm = isRoundArg ? Math.round(totalKm / 2) : totalKm;
-                    const estOutboundKwh = Math.round((oneWayKm * (battery / effectiveBaseRange) * 1.15) * 10) / 10;
-                    const canReachOutboundDirectly = availableKwh >= estOutboundKwh;
-
-                    // Si la ida se completa directamente con la carga inicial, el tramo de ida NO requiere paradas
-                    let chosen: Array<CopilotChargerInfo & { isOutbound?: boolean; isInbound?: boolean }> = [];
-
-                    if (kwhDeficit > 0) {
-                      const oLat = effectiveOriginCoords ? effectiveOriginCoords[1] : -0.1807;
-                      const oLng = effectiveOriginCoords ? effectiveOriginCoords[0] : -78.4678;
-                      // Filtrar cargadores urbanos adyacentes al punto de partida (< 35 km) que no aportan avance real
-                      const highwayCandidates = candidateChargers.filter(c => {
-                        const distFromOrigin = Math.hypot((c.lat - oLat) * 111, (c.lng - oLng) * 111);
-                        return distFromOrigin >= 35 || candidateChargers.length <= 1;
-                      });
-
-                      const availablePool = highwayCandidates.length > 0 ? highwayCandidates : candidateChargers;
-
-                      if (isRoundArg && canReachOutboundDirectly) {
-                        // La ida es directa sin paradas. El déficit es exclusivamente en el tramo de retorno (subida/distancia)
-                        if (availablePool.length > 0 && availablePool[0]) {
-                          chosen = [{ ...availablePool[0], isInbound: true }];
-                        } else {
-                          // Si no hay electrolinera en la carretera, la parada física obligatoria es en destino
-                          chosen = [{
-                            name: `Recarga en destino (${resolved.name})`,
-                            lat: resolved.lat,
-                            lng: resolved.lng,
-                            power: '22 kW AC / 220V',
-                            speed: 'Semirrápida',
-                            isInbound: true,
-                          }];
-                        }
-                      } else if (isRoundArg && !canReachOutboundDirectly && availablePool.length >= 2) {
-                        chosen = [
-                          { ...availablePool[0], isInbound: false },
-                          { ...availablePool[1], isInbound: true },
-                        ];
-                      } else if (availablePool.length > 0) {
-                        chosen = [availablePool[0]];
+                // 3. Si la simulación física indica que no llega directo y aún no se asignaron paradas,
+                // buscar electrolineras compatibles a lo largo de la ruta
+                if (!canReach && combinedChargers.length === 0) {
+                  const candidatePool = prioritizeChargersByBrand(resolved.chargers || [], vehicleBrand).list;
+                  if (candidatePool.length > 0) {
+                    combinedChargers = [
+                      {
+                        ...candidatePool[0],
+                        isNecessaryStop: true,
+                        legIndex: 1,
+                        totalLegs: 1,
+                        kwhToCharge: Math.max(10, Math.round((vSpecs.usable_battery_kwh * 0.5) * 10) / 10),
+                        estMinutes: 20,
+                        posKm: Math.round(totalKm * 0.5),
+                        isInbound: false,
                       }
-
-                      combinedChargers = chosen.map((c, idx) => {
-                        const pKwMatch = c.power?.match(/(\d+)/);
-                        const cKw = pKwMatch ? Number(pKwMatch[1]) : (c.speed?.toLowerCase().includes('semi') ? 22 : (c.speed?.toLowerCase().includes('ultra') ? 100 : 50));
-                        const kwhToCharge = Math.max(6, Math.round((kwhDeficit / chosen.length) * 10) / 10);
-                        const estMinutes = Math.max(12, Math.round((kwhToCharge / Math.min(60, cKw * 0.85)) * 60));
-
-                        const assignedIsInbound = c.isInbound !== undefined
-                          ? c.isInbound
-                          : (isRoundArg ? (idx >= Math.ceil(chosen.length / 2)) : false);
-
-                        const assignedPosKm = isRoundArg
-                          ? (chosen.length === 1
-                              ? Math.round(totalKm * 0.5)
-                              : (idx === 0 ? Math.round(totalKm * 0.24) : (idx === 1 ? Math.round(totalKm * 0.76) : Math.round((totalKm / (chosen.length + 1)) * (idx + 1)))))
-                          : Math.round((totalKm / (chosen.length + 1)) * (idx + 1));
-
-                        return {
-                          ...c,
-                          isNecessaryStop: true,
-                          legIndex: idx + 1,
-                          totalLegs: chosen.length,
-                          kwhToCharge,
-                          estMinutes,
-                          isInbound: assignedIsInbound,
-                          posKm: assignedPosKm,
-                        };
-                      });
-                    } else {
-                      combinedChargers = [];
-                    }
-                  } else if (necessaryStopName) {
-                    const existingMatch = combinedChargers.find(c => c.name.toLowerCase().includes(necessaryStopName.toLowerCase()) || necessaryStopName.toLowerCase().includes(c.name.toLowerCase()));
-                    if (existingMatch) {
-                      existingMatch.isNecessaryStop = true;
-                      combinedChargers = [existingMatch];
-                    } else {
-                      combinedChargers = [];
-                    }
-                  } else {
-                    combinedChargers = [];
+                    ];
                   }
-                } else {
-                  // Si llega con batería sin requerir recarga obligatoria, no presenta paradas
-                  combinedChargers = [];
                 }
+
+                const primaryStopName = combinedChargers[0]?.name || (resolved.chargers && resolved.chargers[0]?.name) || 'Estación en ruta';
 
                 returnDestination = {
                   name: resolved.name,
@@ -2112,47 +2211,30 @@ ${plannedStopsPrompt}
                   lng: resolved.lng,
                   distKm: totalKm,
                   isRoundTrip: isRoundArg,
-                  origin: (resolved as any).origin,
+                  origin: (resolved as any).origin || explicitOriginObj || { name: 'Punto de partida', lat: startPt.lat, lng: startPt.lng },
                   vehicleModel: (resolved as any).vehicleModel || call.args?.vehicleModel,
                   vehicleBrand: (resolved as any).vehicleBrand,
                   waypoints: resolved.waypoints,
                 };
                 returnChargers = combinedChargers;
 
-                const primaryStopName = rawNecStops[0]?.name || combinedChargers[0]?.name || necessaryStopName || 'Riobamba';
-
                 toolResponseData = {
                   destination: resolved.name,
+                  origin: (resolved as any).origin || explicitOriginObj || { name: 'Punto de partida', lat: startPt.lat, lng: startPt.lng },
                   distanceKm: totalKm,
                   isRoundTrip: isRoundArg,
                   estimatedArrivalSoc: arrivalSoc,
+                  kwhRequired,
                   canReachWithoutRecharge: canReach,
                   recommendedStop: primaryStopName,
-                  recommendedCity: resolved.name.toLowerCase().includes('macas') ? 'Riobamba' : undefined,
-                  necessaryStopsCount: rawNecStops.length > 0 ? rawNecStops.length : combinedChargers.length,
-                  necessaryStops: rawNecStops.length > 0
-                    ? rawNecStops.map((s: any, idx: number) => ({
-                        step: idx + 1,
-                        name: s.name,
-                        city: s.canton || '',
-                        kwhToCharge: s.kwhToCharge,
-                        estMinutes: s.estMinutes,
-                        targetSocPct: s.targetSocPct,
-                        arrivalSocPct: s.arrivalSocPct,
-                      }))
-                    : combinedChargers.map((c, idx) => ({
-                        step: idx + 1,
-                        name: c.name,
-                        city: c.name.includes('Riobamba') ? 'Riobamba' : '',
-                        power: c.power,
-                      })),
-                  recommendedStopsSummary: rawNecStops.length > 1
-                    ? `Para completar este viaje de ${totalKm} km requieres ${rawNecStops.length} paradas obligatorias de recarga: ${rawNecStops.map((s: any, i: number) => `${i + 1}. ${s.name}${s.canton ? ` en ${s.canton}` : ''}`).join(', ')}.`
-                    : (combinedChargers.length > 1
-                        ? (isRoundArg && combinedChargers.length === 2
-                            ? `recargar en ${combinedChargers[0].name} a la ida y en ${combinedChargers[1].name} al regreso`
-                            : `recargar en ${combinedChargers.map((c, i) => `${i + 1}. ${c.name}`).join(' y ')}`)
-                        : primaryStopName),
+                  necessaryStopsCount: combinedChargers.length,
+                  necessaryStops: combinedChargers.map((c, idx) => ({
+                    step: idx + 1,
+                    name: c.name,
+                    power: c.power,
+                    kwhToCharge: c.kwhToCharge,
+                    estMinutes: c.estMinutes,
+                  })),
                   availableChargersCount: combinedChargers.length,
                 };
               } else {
@@ -2362,8 +2444,12 @@ ${plannedStopsPrompt}
                 body: JSON.stringify({
                   contents: turn2Messages,
                   systemInstruction: { parts: [{ text: systemInstructionText }] },
+                  generationConfig: {
+                    maxOutputTokens: 180,
+                    temperature: 0.2,
+                  },
                 }),
-                signal: AbortSignal.timeout(5000),
+                signal: AbortSignal.timeout(9000),
               });
 
               if (turn2Res.ok) {
@@ -2383,7 +2469,23 @@ ${plannedStopsPrompt}
                 const dest = toolResponseData.destination;
                 const km = toolResponseData.distanceKm;
                 const arrivalSoc = toolResponseData.estimatedArrivalSoc;
-                spokenReply = `Ruta calculada a ${dest} (${km} km). Llegarás con aproximadamente un ${arrivalSoc}% de batería.`;
+                const orig = toolResponseData.origin?.name || (returnDestination as any)?.origin?.name;
+                const fromPrefix = orig ? `desde ${orig} ` : '';
+                const singleChargeQuery = normQuery.includes('sola carga') || normQuery.includes('una carga') || normQuery.includes('sin recargar') || normQuery.includes('directo');
+
+                if (singleChargeQuery) {
+                  const querySocMatch = normQuery.match(/(?:saliendo\s+con\s+(?:el\s+)?|con\s+(?:el\s+)?|al\s+|bateria\s+(?:al\s+|en\s+))(\d{1,3})\s*%/i);
+                  const startPct = querySocMatch ? `${querySocMatch[1]}%` : `${soc}%`;
+                  if (arrivalSoc >= 12) {
+                    spokenReply = `Sí, es posible llegar ${fromPrefix}hasta ${dest} (${km} km) con una sola carga al ${startPct}. Llegarás con aproximadamente un ${arrivalSoc}% de batería gracias a la regeneración en el descenso andino.`;
+                  } else {
+                    spokenReply = `El trayecto ${fromPrefix}hasta ${dest} es de ${km} km. Para viajar con reserva segura se recomienda realizar una parada de recarga estratégica, ya que llegarías al límite (~${Math.max(0, arrivalSoc)}% de batería).`;
+                  }
+                } else if (arrivalSoc >= 15) {
+                  spokenReply = `Ruta trazada ${fromPrefix}a ${dest} (${km} km). Llegarás con aproximadamente un ${arrivalSoc}% de batería sin recargas intermedias.`;
+                } else {
+                  spokenReply = `Ruta trazada ${fromPrefix}a ${dest} (${km} km). Llegarás con aproximadamente un ${arrivalSoc}% de batería.`;
+                }
               } else if (returnAction === 'add_waypoint' && returnWaypoint) {
                 spokenReply = `He añadido la parada en ${returnWaypoint.name} a tu ruta activa.`;
               } else if (toolResponseData.totalFound !== undefined) {
@@ -2398,6 +2500,7 @@ ${plannedStopsPrompt}
               destination: returnDestination,
               chargers: returnChargers,
               action: returnAction,
+              actionPayload: returnActionPayload,
               waypoint: returnWaypoint,
               places: returnPlaces,
               provider: `${usedModel}-agent`,

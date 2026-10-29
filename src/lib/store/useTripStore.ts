@@ -7,6 +7,31 @@ import { geocodePlace } from '@/lib/services/mapbox';
 import { supabase } from '@/lib/supabase';
 import { ConsentChoices, TERMS_VERSION, PRIVACY_VERSION } from '@/components/Dashboard/ConsentModal';
 
+export interface DriverPreferences {
+  minArrivalSocSafetyMargin: number; // e.g. 0.15 (15%) or 0.20 (20%)
+  preferredBrands: string[]; // e.g. ['BYD', 'Primax', 'Porsche', 'Kia']
+  drivingStyle: 'eco' | 'normal' | 'sport'; // affects consumption multiplier: 0.92, 1.0, 1.15
+  voiceAlertsEnabled: boolean; // proactive speech alerts
+  minPowerFilterKw: number; // 0 = all, 50 = fast (>=50kW)
+}
+
+export interface ChargerStatusReport {
+  chargerId?: string;
+  chargerName: string;
+  status: 'available' | 'busy' | 'broken';
+  reportedAt: number;
+  comment?: string;
+}
+
+export interface ProactiveAlert {
+  id: string;
+  type: 'consumption_warning' | 'charger_proximity';
+  title: string;
+  message: string;
+  timestamp: number;
+  actionText?: string;
+}
+
 interface TripState {
   globalVehicles: Vehicle[];
   isVehiclesLoading: boolean;
@@ -63,6 +88,14 @@ interface TripState {
   recalculateRoute: (currentPos: { lat: number; lng: number }) => Promise<void>;
   theme: 'dark' | 'light';
   toggleTheme: () => void;
+  preferences: DriverPreferences;
+  setPreferences: (pref: Partial<DriverPreferences>) => void;
+  chargerStatusReports: Record<string, ChargerStatusReport>;
+  reportChargerStatus: (chargerName: string, status: 'available' | 'busy' | 'broken', comment?: string, chargerId?: string) => Promise<boolean>;
+  fetchChargerStatusReports: () => Promise<void>;
+  activeProactiveAlert: ProactiveAlert | null;
+  setActiveProactiveAlert: (alert: ProactiveAlert | null) => void;
+  dismissProactiveAlert: () => void;
 }
 
 // planRoute concurrency control (module-level, not persisted):
@@ -78,6 +111,18 @@ export const useTripStore = create<TripState>()(
     (set, get) => ({
       theme: 'dark',
       toggleTheme: () => set(state => ({ theme: state.theme === 'dark' ? 'light' : 'dark' })),
+      preferences: {
+        minArrivalSocSafetyMargin: 0.15,
+        preferredBrands: ['BYD', 'Primax', 'Porsche', 'Kia'],
+        drivingStyle: 'normal',
+        voiceAlertsEnabled: true,
+        minPowerFilterKw: 0,
+      },
+      setPreferences: (pref) => set(state => ({ preferences: { ...state.preferences, ...pref } })),
+      chargerStatusReports: {},
+      activeProactiveAlert: null,
+      setActiveProactiveAlert: (alert) => set({ activeProactiveAlert: alert }),
+      dismissProactiveAlert: () => set({ activeProactiveAlert: null }),
   globalVehicles: [],
   isVehiclesLoading: true,
   selectedVehicle: null,
@@ -707,6 +752,60 @@ export const useTripStore = create<TripState>()(
     } catch (err) {
       console.error('Error removing favorite', err);
     }
+  },
+
+  reportChargerStatus: async (chargerName: string, status: 'available' | 'busy' | 'broken', comment?: string, chargerId?: string) => {
+    const key = chargerName.toLowerCase().trim();
+    const newReport: ChargerStatusReport = {
+      chargerId,
+      chargerName,
+      status,
+      reportedAt: Date.now(),
+      comment,
+    };
+    set(state => ({
+      chargerStatusReports: {
+        ...state.chargerStatusReports,
+        [key]: newReport,
+      }
+    }));
+
+    try {
+      await fetch('/api/chargers/status-report', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chargerId,
+          chargerName,
+          status,
+          comment,
+          reportedBy: get().user?.email || 'Conductor ChargeWay',
+        }),
+      });
+      return true;
+    } catch (e) {
+      console.warn('Error reporting charger status:', e);
+      return false;
+    }
+  },
+
+  fetchChargerStatusReports: async () => {
+    try {
+      const res = await fetch('/api/chargers/status-report');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.reports && Array.isArray(data.reports)) {
+          const map: Record<string, ChargerStatusReport> = {};
+          data.reports.forEach((r: ChargerStatusReport) => {
+            const k = (r.chargerName || r.chargerId || '').toLowerCase().trim();
+            if (k) map[k] = r;
+          });
+          set({ chargerStatusReports: map });
+        }
+      }
+    } catch (e) {
+      console.warn('Error fetching charger status reports:', e);
+    }
   }
 }),
 {
@@ -716,5 +815,7 @@ export const useTripStore = create<TripState>()(
     soc: state.soc,
     routePoints: state.routePoints,
     filterCompatibleChargers: state.filterCompatibleChargers,
+    preferences: state.preferences,
+    theme: state.theme,
   }),
 }));

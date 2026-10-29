@@ -3,6 +3,7 @@
 import React from 'react';
 import { Charger, getChargerExclusiveBrands } from '@/lib/services/charging';
 import { MapPin, Navigation, ShieldCheck } from 'lucide-react';
+import { useTripStore } from '@/lib/store/useTripStore';
 
 interface ChargerCardProps {
   charger: Charger;
@@ -36,6 +37,10 @@ const ChargerCardComponent: React.FC<ChargerCardProps> = ({
     window.open(url, '_blank');
   };
 
+  const chargerStatusReports = useTripStore(state => state.chargerStatusReports);
+  const chKey = (charger.nombre || charger.operator || charger.id || '').toLowerCase().trim();
+  const liveReport = chargerStatusReports[chKey];
+
   return (
     <div className={`hud-panel p-3.5 rounded-xl border transition-all flex flex-col gap-2 font-mono group ${
       isPassed 
@@ -47,9 +52,22 @@ const ChargerCardComponent: React.FC<ChargerCardProps> = ({
       {/* Title & Nav button */}
       <div className="flex justify-between items-start gap-2">
         <div className="min-w-0 flex-1">
-          <h4 className="text-xs font-bold text-white truncate group-hover:text-brand-cyan transition" title={charger.nombre || charger.operator}>
-            {charger.nombre || charger.operator}
-          </h4>
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <h4 className="text-xs font-bold text-white truncate group-hover:text-brand-cyan transition" title={charger.nombre || charger.operator}>
+              {charger.nombre || charger.operator}
+            </h4>
+            {liveReport && (
+              <span className={`text-[8.5px] px-1.5 py-0.2 rounded font-extrabold border ${
+                liveReport.status === 'broken'
+                  ? 'bg-red-500/20 text-red-300 border-red-500/40'
+                  : liveReport.status === 'busy'
+                  ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                  : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+              }`}>
+                {liveReport.status === 'broken' ? '🔴 Averiado' : (liveReport.status === 'busy' ? '🟡 Ocupado' : '🟢 Libre')}
+              </span>
+            )}
+          </div>
           <span className="text-[10px] text-slate-400 flex items-center gap-1 mt-0.5 truncate">
             <MapPin size={10} className="shrink-0 text-slate-500" />
             {charger.canton ? `${charger.canton}, ${charger.provincia}` : charger.address || 'Ecuador'}

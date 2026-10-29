@@ -48,6 +48,7 @@ next-env.d.ts
 
 /respaldos/
 /.design_proposal/
+landing/revision-*/
 /.vscode/
 *.bak
 find_guajalo.js

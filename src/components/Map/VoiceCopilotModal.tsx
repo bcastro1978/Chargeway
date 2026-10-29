@@ -842,11 +842,76 @@ export const VoiceCopilotModal: React.FC<VoiceCopilotModalProps> = React.memo(({
       // 2. Iniciar reproducción hablada de voz de inmediato
       speakText(response.text);
 
-      // 3. Sincronización asíncrona de mapa en segundo plano (sin bloquear el audio)
+      // 3. Sincronización asíncrona de mapa y acciones de cabina por voz
       if (response.action === 'add_waypoint' && response.waypoint) {
         addWaypointToRoute(response.waypoint, true).catch(err => console.warn('Error en waypoint:', err));
-      } else if (autoSyncMap && response.destination && response.destination.lat && response.destination.lng) {
+      } else if ((response.action === 'plan_route' || autoSyncMap) && response.destination && response.destination.lat && response.destination.lng) {
         applyDestinationToMap(response.destination, true, response.chargers).catch(err => console.warn('Error mapeando destino:', err));
+      } else if (response.action === 'change_vehicle' && response.actionPayload) {
+        const { vehicleModel, vehicleBrand } = response.actionPayload;
+        const { globalVehicles, setSelectedVehicle } = useTripStore.getState();
+        const found = globalVehicles.find(v =>
+          (v.model.toLowerCase().includes(vehicleModel.toLowerCase()) || vehicleModel.toLowerCase().includes(v.model.toLowerCase())) &&
+          (!vehicleBrand || v.brand.toLowerCase() === vehicleBrand.toLowerCase())
+        );
+        if (found) {
+          setSelectedVehicle(found);
+          setActiveSyncNotice(`Vehículo cambiado a ${found.brand} ${found.model}`);
+          setTimeout(() => setActiveSyncNotice(null), 3500);
+        }
+      } else if (response.action === 'toggle_theme') {
+        const targetTheme = response.actionPayload?.theme;
+        const currentTheme = useTripStore.getState().theme;
+        if (!targetTheme || targetTheme !== currentTheme) {
+          useTripStore.getState().toggleTheme();
+          setActiveSyncNotice(`Tema cambiado a ${useTripStore.getState().theme === 'dark' ? 'Modo Oscuro' : 'Modo Claro'}`);
+          setTimeout(() => setActiveSyncNotice(null), 3000);
+        }
+      } else if (response.action === 'toggle_elevation') {
+        const visible = response.actionPayload?.visible ?? true;
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('chargeway:toggle-elevation', { detail: { visible } }));
+        }
+        setActiveSyncNotice(visible ? 'Perfil de elevación desplegado' : 'Perfil de elevación ocultado');
+        setTimeout(() => setActiveSyncNotice(null), 3000);
+      } else if (response.action === 'remove_waypoint') {
+        const which = response.actionPayload?.which || 'last';
+        const { routePoints, setRoutePoints } = useTripStore.getState();
+        if (which === 'all_stops') {
+          if (routePoints.length > 2) {
+            setRoutePoints([routePoints[0], routePoints[routePoints.length - 1]]);
+            setActiveSyncNotice('Paradas intermedias eliminadas');
+            setTimeout(() => setActiveSyncNotice(null), 3000);
+          }
+        } else {
+          if (routePoints.length > 2) {
+            const copy = [...routePoints];
+            copy.splice(copy.length - 2, 1);
+            setRoutePoints(copy);
+            setActiveSyncNotice('Última parada intermedia eliminada');
+            setTimeout(() => setActiveSyncNotice(null), 3000);
+          }
+        }
+      } else if (response.action === 'filter_chargers') {
+        const { minPowerKw, all, fastOnly } = response.actionPayload || {};
+        if (all) {
+          useTripStore.getState().setPreferences({ minPowerFilterKw: 0 });
+          useTripStore.getState().setFilterCompatibleChargers(false);
+          setActiveSyncNotice('Mostrando todos los cargadores');
+        } else if (fastOnly || minPowerKw >= 50) {
+          useTripStore.getState().setPreferences({ minPowerFilterKw: 50 });
+          setActiveSyncNotice('Filtro activado: solo cargadores rápidos (≥50 kW)');
+        }
+        setTimeout(() => setActiveSyncNotice(null), 3000);
+      } else if (response.action === 'report_charger' && response.actionPayload) {
+        const { chargerName, status, comment } = response.actionPayload;
+        useTripStore.getState().reportChargerStatus(chargerName, status, comment).catch(console.error);
+        setActiveSyncNotice(`Reporte enviado: ${chargerName} (${status})`);
+        setTimeout(() => setActiveSyncNotice(null), 4000);
+      } else if (response.action === 'update_preferences' && response.actionPayload) {
+        useTripStore.getState().setPreferences(response.actionPayload);
+        setActiveSyncNotice('Preferencias de conducción actualizadas');
+        setTimeout(() => setActiveSyncNotice(null), 3500);
       } else if (autoSyncMap && response.chargers && response.chargers.length > 0 && ((context?.activeTrip?.arrivalSoc ?? 100) < 20)) {
         flyToChargerOnMap(response.chargers[0]);
       }
@@ -1091,7 +1156,7 @@ export const VoiceCopilotModal: React.FC<VoiceCopilotModalProps> = React.memo(({
                     {m.destination && (
                       <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                         <button
-                          onClick={() => applyDestinationToMap(m.destination!)}
+                          onClick={() => applyDestinationToMap(m.destination!, true, m.chargers)}
                           style={{
                             background: 'linear-gradient(135deg, #10b981, #059669)',
                             border: 'none',
