@@ -530,7 +530,7 @@ export async function generateTripPlan(
         /byd|kia|jac|cargador|electrolinera|ultra|evinka|condor|rayo|primax|terpel|kfc|shopping|charge|plaza|mall|recarga|estaci[oó]n/i.test(matchingWp.name) ||
         /\b\d+\s*kw\b/i.test(matchingWp.name)
       );
-      const isKnownCharger = chargers.some(c => haversineKm(pt.lat, pt.lng, c.location.lat, c.location.lng) < 1.5);
+      const isKnownCharger = false; // Only explicit charger stops should be treated as recharge waypoints
 
       if (isNamedCharger || isKnownCharger || matchingWp?.id?.startsWith('stop-') || matchingWp?.id?.startsWith('nec_stop_')) {
         // Project onto route cumDist
@@ -571,7 +571,7 @@ export async function generateTripPlan(
     avgSpeedKmh,
     vehicleSpecs,
     environment,
-    currentSoc,
+    (currentSoc > 1.0 ? currentSoc / 100 : Math.max(0.01, currentSoc)),
     rechargeStops
   );
 
@@ -603,7 +603,7 @@ export async function generateTripPlan(
       environment,
       avgSpeedKmh,
       totalDistanceKm,
-      currentSoc,
+      (currentSoc > 1.0 ? currentSoc / 100 : Math.max(0.01, currentSoc)),
       userBrand
     );
     suggestedChargingStop = suggestedChargingStops[0] || null;

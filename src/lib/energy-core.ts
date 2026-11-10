@@ -153,11 +153,12 @@ export function simulateContinuousRouteEnergy(
   avgSpeedKmh: number,
   vehicleSpecs: VehicleSpecs,
   environment: EnvironmentFactors,
-  initialSoc: number, // 0 to 1
+  initialSoc: number, // 0 to 1 (or 0 to 100, normalized automatically)
   rechargeStops?: Array<{ km: number; targetSoc: number }>
 ): ContinuousRouteSimulation {
+  const normalizedInitialSoc = initialSoc > 1.0 ? initialSoc / 100 : Math.max(0.01, initialSoc);
   const batteryCapacityKwh = vehicleSpecs.usable_battery_kwh;
-  let currentEnergyKwh = batteryCapacityKwh * Math.max(0.01, Math.min(1.0, initialSoc));
+  let currentEnergyKwh = batteryCapacityKwh * Math.max(0.01, Math.min(1.0, normalizedInitialSoc));
   const usableKwhAtStart = currentEnergyKwh;
 
   // Track applied recharge stops
@@ -204,7 +205,7 @@ export function simulateContinuousRouteEnergy(
   if (elevationPoints.length > 0) {
     socTimeline.push({
       km: 0,
-      soc: initialSoc,
+      soc: Math.max(0, Math.min(1.0, normalizedInitialSoc)),
       elevationM: elevationPoints[0].elevation
     });
   }
@@ -336,8 +337,9 @@ export function simulateContinuousRouteEnergy(
   const safetyMarginKm = Math.round(((usableKwhAtEnd - safetyBufferKwh) * 1000) / safeAutonomyRateWhKm);
   const arrivalRangeKm = Math.max(0, Math.round((usableKwhAtEnd * 1000) / safeAutonomyRateWhKm));
 
-  // Direct reachable without stopping if arrival SoC >= 12%
-  const isDirectReachable = arrivalSoc >= 0.12 && depletionKm === null;
+  // Direct reachable without stopping if arrival SoC >= 12% and no recharge stops were applied
+  const hadRechargeStops = activeRechargeStops.some(s => s.applied);
+  const isDirectReachable = arrivalSoc >= 0.12 && depletionKm === null && !hadRechargeStops;
 
   return {
     totalConsumptionWh: Math.round(netConsumptionWh),

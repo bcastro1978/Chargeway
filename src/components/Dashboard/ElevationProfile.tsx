@@ -246,10 +246,17 @@ const ElevationProfileComponent: React.FC<ElevationProfileProps> = ({
     return 74;
   }, [tripPlan]);
 
+  const hasRechargeStops = useMemo(() => {
+    if (tripPlan?.suggestedChargingStop) return true;
+    if (tripPlan?.suggestedChargingStops && tripPlan.suggestedChargingStops.length > 0) return true;
+    return false;
+  }, [tripPlan]);
+
   const isDirectTrip = useMemo(() => {
-    // Direct only if arrival SoC >= 12% and no suggested charging stop
-    return tripArrivalSocPct >= 12 && !tripPlan?.suggestedChargingStop;
-  }, [tripArrivalSocPct, tripPlan]);
+    // Direct only if arrival SoC >= 12%, no recharge stop required, and simulation confirms direct reachability
+    const directReachable = tripPlan?.simulation?.isDirectReachable ?? (tripArrivalSocPct >= 12);
+    return tripArrivalSocPct >= 12 && !hasRechargeStops && directReachable;
+  }, [tripArrivalSocPct, hasRechargeStops, tripPlan]);
 
   const nextChargerInfo = useMemo(() => {
     const curDist = currentDistance || 0;
@@ -520,6 +527,22 @@ const ElevationProfileComponent: React.FC<ElevationProfileProps> = ({
           explanation: 'La regeneración compensa con exactitud las pérdidas por fricción y resistencia del aire.'
         };
       }
+    } else if (socDelta > 0) {
+      // Recharging stop or net regeneration during this segment (fixes previous negative sign bug)
+      const kwhGained = timelineItem.kwh || +(dist * 0.1).toFixed(1);
+      return {
+        type: 'regen',
+        title: 'Recarga / Ganancia en Tramo',
+        badge: '⚡ Ganancia Neta de Batería',
+        badgeColor: 'text-[#00E676] bg-emerald-500/15 border-emerald-500/30',
+        kwhMetric: `+${kwhGained} kWh`,
+        rateMetric: 'Incremento neto de energía',
+        entrySoc: entrySoc,
+        exitSoc: exitSoc,
+        socDelta: `+${socDelta}%`,
+        socDeltaColor: 'text-[#00E676]',
+        explanation: 'El nivel de batería aumentó en este tramo por recarga o regeneración.'
+      };
     } else if (activeTip.type === 'subida') {
       const kwhLoss = timelineItem.kwh || +(dist * 0.22).toFixed(1);
       const absDelta = Math.abs(socDelta) || Math.max(2, Math.round((kwhLoss / batteryCapacity) * 100));

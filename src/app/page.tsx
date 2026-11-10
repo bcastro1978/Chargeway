@@ -706,14 +706,19 @@ export default function Home() {
     let arrivalSoc = 0;
     let usableAtEnd = 0;
 
-    if (tripPlan.arrivalSoc !== undefined && tripPlan.arrivalSoc !== null && (tripPlan.arrivalSoc > 0 || !hasChargingStops)) {
-      arrivalSoc = Math.max(0, Math.min(1.0, tripPlan.arrivalSoc));
+    const normalizedPlanArrivalSoc = tripPlan.arrivalSoc !== undefined && tripPlan.arrivalSoc !== null
+      ? (tripPlan.arrivalSoc > 1.0 ? tripPlan.arrivalSoc / 100 : tripPlan.arrivalSoc)
+      : null;
+    const normalizedCurrentSoc = soc > 1.0 ? soc / 100 : soc;
+
+    if (normalizedPlanArrivalSoc !== null && (normalizedPlanArrivalSoc > 0 || !hasChargingStops)) {
+      arrivalSoc = Math.max(0, Math.min(1.0, normalizedPlanArrivalSoc));
       usableAtEnd = battery * arrivalSoc;
     } else if (hasChargingStops) {
       arrivalSoc = 0.28;
       usableAtEnd = battery * arrivalSoc;
     } else {
-      const usableAtStart = battery * soc;
+      const usableAtStart = battery * normalizedCurrentSoc;
       usableAtEnd = Math.max(0, usableAtStart - tripPlan.totalConsumptionWh / 1000);
       arrivalSoc = usableAtEnd / battery;
     }
@@ -838,7 +843,7 @@ export default function Home() {
     routeDistanceKm,
     routeDurationMin,
     totalConsumptionKwh,
-    Math.round((liveStats?.arrivalSoc ?? tripPlan?.arrivalSoc ?? 0) * 100),
+    Math.round((liveStats?.arrivalSoc ? (liveStats.arrivalSoc <= 1.0 ? liveStats.arrivalSoc * 100 : liveStats.arrivalSoc) : (tripPlan?.arrivalSoc ? (tripPlan.arrivalSoc <= 1.0 ? tripPlan.arrivalSoc * 100 : tripPlan.arrivalSoc) : 0))),
     staticChargerProjections,
     preferences,
   ]);
@@ -1326,7 +1331,7 @@ export default function Home() {
               })()
             ) : (
               (() => {
-                const arrivalSocPct = Math.round(tripPlan.arrivalSoc * 100);
+                const arrivalSocPct = Math.round(tripPlan.arrivalSoc <= 1.0 ? tripPlan.arrivalSoc * 100 : tripPlan.arrivalSoc);
                 const isDeficit = arrivalSocPct < 12;
 
                 if (isDeficit) {
