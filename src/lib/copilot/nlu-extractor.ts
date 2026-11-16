@@ -10,6 +10,7 @@ import {
   CockpitIntent,
   ExtractedDriverIntent,
   resolveCanonicalPlace,
+  ECUADOR_CANONICAL_PLACES,
 } from './ontology';
 
 /**
@@ -83,24 +84,44 @@ export function extractDriverIntentDeterministic(rawUtterance: string): Extracte
   }
 
   // 4. Check for charging network exploration
-  if (
+  const isChargingQuery =
+    norm.includes('cargador') ||
+    norm.includes('cargadores') ||
     norm.includes('electrolinera') ||
-    norm.includes('donde hay cargador') ||
-    norm.includes('cargadores en') ||
-    norm.includes('puntos de carga')
-  ) {
+    norm.includes('punto de carga') ||
+    norm.includes('puntos de carga') ||
+    norm.includes('punto de recarga') ||
+    norm.includes('puntos de recarga') ||
+    norm.includes('estacion de carga') ||
+    norm.includes('estaciones de carga') ||
+    norm.includes('estacion de recarga') ||
+    norm.includes('estaciones de recarga') ||
+    norm.includes('donde cargar') ||
+    norm.includes('donde recargar');
+
+  if (isChargingQuery) {
     let connector: 'CCS2' | 'GBT' | 'TYPE2' | 'CHADEMO' | undefined = undefined;
     if (norm.includes('gbt') || norm.includes('gb/t')) connector = 'GBT';
     else if (norm.includes('ccs') || norm.includes('ccs2')) connector = 'CCS2';
     else if (norm.includes('tipo 2') || norm.includes('type 2')) connector = 'TYPE2';
 
+    let targetLocation: string | undefined = undefined;
+    for (const place of ECUADOR_CANONICAL_PLACES) {
+      const pName = place.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      if (norm.includes(pName) || place.aliases.some(a => norm.includes(a))) {
+        targetLocation = place.name;
+        break;
+      }
+    }
+
     return {
       intent: 'INTENT_QUERY_CHARGING_NETWORK',
-      confidence: 0.92,
+      confidence: 0.95,
       slots: {
         chargingNetwork: {
+          location: targetLocation,
           connectorType: connector,
-          fastOnly: norm.includes('rapido') || norm.includes('dc'),
+          fastOnly: norm.includes('rapido') || norm.includes('rapida') || norm.includes('dc'),
         },
       },
     };

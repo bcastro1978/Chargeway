@@ -20,10 +20,28 @@ import {
   resolveMechanicalVehicleSpecs,
   GeoPoint3D,
 } from '@/lib/powertrain';
-import { fetchAllEcuadorChargers } from '@/lib/services/charging';
+import { fetchAllEcuadorChargers, isChargerBrandCompatible } from '@/lib/services/charging';
 import { getPlacesRecommendationsFromGoogle } from '@/lib/services/ecuadorGuideAgent';
 import { geocodePlace } from '@/lib/services/mapbox';
 import { ECUADOR_ROUTES, CORRIDOR_CHARGERS, isBrandMatch } from '@/lib/data/ecuador-routes';
+
+function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number): number {
+  const R = 6371;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLng = ((lng2 - lng1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLng / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+function formatChargerPower(potencia: string | number | undefined): string {
+  if (!potencia) return '7 kW';
+  const str = String(potencia).trim();
+  return str.replace(/\s*kW\s*kW/gi, ' kW').replace(/(\d+)\s*kW/gi, '$1 kW');
+}
 
 export const runtime = 'nodejs';
 
@@ -243,7 +261,7 @@ export async function POST(request: Request) {
             name: match.nombre,
             lat: match.location.lat,
             lng: match.location.lng,
-            power: `${match.potencia} kW`,
+            power: formatChargerPower(match.potencia),
           },
         });
       }
@@ -259,30 +277,89 @@ export async function POST(request: Request) {
     if (intent.intent === 'INTENT_QUERY_CHARGING_NETWORK') {
       const allChargers = await fetchAllEcuadorChargers().catch(() => []);
       const conn = intent.slots.chargingNetwork?.connectorType;
+      const targetLoc = intent.slots.chargingNetwork?.location;
 
+      // 1. Determine reference center (target location, current location, or active trip origin)
+      let refLat = -0.1807;
+      let refLng = -78.4678;
+      let locationLabel = '';
+
+      if (targetLoc) {
+        const canonical = resolveCanonicalPlace(targetLoc);
+        if (canonical) {
+          refLat = canonical.lat;
+          refLng = canonical.lng;
+          locationLabel = ` en ${canonical.name}`;
+        }
+      } else if (context?.currentCoords && Array.isArray(context.currentCoords) && context.currentCoords.length >= 2) {
+        refLng = context.currentCoords[0];
+        refLat = context.currentCoords[1];
+      } else if (context?.activeTrip?.originLat && context?.activeTrip?.originLng) {
+        refLat = context.activeTrip.originLat;
+        refLng = context.activeTrip.originLng;
+      }
+
+      // 2. Filter chargers by connector, power speed, and brand compatibility
       const filtered = allChargers.filter(c => {
-        if (!conn) return true;
-        const cType = (c.tipo_cargador || '').toUpperCase();
-        if (conn === 'GBT') return cType.includes('GB/T') || cType.includes('GBT');
-        if (conn === 'CCS2') return cType.includes('CCS2') || cType.includes('COMBO 2');
-        if (conn === 'TYPE2') return cType.includes('TYPE 2') || cType.includes('TIPO 2');
+        if (conn) {
+          const cType = (c.tipo_cargador || '').toUpperCase();
+          if (conn === 'GBT' && !(cType.includes('GB/T') || cType.includes('GBT'))) return false;
+          if (conn === 'CCS2' && !(cType.includes('CCS2') || cType.includes('COMBO 2'))) return false;
+          if (conn === 'TYPE2' && !(cType.includes('TYPE 2') || cType.includes('TIPO 2'))) return false;
+        }
+
+        if (intent.slots.chargingNetwork?.fastOnly) {
+          const isFast = (c.velocidad || '').toLowerCase().includes('rápida') ||
+                         (c.velocidad || '').toLowerCase().includes('rapida') ||
+                         /\b([5-9]\d|[1-9]\d{2,})\s*kw/i.test(c.potencia || '');
+          if (!isFast) return false;
+        }
+
+        if (vehicleBrand && !isChargerBrandCompatible(c, vehicleBrand)) {
+          return false;
+        }
+
         return true;
       });
 
-      const count = filtered.length;
-      const text = sanitizeAcousticText(
-        `Se encontraron ${count} puntos de recarga disponibles en la red nacional.`
-      );
+      // 3. Compute real distance and sort strictly by proximity to user / reference point
+      const withDistance = filtered.map(c => {
+        const distKm = haversineKm(refLat, refLng, c.location.lat, c.location.lng);
+        return {
+          ...c,
+          distKm: Math.round(distKm * 10) / 10,
+        };
+      });
+
+      withDistance.sort((a, b) => a.distKm - b.distKm);
+
+      const top5 = withDistance.slice(0, 5);
+
+      // 4. Concise acoustic spoken feedback (< 20 words, NHTSA standard)
+      let replyText = '';
+      if (top5.length > 0) {
+        const closestKm = top5[0].distKm;
+        const firstName = top5[0].nombre;
+        replyText = sanitizeAcousticText(
+          `Cerca de tu ubicación${locationLabel} encontré ${top5.length} estaciones, la más próxima a ${closestKm} kilómetros en ${firstName}.`
+        );
+      } else {
+        replyText = sanitizeAcousticText(
+          `No se encontraron estaciones compatibles disponibles${locationLabel}.`
+        );
+      }
 
       return NextResponse.json({
-        reply: text,
-        chargers: filtered.slice(0, 5).map(c => ({
+        reply: replyText,
+        chargers: top5.map(c => ({
           name: c.nombre,
           lat: c.location.lat,
           lng: c.location.lng,
-          power: `${c.potencia} kW`,
+          power: formatChargerPower(c.potencia),
           operator: c.fuente || c.provincia,
           speed: c.velocidad,
+          distKm: c.distKm,
+          isBrandMatch: isChargerBrandCompatible(c, vehicleBrand),
         })),
       });
     }

@@ -1340,7 +1340,7 @@ export const VoiceCopilotModal: React.FC<VoiceCopilotModalProps> = React.memo(({
                                             fontWeight: 700,
                                             whiteSpace: 'nowrap',
                                           }}>
-                                            {ch.power}
+                                            {ch.power.replace(/\s*kW\s*kW/gi, ' kW')}
                                           </span>
                                         )}
                                         {ch.operator && ch.operator.toLowerCase() !== 'supabase' && (
